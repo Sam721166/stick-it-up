@@ -2,16 +2,23 @@
   "name": "components",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run build:package && next build",
+    "build:package": "npm --workspace=stick-it-up run build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "lucide-react": "^1.66.0",
     "next": "16.4.3",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "shaders": "^4.0.6",
+    "stick-it-up": "*"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
@@ -21,6 +28,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
     "tailwindcss": "^4",
+    "tsup": "^9.0.0",
     "typescript": "^5"
   }
 }
