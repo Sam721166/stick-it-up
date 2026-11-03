@@ -18,6 +18,7 @@ const POP_SRCS = [
   "/Stickers/SparkleTrio.svg",
   "/Stickers/Spiral.svg",
   "/Stickers/Cosmiceye.svg",
+  "/Stickers/dog.svg",
   
 ];
 
@@ -229,7 +230,6 @@ export default function Home() {
     <main
       ref={mainRef}
       onPointerMove={onPointerMove}
-      onClick={onClick}
       className="relative min-h-screen w-full overflow-hidden bg-white"
     >
       <style>{`
@@ -387,7 +387,10 @@ export default function Home() {
       ))}
 
       {/* hero */}
-      <section className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 pb-24 pt-16 text-center md:pt-24">
+      <section
+        onClick={onClick}
+        className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 pb-24 pt-16 text-center md:pt-24"
+      >
         <h1 className="font-sans text-4xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">
           {HERO.map((token, i) => {
             const delay = 80 + i * 55;

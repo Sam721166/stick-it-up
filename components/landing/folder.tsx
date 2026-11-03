@@ -244,40 +244,6 @@ function Shot({ src, round }: { src: string; round: string }) {
   );
 }
 
-/* ---------- skeuomorphic bits ---------- */
-
-function Paperclip() {
-  return (
-    <svg
-      viewBox="0 0 24 56"
-      fill="none"
-      className="absolute"
-      style={{
-        width: "2.8em",
-        left: "50%",
-        top: "-0.2em",
-        translate: "-50% 0",
-        zIndex: 3,
-        filter: "drop-shadow(0 0.2em 0.15em rgba(0,0,0,0.22))",
-      }}
-    >
-      <defs>
-        <linearGradient id="clip" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#f4f6fa" />
-          <stop offset="0.5" stopColor="#9aa3b2" />
-          <stop offset="1" stopColor="#d8dde6" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M17 18v26a6 6 0 0 1-12 0V12a9 9 0 0 1 18 0v30"
-        stroke="url(#clip)"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 /* ---------- the folder ---------- */
 
@@ -378,7 +344,7 @@ function Folder({ title, stamp, stampRot, cards, avatars }: FolderProps) {
               zIndex: 10,
               borderRadius: "2.8em",
               background: "linear-gradient(180deg,#ffffff 0%,#f6f6f7 45%,#ececee 100%)",
-              border: "0.12em solid rgba(255,255,255,0.95)",
+              border: "0.24em solid rgba(255,255,255,0.95)",
               boxShadow: [
                 "inset 0 0.18em 0 #fff",
                 "inset 0 -0.2em 0.5em rgba(0,0,0,0.05)",
@@ -411,7 +377,7 @@ function Folder({ title, stamp, stampRot, cards, avatars }: FolderProps) {
                 transition: `rotate 600ms ${SPRING}`,
               }}
             >
-              <Paperclip />
+        
               {stamp}
             </div>
 
@@ -565,14 +531,14 @@ export default function FolderShowcase() {
           <Folder
             title="Landing pages"
             avatars={WEB_AVATARS}
-            stampRot={8}
+            stampRot={0}
             cards={webCards}
             stamp={
                 <img
                 src="/stickers/pink-cat2.svg"
                 alt=""
                 draggable={false}
-                className="h-[80%] w-[80%] mt-8 -ml-2 object-contain drop-shadow-[0_3px_2px_rgba(0,0,0,0.10)]"
+                className="h-[80%] w-[80%] mt-11 -ml-2 object-contain drop-shadow-[0_3px_2px_rgba(0,0,0,0.10)] "
                 />
             }
             
