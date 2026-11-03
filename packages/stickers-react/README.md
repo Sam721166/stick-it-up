@@ -128,4 +128,4 @@ interface StickerProps extends React.SVGProps<SVGSVGElement> {
 
 ## 📄 License
 
-MIT © [Samiran De](https://github.com/samirande)
+MIT © [Samiran De](https://github.com/Sam721166)

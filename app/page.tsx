@@ -1,350 +1,552 @@
 "use client";
+import { useEffect, useRef, useState } from "react";
 
-import React, { useState } from "react";
-import {
-  Sticker,
-  MetalSticker,
-  BlobBurstSticker,
-  StarBurstSticker,
-  DevilConeSticker,
-  FlameStarSticker,
-  FoldedPaperSticker,
-  BadgeSmileySticker,
-  CosmicPillSticker,
-  StickerName,
-} from "stick-it-up";
-import { Copy, Check, Sparkles, Terminal, Sliders, Layers } from "lucide-react";
+/* ---------- data ---------- */
 
-interface StickerItem {
-  id: StickerName;
-  name: string;
-  componentName: string;
-  category: "Chrome & Metal" | "Retro & Pop" | "Badge & Graphic";
-  description: string;
-  Component: React.ComponentType<{ size?: number | string; peel?: boolean }>;
-}
+type Pop = { id: number; x: number; y: number; src: string; rot: number };
 
-const STICKERS: StickerItem[] = [
-  {
-    id: "metal",
-    name: "Chrome Shuriken",
-    componentName: "MetalSticker",
-    category: "Chrome & Metal",
-    description: "Specular chrome reflections with deep blue/white gradients and 3D inner shadows",
-    Component: MetalSticker,
-  },
-  {
-    id: "blob-burst",
-    name: "Blob Burst",
-    componentName: "BlobBurstSticker",
-    category: "Retro & Pop",
-    description: "Organic electric blue and black fluid burst with layered sticker shadow",
-    Component: BlobBurstSticker,
-  },
-  {
-    id: "star-burst",
-    name: "Distressed Star",
-    componentName: "StarBurstSticker",
-    category: "Retro & Pop",
-    description: "Distressed noise texture 4-pointed retro star with white die-cut border",
-    Component: StarBurstSticker,
-  },
-  {
-    id: "devil-cone",
-    name: "Devil Horns",
-    componentName: "DevilConeSticker",
-    category: "Badge & Graphic",
-    description: "Geometric red & gold linear gradient cone badge with character eyes",
-    Component: DevilConeSticker,
-  },
-  {
-    id: "flame-star",
-    name: "Flame Creature",
-    componentName: "FlameStarSticker",
-    category: "Retro & Pop",
-    description: "Expressive cartoon flame star sticker with retro screen-print stipple",
-    Component: FlameStarSticker,
-  },
-  {
-    id: "folded-paper",
-    name: "Origami Ribbon",
-    componentName: "FoldedPaperSticker",
-    category: "Badge & Graphic",
-    description: "Folded red paper ribbon with realistic creased highlights and edges",
-    Component: FoldedPaperSticker,
-  },
-  {
-    id: "badge-smiley",
-    name: "Smile Badge",
-    componentName: "BadgeSmileySticker",
-    category: "Badge & Graphic",
-    description: "Coral pink oval badge sticker featuring a smiling star character",
-    Component: BadgeSmileySticker,
-  },
-  {
-    id: "cosmic-pill",
-    name: "Cosmic Pill",
-    componentName: "CosmicPillSticker",
-    category: "Badge & Graphic",
-    description: "Purple cosmic pill with glowing neon inner star outline",
-    Component: CosmicPillSticker,
-  },
+const POP_SRCS = [
+  "/stickers/blueberry.svg",
+  "/stickers/face.svg",
+  "/stickers/star.svg",
+  "/stickers/flower.svg",
+  "/stickers/cat.svg",
+  "/stickers/Sparkles.svg",
+  "/stickers/Flame.svg",
+  "/Stickers/vlc2.svg",
+  "/Stickers/SparkleTrio.svg",
+  "/Stickers/Spiral.svg",
+  "/Stickers/Cosmiceye.svg",
+  
 ];
 
-export default function StickerShowcase() {
-  const [size, setSize] = useState(130);
-  const [peel, setPeel] = useState(true);
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const [filterCategory, setFilterCategory] = useState<string>("All");
-  const [search, setSearch] = useState("");
+type Token = string | { src: string };
 
-  const copyToClipboard = (text: string, key: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedKey(key);
-    setTimeout(() => setCopiedKey(null), 1800);
-  };
+const HERO: Token[] = [
+  "Give",
+  "your",
+  "website",
+  { src: "/stickers/Curious%20blue%20globe.svg" },
+  "the",
+  "kind",
+  "of",
+  { src: "/stickers/Flame.svg" },
+  "personality",
+  "that",
+  "makes",
+  "people",
+  "stick",
+  "around.",
+  { src: "/stickers/Peace-hand.svg" },
+];
 
-  const filteredStickers = STICKERS.filter((s) => {
-    const matchesCategory = filterCategory === "All" || s.category === filterCategory;
-    const matchesSearch =
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      s.componentName.toLowerCase().includes(search.toLowerCase()) ||
-      s.description.toLowerCase().includes(search.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+
+/* ---------- draggable background sticker ---------- */
+
+function DraggableSticker({
+  src,
+  size,
+  rotate,
+  depth = 12,
+  delay = 0,
+  className = "",
+}: {
+  src: string;
+  size: number;
+  rotate: number;
+  depth?: number;
+  delay?: number;
+  className?: string;
+}) {
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [hover, setHover] = useState(false);
+  const [drag, setDrag] = useState(false);
+  const start = useRef({ px: 0, py: 0, x: 0, y: 0 });
+
+  function onDown(e: React.PointerEvent<HTMLDivElement>) {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    start.current = { px: e.clientX, py: e.clientY, x: pos.x, y: pos.y };
+    setDrag(true);
+  }
+
+  function onMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (!drag) return;
+    setPos({
+      x: start.current.x + e.clientX - start.current.px,
+      y: start.current.y + e.clientY - start.current.py,
+    });
+  }
+
+  function onUp() {
+    setDrag(false);
+  }
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col items-center px-4 py-12 selection:bg-rose-500/30 selection:text-white">
-      {/* Background Ambient Glow */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-rose-500/10 via-amber-500/5 to-transparent blur-[160px] opacity-70" />
+    // layer 1: position, entrance pop and cursor parallax
+    <div
+      className={`pointer-events-none absolute ${className}`}
+      style={{
+        width: `clamp(48px, ${size / 14.4}vw, ${size}px)`,
+        translate: `calc(var(--mx, 0) * ${depth}px) calc(var(--my, 0) * ${depth}px)`,
+        transition: "translate 400ms ease-out",
+        animation: `pop 650ms ${SPRING} ${400 + delay * 120}ms both`,
+      }}
+    >
+      {/* layer 2: idle float */}
+      <div
+        style={{
+          animation: `float ${5 + delay}s ease-in-out ${delay * 0.6}s infinite`,
+          animationPlayState: drag ? "paused" : "running",
+        }}
+      >
+        {/* layer 3: drag, hover, tilt */}
+        <div
+          data-sticker
+          onPointerDown={onDown}
+          onPointerMove={onMove}
+          onPointerUp={onUp}
+          onPointerCancel={onUp}
+          onPointerEnter={() => setHover(true)}
+          onPointerLeave={() => setHover(false)}
+          className="pointer-events-auto touch-none select-none"
+          style={{
+            translate: `${pos.x}px ${pos.y}px`,
+            rotate: `${rotate + (drag ? -5 : hover ? 8 : 0)}deg`,
+            scale: drag ? 1.14 : hover ? 1.06 : 1,
+            cursor: drag ? "grabbing" : "grab",
+            filter: drag
+              ? "drop-shadow(0 16px 14px rgba(0,0,0,0.18))"
+              : "drop-shadow(0 2px 3px rgba(0,0,0,0.06))",
+            transition: `scale 450ms ${SPRING}, rotate 450ms ${SPRING}, filter 250ms ease-out`,
+          }}
+        >
+          <img src={src} alt="" draggable={false} className="block h-auto w-full" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- inline sticker inside the headline ---------- */
+
+function HeroSticker({ src, delay }: { src: string; delay: number }) {
+  const [turns, setTurns] = useState(0);
+  const [hover, setHover] = useState(false);
+
+  return (
+    <span
+      className="inline-block"
+      style={{ animation: `rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) ${delay}ms both` }}
+    >
+      <img
+        data-sticker
+        src={src}
+        alt=""
+        draggable={false}
+        onClick={() => setTurns((t) => t + 1)}
+        onPointerEnter={() => setHover(true)}
+        onPointerLeave={() => setHover(false)}
+        className="mx-1 inline-block h-[0.92em] w-[0.92em] cursor-pointer select-none align-middle sm:mx-2 hover:rotate-15"
+        style={{
+          rotate: `${turns * 360 + (hover ? 14 : 0)}deg`,
+          scale: hover ? 1.1 : 1,
+          transition: `rotate 650ms ${SPRING}, scale 300ms ${SPRING}`,
+        }}
+      />
+    </span>
+  );
+}
+
+/* ---------- page ---------- */
+
+export default function Home() {
+  const [copied, setCopied] = useState(false);
+  const [pops, setPops] = useState<Pop[]>([]);
+  const [count, setCount] = useState(0);
+  const mainRef = useRef<HTMLElement>(null);
+  const popId = useRef(0);
+
+  /* copy button feedback reset */
+  useEffect(() => {
+    if (!copied) return;
+    const timeout = setTimeout(() => setCopied(false), 1500);
+    return () => clearTimeout(timeout);
+  }, [copied]);
+
+  /* count-up for the social proof */
+  useEffect(() => {
+    let raf = 0;
+    const t0 = performance.now() + 800;
+    const dur = 1400;
+    const tick = (now: number) => {
+      const p = Math.min(Math.max((now - t0) / dur, 0), 1);
+      setCount(Math.round(1000 * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  async function copyCommand() {
+    try {
+      await navigator.clipboard.writeText("npm i stick-it-up");
+      setCopied(true);
+    } catch (error) {
+      console.error("Failed to copy command:", error);
+    }
+  }
+
+  /* cursor parallax: write CSS vars, no re-renders */
+  function onPointerMove(e: React.PointerEvent<HTMLElement>) {
+    const el = mainRef.current;
+    if (!el) return;
+    el.style.setProperty("--mx", String((e.clientX / window.innerWidth - 0.5) * 2));
+    el.style.setProperty("--my", String((e.clientY / window.innerHeight - 0.5) * 2));
+  }
+
+  /* click empty space to stick a little sticker there */
+  function onClick(e: React.MouseEvent<HTMLElement>) {
+    const target = e.target as HTMLElement;
+    if (target.closest("a, button, [data-sticker]")) return;
+    const rect = mainRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const id = popId.current++;
+    const pop: Pop = {
+      id,
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      src: POP_SRCS[Math.floor(Math.random() * POP_SRCS.length)],
+      rot: Math.round(Math.random() * 50 - 25),
+    };
+    setPops((p) => [...p.slice(-7), pop]);
+    setTimeout(() => setPops((p) => p.filter((s) => s.id !== id)), 2600);
+  }
+
+  return (
+    <main
+      ref={mainRef}
+      onPointerMove={onPointerMove}
+      onClick={onClick}
+      className="relative min-h-screen w-full overflow-hidden bg-white"
+    >
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        @keyframes rise {
+          from { opacity: 0; transform: translateY(16px); filter: blur(6px); }
+          to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        @keyframes pop {
+          0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+          100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+          to { opacity: 0; transform: scale(0.8); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after {
+            animation: none !important;
+            transition: none !important;
+          }
+        }
+      `}</style>
+
+      {/* navbar */}
+      <header className="sticky top-0 z-50 w-full px-4 py-2">
+        <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between rounded-2xl">
+          {/* brand */}
+          <a href="/" className="group flex items-center gap-2.5">
+            <img
+              src="/stickers/logo.svg"
+              alt="Stick it up logo"
+              className="h-9 w-9 rounded-lg transition-transform duration-200
+                group-hover:-rotate-6 group-hover:scale-110"
+            />
+            <span className="text-lg font-semibold tracking-tight text-zinc-900">
+              Stick it up
+            </span>
+          </a>
+
+          {/* links */}
+          <ul className="hidden items-center gap-1 md:flex">
+            {[
+              { label: "Stickers", href: "#stickers" },
+              { label: "Docs", href: "#docs" },
+              { label: "npm", href: "https://www.npmjs.com/package/stick-it-up" },
+            ].map((link) => (
+              <li key={link.label}>
+                <a
+                  href={link.href}
+                  className="rounded-lg px-3.5 py-2 text-sm font-medium text-zinc-600
+                    transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          {/* cta */}
+          <a
+            href="#stickers"
+            className="group inline-flex items-center gap-2 rounded-xl
+              border border-zinc-800 bg-gradient-to-b from-zinc-800 to-zinc-900
+              px-4 py-2 text-sm font-medium text-white
+              shadow-[inset_0_1px_0_#ffffff18,0_1px_2px_#00000015]
+              transition-all duration-150
+              hover:from-zinc-700 hover:to-zinc-800
+              active:translate-y-px active:shadow-inner"
+          >
+            <span>Log in</span>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            >
+              <path d="M7 17 17 7M7 7h10v10" />
+            </svg>
+          </a>
+        </nav>
+      </header>
+
+      {/* stickers layer (draggable, parallax, floating) */}
+      <div className="pointer-events-none absolute inset-0 z-20">
+        <DraggableSticker
+          src="/stickers/blueberry.svg"
+          size={128}
+          rotate={-25}
+          depth={16}
+          delay={0}
+          className="left-[9%] top-[14%]"
+        />
+        <DraggableSticker
+          src="/stickers/face.svg"
+          size={104}
+          rotate={-45}
+          depth={26}
+          delay={1}
+          className="left-[6%] top-[42%] hidden sm:block"
+        />
+        <DraggableSticker
+          src="/stickers/star.svg"
+          size={108}
+          rotate={-10}
+          depth={20}
+          delay={2}
+          className="left-[18%] top-[70%] hidden sm:block"
+        />
+        <DraggableSticker
+          src="/stickers/flower.svg"
+          size={72}
+          rotate={25}
+          depth={14}
+          delay={1}
+          className="right-[7%] top-[16%]"
+        />
+        <DraggableSticker
+          src="/stickers/cat.svg"
+          size={100}
+          rotate={25}
+          depth={28}
+          delay={2}
+          className="right-[6%] top-[44%] hidden sm:block"
+        />
+        <DraggableSticker
+          src="/stickers/Sparkles.svg"
+          size={92}
+          rotate={10}
+          depth={18}
+          delay={0}
+          className="right-[16%] top-[70%] hidden sm:block"
+        />
       </div>
 
-      {/* Hero Header */}
-      <div className="relative z-10 w-full max-w-5xl flex flex-col items-center text-center mb-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/10 text-xs font-medium text-rose-300 mb-5 backdrop-blur-md">
-          <Sparkles className="w-3.5 h-3.5 text-rose-400" />
-          <span>NPM Package Initialized: stick-it-up v0.1.0</span>
-        </div>
+      {/* click-to-stick pops */}
+      {pops.map((p) => (
+        <img
+          key={p.id}
+          src={p.src}
+          alt=""
+          draggable={false}
+          className="pointer-events-none absolute z-10 w-14 select-none"
+          style={{
+            left: p.x - 28,
+            top: p.y - 28,
+            rotate: `${p.rot}deg`,
+            filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.12))",
+            animation: `pop 500ms ${SPRING} both, fadeOut 400ms ease-in 2100ms forwards`,
+          }}
+        />
+      ))}
 
-        <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-white mb-4">
-          Stickers for React
+      {/* hero */}
+      <section className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 pb-24 pt-16 text-center md:pt-24">
+        <h1 className="font-sans text-4xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">
+          {HERO.map((token, i) => {
+            const delay = 80 + i * 55;
+            return typeof token === "string" ? (
+              <span
+                key={i}
+                className="mr-[0.25em] inline-block"
+                style={{
+                  animation: `rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) ${delay}ms both`,
+                }}
+              >
+                {token}
+              </span>
+            ) : (
+              <HeroSticker key={i} src={token.src} delay={delay} />
+            );
+          })}
         </h1>
 
-        <p className="max-w-2xl text-base sm:text-lg text-zinc-400 leading-relaxed mb-8">
-          Import premium vector stickers, chrome finishes, and pop-art decals into any React or Next.js app with responsive sizing, peel hover effects, and scoped SVG filters.
-        </p>
-
-        {/* Quick Install Bar */}
-        <div className="flex items-center gap-2 p-1.5 pl-4 pr-2 rounded-2xl bg-zinc-900/90 border border-white/10 shadow-2xl backdrop-blur-xl">
-          <Terminal className="w-4 h-4 text-zinc-500" />
-          <code className="text-sm font-mono text-zinc-200">npm install stick-it-up</code>
+        {/* buttons */}
+        <div
+          className="mt-14 flex flex-wrap items-center justify-center gap-4"
+          style={{ animation: "rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 1000ms both" }}
+        >
+          {/* Install button */}
           <button
-            onClick={() => copyToClipboard("npm install stick-it-up", "npm-install")}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs text-white transition-all cursor-pointer"
+            onClick={copyCommand}
+            aria-label={copied ? "Copied to clipboard" : "Copy npm i stick-it-up"}
+            className={`group relative inline-flex cursor-pointer items-center gap-3 rounded-xl
+              border bg-gradient-to-b
+              py-3 pl-4 pr-5 font-mono text-sm
+              shadow-[inset_0_1px_0_white,0_1px_2px_#0000000a]
+              transition-all duration-300 ease-out
+              hover:-translate-y-px active:translate-y-px active:shadow-inner
+              ${
+                copied
+                  ? "border-emerald-300 from-emerald-50 to-emerald-100/70 text-emerald-800"
+                  : "border-zinc-300 from-white to-zinc-50 text-zinc-800 hover:border-zinc-400 hover:shadow-[inset_0_1px_0_white,0_2px_4px_#0000000a]"
+              }`}
           >
-            {copiedKey === "npm-install" ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-emerald-400">Copied</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-3.5 h-3.5 text-zinc-400" />
-                <span>Copy</span>
-              </>
-            )}
-          </button>
-        </div>
-      </div>
+            {/* Text swap: both states share one grid cell, so the button width never shifts */}
+            <span className="relative grid" aria-live="polite">
+              <span
+                className={`col-start-1 row-start-1 transition-all duration-300 ease-out ${
+                  copied
+                    ? "-translate-y-1 opacity-0 blur-[2px]"
+                    : "translate-y-0 opacity-100 blur-0"
+                }`}
+              >
+                npm i stick-it-up
+              </span>
 
-      {/* Interactive Controls Bar */}
-      <div className="relative z-10 w-full max-w-5xl mb-8 p-4 rounded-2xl bg-zinc-900/80 border border-white/10 backdrop-blur-xl flex flex-wrap items-center justify-between gap-4">
-        {/* Category Filters */}
-        <div className="flex items-center gap-1.5">
-          {["All", "Chrome & Metal", "Retro & Pop", "Badge & Graphic"].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilterCategory(cat)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
-                filterCategory === cat
-                  ? "bg-white text-black shadow-md font-semibold"
-                  : "text-zinc-400 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+              <span
+                className={`col-start-1 row-start-1 font-medium transition-all duration-300 ease-out ${
+                  copied
+                    ? "translate-y-0 opacity-100 blur-0 delay-75"
+                    : "translate-y-1 opacity-0 blur-[2px]"
+                }`}
+              >
+                Copied!
+              </span>
+            </span>
 
-        {/* Sliders & Toggles */}
-        <div className="flex items-center gap-6">
-          {/* Size Slider */}
-          <div className="flex items-center gap-2 text-xs text-zinc-400">
-            <Sliders className="w-3.5 h-3.5" />
-            <span>Size:</span>
-            <input
-              type="range"
-              min="70"
-              max="200"
-              value={size}
-              onChange={(e) => setSize(Number(e.target.value))}
-              className="w-24 accent-rose-500 cursor-pointer"
-            />
-            <span className="w-10 font-mono text-zinc-200">{size}px</span>
-          </div>
+            {/* Copy icon -> check badge that draws itself */}
+            <span className="relative grid h-4 w-4 place-items-center">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                className={`col-start-1 row-start-1 h-4 w-4 transition-all duration-200 ease-out ${
+                  copied ? "scale-75 opacity-0" : "scale-100 opacity-100"
+                }`}
+              >
+                <rect x="8" y="3" width="12" height="15" rx="2" />
+                <path d="M5 7H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1" />
+              </svg>
 
-          {/* Peel Toggle */}
-          <div className="flex items-center gap-2 text-xs text-zinc-400">
-            <Layers className="w-3.5 h-3.5" />
-            <span>Peel Effect:</span>
-            <button
-              onClick={() => setPeel(!peel)}
-              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
-                peel ? "bg-rose-500/20 text-rose-300 border border-rose-500/30" : "bg-white/5 text-zinc-500 border border-white/5"
-              }`}
-            >
-              {peel ? "ON" : "OFF"}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Sticker Grid */}
-      <div className="relative z-10 w-full max-w-5xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
-        {filteredStickers.map((sticker) => {
-          const importCode = `import { ${sticker.componentName} } from "stick-it-up";`;
-          const usageCode = `<${sticker.componentName} size={${size}}${peel ? " peel" : ""} />`;
-
-          return (
-            <div
-              key={sticker.id}
-              className="group relative rounded-2xl bg-zinc-900/60 hover:bg-zinc-900/90 border border-white/[0.08] hover:border-white/20 p-5 flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-            >
-              {/* Sticker Preview Box */}
-              <div className="relative w-full h-44 rounded-xl bg-black/40 border border-white/5 flex items-center justify-center overflow-hidden mb-4 p-2">
-                {/* Subtle checkered sticker artboard background */}
-                <div
-                  className="absolute inset-0 opacity-15 pointer-events-none"
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                className="col-start-1 row-start-1 h-4 w-4 overflow-visible"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="11"
+                  className="fill-emerald-500"
                   style={{
-                    backgroundImage: `radial-gradient(rgba(255,255,255,0.2) 1px, transparent 1px)`,
-                    backgroundSize: "14px 14px",
+                    transformOrigin: "center",
+                    transformBox: "fill-box",
+                    transform: copied ? "scale(1)" : "scale(0.4)",
+                    opacity: copied ? 1 : 0,
+                    transition:
+                      "transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 150ms ease-out",
                   }}
                 />
-
-                <div className="relative z-10 flex items-center justify-center">
-                  <sticker.Component size={size} peel={peel} />
-                </div>
-              </div>
-
-              {/* Info */}
-              <div className="flex items-start justify-between gap-2 mb-1.5">
-                <h3 className="font-semibold text-white text-sm">{sticker.name}</h3>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-zinc-400 border border-white/5">
-                  {sticker.category}
-                </span>
-              </div>
-
-              <code className="text-xs font-mono text-rose-300/80 mb-2">{`<${sticker.componentName} />`}</code>
-
-              <p className="text-xs text-zinc-500 leading-relaxed line-clamp-2 mb-4 flex-1">
-                {sticker.description}
-              </p>
-
-              {/* Action Buttons */}
-              <div className="flex items-center gap-2 pt-2 border-t border-white/5">
-                <button
-                  onClick={() => copyToClipboard(importCode, `imp-${sticker.id}`)}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 text-[11px] text-zinc-300 hover:text-white transition-colors cursor-pointer"
-                  title="Copy import syntax"
-                >
-                  {copiedKey === `imp-${sticker.id}` ? (
-                    <>
-                      <Check className="w-3 h-3 text-emerald-400" />
-                      <span className="text-emerald-400">Import</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3 h-3 text-zinc-400" />
-                      <span>Import</span>
-                    </>
-                  )}
-                </button>
-
-                <button
-                  onClick={() => copyToClipboard(usageCode, `use-${sticker.id}`)}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-[11px] text-rose-300 hover:text-rose-200 transition-colors cursor-pointer"
-                  title="Copy JSX code"
-                >
-                  {copiedKey === `use-${sticker.id}` ? (
-                    <>
-                      <Check className="w-3 h-3 text-emerald-400" />
-                      <span className="text-emerald-400">JSX</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3 h-3 text-rose-400" />
-                      <span>JSX</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Code Examples Section */}
-      <div className="relative z-10 w-full max-w-5xl rounded-3xl bg-zinc-900/70 border border-white/10 p-6 sm:p-8 backdrop-blur-xl">
-        <h2 className="text-xl font-bold text-white mb-2">How to Use in Your Project</h2>
-        <p className="text-sm text-zinc-400 mb-6">
-          Both tree-shakeable named imports and polymorphic dynamic components are supported.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Method 1: Named Imports */}
-          <div className="rounded-2xl bg-black/60 border border-white/5 p-5">
-            <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider block mb-2">
-              Method 1: Direct Component Import
+                <path
+                  d="m7 12.5 3.2 3.2L17 8.8"
+                  pathLength={1}
+                  stroke="white"
+                  strokeWidth="2.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{
+                    strokeDasharray: 1,
+                    strokeDashoffset: copied ? 0 : 1,
+                    transition: copied
+                      ? "stroke-dashoffset 280ms ease-out 140ms"
+                      : "stroke-dashoffset 120ms ease-in",
+                  }}
+                />
+              </svg>
             </span>
-            <pre className="text-xs font-mono text-zinc-300 leading-relaxed overflow-x-auto">
-              <code>{`import { MetalSticker, BlobBurstSticker } from "stick-it-up";
+          </button>
 
-export function Header() {
-  return (
-    <div className="flex gap-4">
-      {/* Standalone metallic chrome sticker */}
-      <MetalSticker size={120} />
-
-      {/* Interactive hover vinyl peel */}
-      <BlobBurstSticker size={100} peel />
-    </div>
-  );
-}`}</code>
-            </pre>
-          </div>
-
-          {/* Method 2: Dynamic <Sticker name="..." /> */}
-          <div className="rounded-2xl bg-black/60 border border-white/5 p-5">
-            <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider block mb-2">
-              Method 2: Dynamic Sticker Component
-            </span>
-            <pre className="text-xs font-mono text-zinc-300 leading-relaxed overflow-x-auto">
-              <code>{`import { Sticker } from "stick-it-up";
-
-export function StickerList() {
-  return (
-    <div>
-      <Sticker name="metal" size={100} peel />
-      <Sticker name="star-burst" size={80} />
-      <Sticker name="devil-cone" size={90} />
-    </div>
-  );
-}`}</code>
-            </pre>
-          </div>
+          {/* Explore button */}
+          <a
+            href="#stickers"
+            className="group inline-flex cursor-pointer items-center gap-2 rounded-xl
+              border border-zinc-800 bg-gradient-to-b from-zinc-800 to-zinc-900
+              px-5 py-3 text-sm font-medium text-white
+              shadow-[inset_0_1px_0_#ffffff18,0_1px_2px_#00000015]
+              transition-all duration-150
+              hover:-translate-y-px hover:from-zinc-700 hover:to-zinc-800
+              active:translate-y-px active:shadow-inner"
+          >
+            <span>Explore stickers</span>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            >
+              <path d="M7 17 17 7M7 7h10v10" />
+            </svg>
+          </a>
         </div>
-      </div>
-    </div>
+
+        {/* user counter */}
+        <div
+          className="mt-14 flex flex-col items-center"
+          style={{ animation: "rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 1150ms both" }}
+        >
+          <img
+            data-sticker
+            src="/stickers/Component-66.svg"
+            alt=""
+            draggable={false}
+            className="h-20 w-20 cursor-pointer select-none transition-transform duration-300 hover:scale-110 hover:-rotate-3 active:scale-95"
+            style={{ transitionTimingFunction: SPRING }}
+          />
+          <p className="-mt-4 font-sans text-base text-neutral-400">
+            Used by <span className="tabular-nums">{count.toLocaleString()}</span>+ developers
+          </p>
+        </div>
+
+      
+      </section>
+    </main>
   );
 }
