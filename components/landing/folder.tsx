@@ -336,6 +336,8 @@ function Folder({ title, stamp, stampRot, cards, avatars }: FolderProps) {
             ))}
           </div>
 
+
+          {/* folder component  */}
           {/* front panel: frosted, bevelled, with grain */}
           <div
             className="absolute inset-x-0 bottom-0 overflow-visible"
