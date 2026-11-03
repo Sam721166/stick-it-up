@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Folder from "../components/landing/folder"
 
 /* ---------- data ---------- */
 
@@ -316,7 +317,7 @@ export default function Home() {
       </header>
 
       {/* stickers layer (draggable, parallax, floating) */}
-      <div className="pointer-events-none absolute inset-0 z-20">
+      <div className="pointer-events-none absolute inset-0 z-20 h-200">
         <DraggableSticker
           src="/stickers/blueberry.svg"
           size={128}
@@ -547,6 +548,14 @@ export default function Home() {
 
       
       </section>
+
+
+
+
+      <div className="w-screen">
+          <Folder />
+      </div>
+
     </main>
   );
 }
