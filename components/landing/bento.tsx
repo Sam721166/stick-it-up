@@ -620,10 +620,7 @@ export default function Bento() {
         ref={sectionRef}
         id="docs"
         className="relative z-10 mx-4 mb-10 rounded-[40px] px-4 py-20 sm:px-8"
-        style={{
-          background: "",
-          boxShadow: "inset 0 1px 0 #fff, inset 0 -1px 8px rgba(0,0,0,0.04)",
-        }}
+        
       >
         <div className="mx-auto max-w-6xl">
           {/* heading */}

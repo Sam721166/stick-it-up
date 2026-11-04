@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import Folder from "../components/landing/folder"
 import Bento from "../components/landing/bento"
+import GetStarted from "../components/landing/get-started"
+import Footer from "../components/landing/footer"
 
 /* ---------- data ---------- */
 
@@ -561,6 +563,10 @@ export default function Home() {
       </div>
 
       <Bento />
+
+      <GetStarted />
+
+      <Footer />
 
     </main>
   );
