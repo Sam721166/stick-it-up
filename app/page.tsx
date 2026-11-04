@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Folder from "../components/landing/folder"
+import Bento from "../components/landing/bento"
 
 /* ---------- data ---------- */
 
@@ -558,6 +559,8 @@ export default function Home() {
       <div className="w-screen">
           <Folder />
       </div>
+
+      <Bento />
 
     </main>
   );
