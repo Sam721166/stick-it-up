@@ -1,5 +1,61 @@
 "use client";
-import { useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+
+const EASE_OUT = "cubic-bezier(0.2, 0.8, 0.2, 1)";
+
+function useInView(threshold = 0.08) {
+  const ref = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { threshold, rootMargin: "0px 0px -20px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [threshold]);
+
+  return [ref, inView] as const;
+}
+
+function MotionBlur({
+  inView,
+  delay = 0,
+  children,
+  className = "",
+}: {
+  inView: boolean;
+  delay?: number;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={className}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translate3d(0, 0, 0)" : "translate3d(0, 24px, 0)",
+        filter: inView ? "blur(0px)" : "blur(8px)",
+        transition: `opacity 700ms ${EASE_OUT} ${delay}ms, transform 800ms ${EASE_OUT} ${delay}ms, filter 700ms ${EASE_OUT} ${delay}ms`,
+        willChange: inView ? "auto" : "opacity, transform, filter",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 /* ------------------------------------------------------------------
    YOUR SCREENSHOTS
@@ -424,6 +480,8 @@ function Folder({ title, stamp, stampRot, cards, avatars }: FolderProps) {
 /* ---------- section ---------- */
 
 export default function FolderShowcase() {
+  const [sectionRef, inView] = useInView(0.08);
+
   const webMocks: ReactNode[] = [
     <WebMock
       key="w1"
@@ -513,53 +571,59 @@ export default function FolderShowcase() {
 
   return (
     <section
+      ref={sectionRef}
       id="stickers"
       className="relative z-10 mx-4 mb-10 rounded-[40px] px-6 py-24"
-      
     >
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto mb-16 flex max-w-2xl flex-col items-center text-center">
-          
-          <h2 className="mt-5 font-sans text-4xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-5xl">
-            See your brand, stickered.
-          </h2>
-          <p className="mt-4 text-base text-neutral-400">
-            Peek inside a folder to see how a website or an app feels once it has a little
-            personality. Hover or tap to open.
-          </p>
+          <MotionBlur inView={inView} delay={0}>
+            <h2 className="mt-5 font-sans text-4xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-5xl">
+              See your brand, stickered.
+            </h2>
+          </MotionBlur>
+          <MotionBlur inView={inView} delay={100}>
+            <p className="mt-4 text-base text-neutral-400">
+              Peek inside a folder to see how a website or an app feels once it has a little
+              personality. Hover or tap to open.
+            </p>
+          </MotionBlur>
         </div>
 
         <div className="grid items-start justify-items-center gap-16 md:grid-cols-2 md:gap-10">
-          <Folder
-            title="Landing pages"
-            avatars={WEB_AVATARS}
-            stampRot={0}
-            cards={webCards}
-            stamp={
+          <MotionBlur inView={inView} delay={200} className="w-full flex justify-center">
+            <Folder
+              title="Landing pages"
+              avatars={WEB_AVATARS}
+              stampRot={0}
+              cards={webCards}
+              stamp={
                 <img
-                src="/stickers/pink-cat2.svg"
-                alt=""
-                draggable={false}
-                className="h-[80%] w-[80%] mt-11 -ml-2 object-contain drop-shadow-[0_3px_2px_rgba(0,0,0,0.10)] "
+                  src="/stickers/pink-cat2.svg"
+                  alt=""
+                  draggable={false}
+                  className="h-[80%] w-[80%] mt-11 -ml-2 object-contain drop-shadow-[0_3px_2px_rgba(0,0,0,0.10)] "
                 />
-            }
-            
-          />
-
-          <Folder
-            title="Mobile apps"
-            avatars={APP_AVATARS}
-            stampRot={-6}
-            cards={phoneCards}
-            stamp={
-                <img
-                src="/stickers/japan.svg"
-                alt=""
-                draggable={false}
-                className="h-full w-full mt-8 -ml-2 object-contain drop-shadow-[0_3px_2px_rgba(0,0,0,0.18)]"
-                />
-            }
+              }
             />
+          </MotionBlur>
+
+          <MotionBlur inView={inView} delay={340} className="w-full flex justify-center">
+            <Folder
+              title="Mobile apps"
+              avatars={APP_AVATARS}
+              stampRot={-6}
+              cards={phoneCards}
+              stamp={
+                <img
+                  src="/stickers/japan.svg"
+                  alt=""
+                  draggable={false}
+                  className="h-full w-full mt-8 -ml-2 object-contain drop-shadow-[0_3px_2px_rgba(0,0,0,0.18)]"
+                />
+              }
+            />
+          </MotionBlur>
         </div>
       </div>
     </section>

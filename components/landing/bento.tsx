@@ -16,11 +16,64 @@ export const ShownCtx = createContext<boolean>(true);
    tokens (same language as the folder section)
 ------------------------------------------------------------------- */
 const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+const EASE_OUT = "cubic-bezier(0.2, 0.8, 0.2, 1)";
+
+function useInView(threshold = 0.08) {
+  const ref = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { threshold, rootMargin: "0px 0px -20px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [threshold]);
+
+  return [ref, inView] as const;
+}
+
+function MotionBlur({
+  inView,
+  delay = 0,
+  children,
+  className = "",
+}: {
+  inView: boolean;
+  delay?: number;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={className}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translate3d(0, 0, 0)" : "translate3d(0, 24px, 0)",
+        filter: inView ? "blur(0px)" : "blur(8px)",
+        transition: `opacity 700ms ${EASE_OUT} ${delay}ms, transform 800ms ${EASE_OUT} ${delay}ms, filter 700ms ${EASE_OUT} ${delay}ms`,
+        willChange: inView ? "auto" : "opacity, transform, filter",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 const GRAIN =
   "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")";
-
-  
 
 const TONES = {
   yellow: { from: "#fff0a0", to: "#ffd93d" },
@@ -222,7 +275,7 @@ function Key({ label, src, rot }: { label: string; src: string; rot: number }) {
           translate: down ? "0 4px" : "0 0",
           boxShadow: down
             ? "inset 0 2px 5px rgba(0,0,0,0.12), 0 1px 0 #fff"
-            : "inset 0 1px 0 #fff, inset 0 -3px 6px rgba(0,0,0,0.05), 0 1px 1px rgba(0,0,0,0.1), 0 6px 0 #a9d77a, 0 12px 16px rgba(40,90,0,0.18)",
+            : "inset 0 1px 0 #fff, 0 6px 0 #a9d77a",
           transition: `translate 160ms ${SPRING}, box-shadow 160ms ease-out`,
         }}
       >
@@ -235,7 +288,6 @@ function Key({ label, src, rot }: { label: string; src: string; rot: number }) {
             translate: "-50% -50%",
             rotate: `${rot + (hover ? 8 : 0) + (down ? -4 : 0)}deg`,
             scale: down ? 0.94 : hover ? 1.08 : 1,
-            filter: "drop-shadow(0 3px 3px rgba(0,0,0,0.2))",
             transition: `rotate 400ms ${SPRING}, scale 300ms ${SPRING}`,
           }}
         />
@@ -252,7 +304,7 @@ function Key({ label, src, rot }: { label: string; src: string; rot: number }) {
 ------------------------------------------------------------------- */
 function Phone() {
   return (
-    <div className="relative mx-auto w-[272px]">
+    <div className="relative mx-auto -mb-2.5 w-[272px] transition-transform duration-300 ease-out hover:-translate-y-2.5">
       {/* body */}
       <div
         className="relative h-[380px]"
@@ -371,7 +423,7 @@ function Phone() {
       </div>
 
       {/* loose stickers around the phone */}
-      <Sticker src="/stickers/cat.svg" size={78} left="-8%" top="-21%" rot={-12} z={20} />
+      <Sticker src="/stickers/catsticker.svg" size={70} left="-8%" top="-21%" rot={-12} z={20} />
       <Sticker src="/stickers/Peace-hand.svg" size={60} left="58%" top="80%" rot={14} z={20} />
     </div>
   );
@@ -454,7 +506,7 @@ function UiStack() {
       scale: open ? 0.95 : 0.955,
       node: (
         <Glass>
-          <Tile src="/stickers/cat.svg" bg="#ffe3ec" />
+          <Tile src="/stickers/red_cat.svg" bg="#ffe3ec" />
           <div className="min-w-0 flex-1">
             <p className="text-[13.5px] font-semibold text-zinc-800">Mochi replied</p>
             <p className="truncate text-[11.5px] text-zinc-400">this site has so much personality</p>
@@ -543,17 +595,17 @@ function UiStack() {
    section
 ------------------------------------------------------------------- */
 export default function Bento() {
+  const [sectionRef, inView] = useInView(0.08);
   const [copied, setCopied] = useState(false);
 
-      /* copy button feedback reset */
-      useEffect(() => {
-        if (!copied) return;
-        const timeout = setTimeout(() => setCopied(false), 1500);
-        return () => clearTimeout(timeout);
-      }, [copied]);
+  /* copy button feedback reset */
+  useEffect(() => {
+    if (!copied) return;
+    const timeout = setTimeout(() => setCopied(false), 1500);
+    return () => clearTimeout(timeout);
+  }, [copied]);
 
-
-    async function copyCommand() {
+  async function copyCommand() {
     try {
       await navigator.clipboard.writeText("npm i stick-it-up");
       setCopied(true);
@@ -563,209 +615,229 @@ export default function Bento() {
   }
 
   return (
-    <section
-      id="docs"
-      className="relative z-10 mx-4 mb-10 rounded-[40px] px-4 py-20 sm:px-8"
-      style={{
-        background: "linear-gradient(180deg,#f6f6f7 0%,#efeff1 100%)",
-        boxShadow: "inset 0 1px 0 #fff, inset 0 -1px 8px rgba(0,0,0,0.04)",
-      }}
-    >
-      <div className="mx-auto max-w-6xl">
-        {/* heading */}
-        <div className="mx-auto mb-14 flex max-w-2xl flex-col items-center text-center">
-          <span
-            className="rounded-full bg-white px-3 py-1 text-xs font-medium text-zinc-500"
-            style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.08), inset 0 1px 0 #fff" }}
-          >
-            What you get
-          </span>
-          <h2 className="mt-5 font-sans text-4xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-5xl">
-            Everything you need to stick around.
-          </h2>
-          <p className="mt-4 text-base text-neutral-400">
-            Grab, drag and drop. Every sticker below is live, so go ahead and play.
-          </p>
-        </div>
+    <ShownCtx.Provider value={inView}>
+      <section
+        ref={sectionRef}
+        id="docs"
+        className="relative z-10 mx-4 mb-10 rounded-[40px] px-4 py-20 sm:px-8"
+        style={{
+          background: "",
+          boxShadow: "inset 0 1px 0 #fff, inset 0 -1px 8px rgba(0,0,0,0.04)",
+        }}
+      >
+        <div className="mx-auto max-w-6xl">
+          {/* heading */}
+          <div className="mx-auto mb-14 flex max-w-3xl flex-col items-center text-center">
+            <MotionBlur inView={inView} delay={0}>
+              <h2 className="mt-5 font-sans text-4xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-5xl">
+                Everything you need to stick around.
+              </h2>
+            </MotionBlur>
+            <MotionBlur inView={inView} delay={100}>
+              <p className="mt-4 text-base text-neutral-400">
+                Grab, drag and drop. Every sticker below is live, so go ahead and play.
+              </p>
+            </MotionBlur>
+          </div>
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-6">
-          {/* ---------- yellow: phone ---------- */}
-          <Card tone="yellow" className="min-h-[600px] lg:col-span-4 lg:row-span-2">
-            <Title>What&rsquo;s in the pack</Title>
-            <ul className="mt-6 space-y-3.5">
-              {[
-                "Hand-drawn pastel stickers",
-                "Crisp SVG at any size",
-                "Drag, tilt and pop built in",
-                "One npm install",
-              ].map((t) => (
-                <li key={t} className="flex items-center gap-3 text-[15px] font-medium text-zinc-800">
-                  <Check />
-                  {t}
-                </li>
-              ))}
-            </ul>
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-6">
+            {/* ---------- yellow: phone ---------- */}
+            <MotionBlur inView={inView} delay={180} className="flex flex-col lg:col-span-4 lg:row-span-2">
+              <Card tone="yellow" className="h-full min-h-[600px]">
+                <Title>What&rsquo;s in the pack</Title>
+                <ul className="mt-6 space-y-3.5">
+                  {[
+                    "Hand-drawn pastel stickers",
+                    "Crisp SVG at any size",
+                    "Drag, tilt and pop built in",
+                    "One npm install",
+                  ].map((t) => (
+                    <li key={t} className="flex items-center gap-3 text-[15px] font-medium text-zinc-800">
+                      <Check />
+                      {t}
+                    </li>
+                  ))}
+                </ul>
 
-            <div className="mt-auto -mb-6 pt-10 sm:-mb-8">
-              <Phone />
-            </div>
-          </Card>
-
-          {/* ---------- red: laptop ---------- */}
-          <Card tone="red" className="min-h-[360px] lg:col-span-4">
-            <Title light>Stick it anywhere</Title>
-            <Lead light>
-              Heroes, cards, empty states, 404s. Drop one in and the page gets a personality.
-            </Lead>
-
-            <div className="mt-auto -mb-6 -mr-12 ml-12 flex justify-center pt-10 sm:-mb-8">
-              <div
-                className="relative -mb-5 h-[180px] w-[92%]"
-                style={{
-                  borderRadius: "12px 12px 0 0",
-                  background: "linear-gradient(180deg,#f4f6f9 0%,#d6dbe2 60%,#c5cbd4 100%)",
-                  border: "1px solid rgba(255,255,255,0.9)",
-                  boxShadow:
-                    "inset 0 1px 0 #fff, inset 0 -6px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.12), 0 16px 28px rgba(120,0,15,0.35)",
-                }}
-              >
-                <div className="absolute left-1/2 top-[56%] -translate-x-1/2 -translate-y-1/2">
-                  <AppleLogo />
+                <div className="mt-auto -mb-6 pt-10 sm:-mb-8">
+                  <div
+                    style={{
+                      transform: inView ? "translate3d(0, 0, 0)" : "translate3d(0, 96px, 0)",
+                      opacity: inView ? 1 : 0,
+                      filter: inView ? "blur(0px)" : "blur(6px)",
+                      transition: `transform 900ms cubic-bezier(0.16, 1, 0.3, 1) 220ms, opacity 800ms ${EASE_OUT} 220ms, filter 700ms ${EASE_OUT} 220ms`,
+                    }}
+                  >
+                    <Phone />
+                  </div>
                 </div>
-                <Sticker src="/stickers/face.svg" size={62} left="7%" top="-14%" rot={-10} />
-                <Sticker src="/stickers/star.svg" size={56} left="66%" top="-10%" rot={12} />
-                <Sticker src="/stickers/blueberry.svg" size={52} left="76%" top="46%" rot={-6} />
-                <Sticker src="/stickers/Sparkles.svg" size={44} left="12%" top="52%" rot={6} />
-              </div>
-            </div>
-          </Card>
+              </Card>
+            </MotionBlur>
 
-          {/* ---------- green: sticker keys ---------- */}
-          <Card tone="green" className="min-h-[360px] lg:col-span-4">
-            <Title>Light to ship. Fun to touch.</Title>
-            <Lead>Press the keys. Everything on the page behaves like the real thing.</Lead>
-
-            <div className="mt-auto flex items-end justify-between gap-2 px-1 pb-2 pt-10">
-              <Key label="Vector" src="/stickers/star.svg" rot={-6} />
-              <Key label="Drag" src="/stickers/Peace-hand.svg" rot={4} />
-              <Key label="Pop" src="/stickers/Sparkles.svg" rot={0} />
-            </div>
-          </Card>
-
-          {/* ---------- blue: developers ---------- */}
-          <Card tone="blue" className="min-h-[340px] lg:col-span-8">
-            <div className="flex flex-1 flex-col gap-10 md:flex-row md:items-center md:justify-between">
-              <div className="max-w-sm">
-                <Title>
-                  Designed
-                  <br />
-                  for developers
-                </Title>
-                <Lead>
-                  Install once, import what you need, and give every screen of your site or app a
-                  sticker-sized dose of character.
+            {/* ---------- red: laptop ---------- */}
+            <MotionBlur inView={inView} delay={260} className="flex flex-col lg:col-span-4">
+              <Card tone="red" className="h-full min-h-[360px]">
+                <Title light>Stick it anywhere</Title>
+                <Lead light>
+                  Heroes, cards, empty states, 404s. Drop one in and the page gets a personality.
                 </Lead>
 
-                {/* Install button (identical to page.tsx) */}
-              <button
-                onClick={copyCommand}
-                aria-label={copied ? "Copied to clipboard" : "Copy npm i stick-it-up"}
-                className={`group relative mt-6 inline-flex cursor-pointer items-center gap-3 rounded-xl
-                  border bg-gradient-to-b
-                  py-3 pl-4 pr-5 font-mono text-sm
-                  shadow-[inset_0_1px_0_white,0_1px_2px_#0000000a]
-                  transition-all duration-300 ease-out
-                  hover:-translate-y-px active:translate-y-px active:shadow-inner
-                  ${
-                    copied
-                      ? "border-emerald-200 from-emerald-50 to-emerald-100/70 text-emerald-800"
-                      : "border-zinc-200 from-white to-zinc-50 text-zinc-800 hover:border-zinc-300 hover:shadow-[inset_0_1px_0_white,0_2px_4px_#0000000a]"
-                  }`}
-              >
-                {/* Text swap */}
-                <span className="relative grid" aria-live="polite">
-                  <span
-                    className={`col-start-1 row-start-1 transition-all duration-300 ease-out ${
-                      copied
-                        ? "-translate-y-1 opacity-0 blur-[2px]"
-                        : "translate-y-0 opacity-100 blur-0"
-                    }`}
+                <div className="mt-auto -mb-6 -mr-12 ml-12 flex justify-center pt-10 sm:-mb-8">
+                  <div
+                    className="relative -mb-5 h-[180px] w-[92%]"
+                    style={{
+                      borderRadius: "12px 12px 0 0",
+                      background: "linear-gradient(180deg,#f4f6f9 0%,#d6dbe2 60%,#c5cbd4 100%)",
+                      border: "1px solid rgba(255,255,255,0.9)",
+                      boxShadow:
+                        "inset 0 1px 0 #fff, inset 0 -6px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.12), 0 16px 28px rgba(120,0,15,0.35)",
+                      transform: inView ? "translate3d(0, 0, 0)" : "translate3d(110px, 0, 0)",
+                      opacity: inView ? 1 : 0,
+                      filter: inView ? "blur(0px)" : "blur(6px)",
+                      transition: `transform 900ms cubic-bezier(0.16, 1, 0.3, 1) 280ms, opacity 800ms ${EASE_OUT} 280ms, filter 700ms ${EASE_OUT} 280ms`,
+                    }}
                   >
-                    npm i stick-it-up
-                  </span>
+                    <div className="absolute left-1/2 top-[56%] -translate-x-1/2 -translate-y-1/2">
+                      <AppleLogo />
+                    </div>
+                    <Sticker src="/stickers/face.svg" size={62} left="7%" top="-14%" rot={-10} />
+                    <Sticker src="/stickers/star.svg" size={56} left="66%" top="-10%" rot={12} />
+                    <Sticker src="/stickers/blueberry.svg" size={52} left="76%" top="46%" rot={-6} />
+                    <Sticker src="/stickers/Sparkles.svg" size={44} left="12%" top="52%" rot={6} />
+                  </div>
+                </div>
+              </Card>
+            </MotionBlur>
 
-                  <span
-                    className={`col-start-1 row-start-1 font-medium transition-all duration-300 ease-out ${
-                      copied
-                        ? "translate-y-0 opacity-100 blur-0 delay-75"
-                        : "translate-y-1 opacity-0 blur-[2px]"
-                    }`}
-                  >
-                    Copied!
-                  </span>
-                </span>
+            {/* ---------- green: sticker keys ---------- */}
+            <MotionBlur inView={inView} delay={340} className="flex flex-col lg:col-span-4">
+              <Card tone="green" className="h-full min-h-[360px]">
+                <Title>Light to ship. Fun to touch.</Title>
+                <Lead>Press the keys. Everything on the page behaves like the real thing.</Lead>
 
-                {/* Copy icon -> check badge that draws itself */}
-                <span className="relative grid h-4 w-4 place-items-center">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    className={`col-start-1 row-start-1 h-4 w-4 transition-all duration-200 ease-out ${
-                      copied ? "scale-75 opacity-0" : "scale-100 opacity-100"
-                    }`}
-                  >
-                    <rect x="8" y="3" width="12" height="15" rx="2" />
-                    <path d="M5 7H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1" />
-                  </svg>
+                <div className="mt-auto flex items-end justify-between gap-2 px-1 pb-2 pt-10">
+                  <Key label="Vector" src="/stickers/star.svg" rot={-6} />
+                  <Key label="Drag" src="/stickers/Peace-hand.svg" rot={4} />
+                  <Key label="Pop" src="/stickers/red_cat.svg" rot={0} />
+                </div>
+              </Card>
+            </MotionBlur>
 
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    className="col-start-1 row-start-1 h-4 w-4 overflow-visible"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="11"
-                      className="fill-emerald-500"
-                      style={{
-                        transformOrigin: "center",
-                        transformBox: "fill-box",
-                        transform: copied ? "scale(1)" : "scale(0.4)",
-                        opacity: copied ? 1 : 0,
-                        transition:
-                          "transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 150ms ease-out",
-                      }}
-                    />
-                    <path
-                      d="m7 12.5 3.2 3.2L17 8.8"
-                      pathLength={1}
-                      stroke="white"
-                      strokeWidth="2.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      style={{
-                        strokeDasharray: 1,
-                        strokeDashoffset: copied ? 0 : 1,
-                        transition: copied
-                          ? "stroke-dashoffset 280ms ease-out 140ms"
-                          : "stroke-dashoffset 120ms ease-in",
-                      }}
-                    />
-                  </svg>
-                </span>
-              </button>
+            {/* ---------- blue: developers ---------- */}
+            <MotionBlur inView={inView} delay={420} className="flex flex-col lg:col-span-8">
+              <Card tone="blue" className="h-full min-h-[340px]">
+                <div className="flex flex-1 flex-col gap-10 md:flex-row md:items-center md:justify-between">
+                  <div className="max-w-sm">
+                    <Title>
+                      Designed
+                      <br />
+                      for developers
+                    </Title>
+                    <Lead>
+                      Install once, import what you need, and give every screen of your site or app a
+                      sticker-sized dose of character.
+                    </Lead>
 
+                    {/* Install button (identical to page.tsx) */}
+                    <button
+                      onClick={copyCommand}
+                      aria-label={copied ? "Copied to clipboard" : "Copy npm i stick-it-up"}
+                      className={`group relative mt-6 inline-flex cursor-pointer items-center gap-3 rounded-xl
+                        border bg-gradient-to-b
+                        py-3 pl-4 pr-5 font-mono text-sm
+                        shadow-[inset_0_1px_0_white,0_1px_2px_#0000000a]
+                        transition-all duration-300 ease-out
+                        hover:-translate-y-px active:translate-y-px active:shadow-inner
+                        ${
+                          copied
+                            ? "border-emerald-200 from-emerald-50 to-emerald-100/70 text-emerald-800"
+                            : "border-zinc-200 from-white to-zinc-50 text-zinc-800 hover:border-zinc-300 hover:shadow-[inset_0_1px_0_white,0_2px_4px_#0000000a]"
+                        }`}
+                    >
+                      {/* Text swap */}
+                      <span className="relative grid" aria-live="polite">
+                        <span
+                          className={`col-start-1 row-start-1 transition-all duration-300 ease-out ${
+                            copied
+                              ? "-translate-y-1 opacity-0 blur-[2px]"
+                              : "translate-y-0 opacity-100 blur-0"
+                          }`}
+                        >
+                          npm i stick-it-up
+                        </span>
 
-              </div>
+                        <span
+                          className={`col-start-1 row-start-1 font-medium transition-all duration-300 ease-out ${
+                            copied
+                              ? "translate-y-0 opacity-100 blur-0 delay-75"
+                              : "translate-y-1 opacity-0 blur-[2px]"
+                          }`}
+                        >
+                          Copied!
+                        </span>
+                      </span>
 
-              <UiStack />
-            </div>
-          </Card>
+                      {/* Copy icon -> check badge that draws itself */}
+                      <span className="relative grid h-4 w-4 place-items-center">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          className={`col-start-1 row-start-1 h-4 w-4 transition-all duration-200 ease-out ${
+                            copied ? "scale-75 opacity-0" : "scale-100 opacity-100"
+                          }`}
+                        >
+                          <rect x="8" y="3" width="12" height="15" rx="2" />
+                          <path d="M5 7H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1" />
+                        </svg>
+
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          className="col-start-1 row-start-1 h-4 w-4 overflow-visible"
+                        >
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="11"
+                            className="fill-emerald-500"
+                            style={{
+                              transformOrigin: "center",
+                              transformBox: "fill-box",
+                              transform: copied ? "scale(1)" : "scale(0.4)",
+                              opacity: copied ? 1 : 0,
+                              transition:
+                                "transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 150ms ease-out",
+                            }}
+                          />
+                          <path
+                            d="m7 12.5 3.2 3.2L17 8.8"
+                            pathLength={1}
+                            stroke="white"
+                            strokeWidth="2.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            style={{
+                              strokeDasharray: 1,
+                              strokeDashoffset: copied ? 0 : 1,
+                              transition: copied
+                                ? "stroke-dashoffset 280ms ease-out 140ms"
+                                : "stroke-dashoffset 120ms ease-in",
+                            }}
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+
+                  <UiStack />
+                </div>
+              </Card>
+            </MotionBlur>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </ShownCtx.Provider>
   );
 }
