@@ -423,7 +423,7 @@ function Phone() {
       </div>
 
       {/* loose stickers around the phone */}
-      <Sticker src="/stickers/catsticker.svg" size={70} left="-8%" top="-21%" rot={-12} z={20} />
+      <Sticker src="/stickers/cat.svg" size={78} left="-8%" top="-21%" rot={-12} z={20} />
       <Sticker src="/stickers/Peace-hand.svg" size={60} left="58%" top="80%" rot={14} z={20} />
     </div>
   );
