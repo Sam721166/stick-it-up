@@ -1,201 +1,310 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
+/* ------------------------------------------------------------------
+   tokens (same language as the rest of the landing page)
+------------------------------------------------------------------- */
 const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+const EASE_OUT = "cubic-bezier(0.2, 0.8, 0.2, 1)";
 
 const GRAIN =
   "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")";
 
-type FooterLink = {
+function useInView(threshold = 0.08) {
+  const ref = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { threshold, rootMargin: "0px 0px -20px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [threshold]);
+
+  return [ref, inView] as const;
+}
+
+function MotionBlur({
+  inView,
+  delay = 0,
+  children,
+  className = "",
+}: {
+  inView: boolean;
+  delay?: number;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={className}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translate3d(0, 0, 0)" : "translate3d(0, 24px, 0)",
+        filter: inView ? "blur(0px)" : "blur(8px)",
+        transition: `opacity 700ms ${EASE_OUT} ${delay}ms, transform 800ms ${EASE_OUT} ${delay}ms, filter 700ms ${EASE_OUT} ${delay}ms`,
+        willChange: inView ? "auto" : "opacity, transform, filter",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------
+   data
+------------------------------------------------------------------- */
+interface FooterLink {
   label: string;
   href: string;
-};
+  sticker: string;
+  rot?: number;
+}
 
-type FooterColumn = {
+interface FooterColumn {
   title: string;
   links: FooterLink[];
-};
+}
 
 const COLUMNS: FooterColumn[] = [
   {
     title: "Product",
     links: [
-      { label: "Sticker Pack", href: "#stickers" },
-      { label: "Documentation", href: "#docs" },
-      { label: "Components", href: "#" },
-      { label: "Changelog", href: "#" },
+      { label: "Sticker Pack", href: "#stickers", sticker: "/stickers/star.svg", rot: 12 },
+      { label: "Documentation", href: "#docs", sticker: "/stickers/Sparkles.svg", rot: -8 },
+      { label: "Components", href: "#", sticker: "/stickers/blueberry.svg", rot: 6 },
+      { label: "Changelog", href: "#", sticker: "/stickers/Flame.svg", rot: -10 },
     ],
   },
   {
     title: "Resources",
     links: [
-      { label: "GitHub Repo", href: "https://github.com" },
-      { label: "npm Package", href: "https://www.npmjs.com/package/stick-it-up" },
-      { label: "Showcase", href: "#" },
-      { label: "Playground", href: "#" },
-    ],
-  },
-  {
-    title: "Community",
-    links: [
-      { label: "Twitter / X", href: "https://x.com" },
-      { label: "Discord", href: "#" },
-      { label: "License (MIT)", href: "#" },
-      { label: "Feedback", href: "#" },
+      { label: "GitHub", href: "https://github.com", sticker: "/stickers/cat.svg", rot: 8 },
+      { label: "npm Package", href: "https://www.npmjs.com/package/stick-it-up", sticker: "/stickers/flower.svg", rot: -12 },
+      { label: "Showcase", href: "#", sticker: "/stickers/face.svg", rot: 10 },
+      { label: "Playground", href: "#", sticker: "/stickers/SparkleTrio.svg", rot: -6 },
     ],
   },
 ];
 
-/* Interactive sticker chip sitting on top of the letters */
-function StickerChip({
-  color,
-  shape = "square",
-  style,
-  rot = 0,
-}: {
-  color: string;
-  shape?: "circle" | "square";
-  style: React.CSSProperties;
-  rot?: number;
-}) {
+/* ------------------------------------------------------------------
+   small inline sticker in the tagline (click = spin, like the hero)
+------------------------------------------------------------------- */
+function InlineSticker({ src }: { src: string }) {
+  const [turns, setTurns] = useState(0);
   const [hover, setHover] = useState(false);
-  const [clicked, setClicked] = useState(false);
 
   return (
-    <div
-      onClick={() => {
-        setClicked(true);
-        setTimeout(() => setClicked(false), 300);
-      }}
+    <img
+      data-sticker
+      src={src}
+      alt=""
+      draggable={false}
+      onClick={() => setTurns((t) => t + 1)}
       onPointerEnter={() => setHover(true)}
       onPointerLeave={() => setHover(false)}
-      className="absolute cursor-pointer transition-transform select-none"
+      className="mx-1 inline-block h-[0.95em] w-[0.95em] cursor-pointer select-none align-[-0.1em]"
       style={{
-        ...style,
-        transform: `rotate(${rot + (hover ? 8 : 0) + (clicked ? -6 : 0)}deg) scale(${
-          clicked ? 0.9 : hover ? 1.18 : 1
-        })`,
-        transitionDuration: "250ms",
-        transitionTimingFunction: SPRING,
-        zIndex: 20,
+        rotate: `${turns * 360 + (hover ? 14 : 0)}deg`,
+        scale: hover ? 1.12 : 1,
+        transition: `rotate 650ms ${SPRING}, scale 300ms ${SPRING}`,
+      }}
+    />
+  );
+}
+
+/* ------------------------------------------------------------------
+   draggable sticker (sits on top of the wordmark)
+------------------------------------------------------------------- */
+function DraggableSticker({
+  src,
+  size,
+  left,
+  top,
+  rot = 0,
+  inView,
+  delay = 0,
+}: {
+  src: string;
+  size: number;
+  left: string;
+  top: string;
+  rot?: number;
+  inView: boolean;
+  delay?: number;
+}) {
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [hover, setHover] = useState(false);
+  const [drag, setDrag] = useState(false);
+  const start = useRef({ px: 0, py: 0, x: 0, y: 0 });
+
+  return (
+    // layer 1: placement + entrance pop
+    <div
+      className="absolute"
+      style={{
+        left,
+        top,
+        width: `clamp(36px, ${size / 10.24}vw, ${size}px)`,
+        zIndex: drag ? 30 : 20,
+        opacity: inView ? 1 : 0,
+        transform: inView ? "scale(1) rotate(0deg)" : "scale(0) rotate(-20deg)",
+        transition: `transform 650ms ${SPRING} ${delay}ms, opacity 300ms ease-out ${delay}ms`,
       }}
     >
+      {/* layer 2: drag, hover, tilt */}
       <div
-        className="w-full h-full shadow-[0_2px_4px_rgba(0,0,0,0.14)]"
-        style={{
-          background: color,
-          borderRadius: shape === "circle" ? "999px" : "28%",
-          border: "2px solid rgba(25, 25, 25, 0.85)",
-          boxShadow: hover
-            ? "0 6px 14px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.6)"
-            : "0 2px 5px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.4)",
+        data-sticker
+        onPointerDown={(e) => {
+          e.currentTarget.setPointerCapture(e.pointerId);
+          start.current = { px: e.clientX, py: e.clientY, x: pos.x, y: pos.y };
+          setDrag(true);
         }}
-      />
+        onPointerMove={(e) => {
+          if (!drag) return;
+          setPos({
+            x: start.current.x + e.clientX - start.current.px,
+            y: start.current.y + e.clientY - start.current.py,
+          });
+        }}
+        onPointerUp={() => setDrag(false)}
+        onPointerCancel={() => setDrag(false)}
+        onPointerEnter={() => setHover(true)}
+        onPointerLeave={() => setHover(false)}
+        className="touch-none select-none"
+        style={{
+          translate: `${pos.x}px ${pos.y}px`,
+          rotate: `${rot + (drag ? -5 : hover ? 8 : 0)}deg`,
+          scale: drag ? 1.14 : hover ? 1.08 : 1,
+          cursor: drag ? "grabbing" : "grab",
+          filter: drag
+            ? "drop-shadow(0 14px 12px rgba(10,40,100,0.28))"
+            : "drop-shadow(0 3px 4px rgba(10,40,100,0.18))",
+          transition: drag
+            ? "scale 200ms ease-out, filter 200ms ease-out"
+            : `scale 450ms ${SPRING}, rotate 450ms ${SPRING}, filter 250ms ease-out`,
+        }}
+      >
+        <img src={src} alt="" draggable={false} className="block h-auto w-full" />
+      </div>
     </div>
   );
 }
 
+/* ------------------------------------------------------------------
+   footer
+------------------------------------------------------------------- */
 export default function Footer() {
+  const [ref, inView] = useInView(0.08);
+
   return (
     <footer
-      className="relative z-10 mx-4 mb-8 overflow-hidden rounded-[40px] px-6 pt-12 sm:px-12 sm:pt-16 pb-0"
+      ref={ref}
+      className="relative z-10 -mx-5 overflow-hidden  px-6 pt-14 sm:px-12 sm:pt-16 "
       style={{
-        background: "linear-gradient(180deg, #52aef9 0%, #3e9cf2 100%)",
-        border: "1px solid rgba(255,255,255,0.45)",
-        boxShadow:
-          "inset 0 1.5px 0 rgba(255,255,255,0.7), inset 0 -2px 10px rgba(0,0,0,0.06), 0 20px 40px -15px rgba(30,120,230,0.3)",
+        background:
+          "linear-gradient(180deg, #ffffff 0%, #e6f2ff 26%, #8cc7fb 62%, #52aef9 100%)",
+        
       }}
     >
-      {/* Paper grain */}
+      {/* paper grain */}
       <div
-        className="pointer-events-none absolute inset-0"
-        style={{ backgroundImage: GRAIN, opacity: 0.04, mixBlendMode: "multiply" }}
+        className="pointer-events-none absolute inset-0  mask-t-from-10% to-100%"
+        style={{ backgroundImage: GRAIN, opacity: 0.05, mixBlendMode: "multiply" }}
       />
 
-      {/* Top 3 Navigation Columns */}
-      <div className="relative z-10 mx-auto max-w-4xl grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-12 text-center sm:text-left mb-16 sm:mb-20">
-        {COLUMNS.map((col) => (
-          <div key={col.title} className="flex flex-col items-center sm:items-start">
-            {/* White pill header from the image */}
-            <span
-              className="inline-block rounded-full bg-white px-6 py-2 text-xs font-bold tracking-wider text-sky-600 shadow-[0_2px_4px_rgba(0,0,0,0.08),inset_0_1px_0_#fff] uppercase"
-            >
-              {col.title}
-            </span>
+      {/* top: tagline + links */}
+      <div className="relative z-10 mx-auto grid max-w-5xl gap-12 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
+        <MotionBlur inView={inView} delay={0} className="text-center lg:text-left">
+          <p className="font-sans text-3xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-4xl">
+            Stick it on.
+            <br />
+            Ship it fun
+            <InlineSticker src="/stickers/Peace-hand.svg" />
+          </p>
+        </MotionBlur>
 
-            {/* Links underneath */}
-            <ul className="mt-4 flex flex-col space-y-2.5">
-              {col.links.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="group relative inline-block text-sm font-medium text-white/90 hover:text-white transition-colors py-0.5"
-                  >
-                    <span>{link.label}</span>
-                    {/* Hand-drawn style underline on hover */}
-                    <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-white/70 transition-all duration-200 group-hover:w-full rounded-full" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      {/* Giant "Stick It Up" Footer Artwork */}
-      <div className="relative z-10 mx-auto max-w-5xl -mb-1 w-full">
-        {/* The letters image */}
-        <div className="relative w-full aspect-[1024/213] select-none">
-          <img
-            src="/landing/stick-it-up-footer.png"
-            alt="Stick It Up"
-            draggable={false}
-            className="w-full h-full object-contain pointer-events-none select-none"
-          />
-
-          {/* Interactive live sticker badges positioned exactly on the letters matching the mockup */}
-          {/* 1. Peach circle sticker on the 'S' */}
-          <StickerChip
-            color="#ffd9a8"
-            shape="circle"
-            rot={-4}
-            style={{ left: "6.2%", top: "67%", width: "5.5%", height: "26%" }}
-          />
-
-          {/* 2. Soft pink circle sticker on the dot of the 'i' */}
-          <StickerChip
-            color="#ffc9c9"
-            shape="circle"
-            rot={6}
-            style={{ left: "23.5%", top: "27%", width: "6.8%", height: "32%" }}
-          />
-
-          {/* 3. Pastel yellow rounded-square sticker on 'I' in 'It' */}
-          <StickerChip
-            color="#ffec99"
-            shape="square"
-            rot={-2}
-            style={{ left: "48.2%", top: "37%", width: "7.2%", height: "35%" }}
-          />
-
-          {/* 4. Soft mint green rounded-square sticker on the 'U' */}
-          <StickerChip
-            color="#b1f2bc"
-            shape="square"
-            rot={-14}
-            style={{ left: "68.8%", top: "54%", width: "5.6%", height: "27%" }}
-          />
-
-          {/* 5. Soft pastel pink rounded-square sticker on the 'p' */}
-          <StickerChip
-            color="#fcc2d7"
-            shape="square"
-            rot={12}
-            style={{ left: "84.2%", top: "50%", width: "5.8%", height: "28%" }}
-          />
+        <div className="grid grid-cols-2 gap-x-8 gap-y-10 text-center sm:text-left">
+          {COLUMNS.map((col, ci) => (
+            <MotionBlur key={col.title} inView={inView} delay={140 + ci * 80}>
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-400">
+                {col.title}
+              </h3>
+              <ul className="mt-4 space-y-2.5">
+                {col.links.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="group relative inline-flex items-center py-0.5 text-sm font-medium text-zinc-500 transition-colors duration-200 hover:text-zinc-900"
+                    >
+                      <span>{link.label}</span>
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute left-full top-1/2 ml-2 -translate-y-1/2 opacity-0 scale-0 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:scale-100"
+                        style={{
+                          transitionTimingFunction: SPRING,
+                        }}
+                      >
+                        <img
+                          src={link.sticker}
+                          alt=""
+                          className="h-[24px] w-[24px] max-w-none select-none object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]"
+                          style={{
+                            transform: `rotate(${link.rot ?? 0}deg)`,
+                          }}
+                        />
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </MotionBlur>
+          ))}
         </div>
       </div>
+
+      {/* full-bleed wordmark + live stickers */}
+      <MotionBlur
+        inView={inView}
+        delay={380}
+        className="relative z-10 -mx-6 mt-14 sm:-mx-12 sm:mt-20"
+      >
+        <div className="relative select-none" style={{ containerType: "inline-size" }}>
+          <div
+            aria-hidden
+            className="overflow-hidden whitespace-nowrap text-center font-bold leading-[0.8] tracking-[-0.055em] text-white"
+            style={{
+              fontSize: "21cqw",
+              height: "14.5cqw",
+              marginBottom: "-2cqw",
+              textShadow: "0 0.02em 0 rgba(20,90,190,0.25)",
+            }}
+          >
+            Stick it up
+          </div>
+          <span className="sr-only">Stick it up</span>
+
+          <DraggableSticker inView={inView} delay={640} src="/stickers/star.svg" size={84} left="4%" top="-6%" rot={-12} />
+          <DraggableSticker inView={inView} delay={720} src="/stickers/blueberry.svg" size={92} left="28%" top="52%" rot={8} />
+          <DraggableSticker inView={inView} delay={800} src="/stickers/Flame.svg" size={65} left="46%" top="-10%" rot={-6} />
+          <DraggableSticker inView={inView} delay={880} src="/stickers/flower.svg" size={70} left="66%" top="32%" rot={14} />
+          <DraggableSticker inView={inView} delay={960} src="/stickers/cat.svg" size={86} left="84%" top="-4%" rot={-10} />
+        </div>
+      </MotionBlur>
     </footer>
   );
 }

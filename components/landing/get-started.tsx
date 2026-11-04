@@ -149,7 +149,7 @@ export default function GetStarted() {
       {/* Paper grain */}
       <div
         className="pointer-events-none absolute inset-0"
-        style={{ backgroundImage: GRAIN, opacity: 0.05, mixBlendMode: "multiply" }}
+        
       />
 
       {/* Floating draggable stickers around the CTA */}
