@@ -100,6 +100,7 @@ function DraggableSticker({
     >
       {/* layer 2: idle float */}
       <div
+        data-float
         style={{
           animation: `float ${5 + delay}s ease-in-out ${delay * 0.6}s infinite`,
           animationPlayState: drag ? "paused" : "running",
@@ -120,10 +121,8 @@ function DraggableSticker({
             rotate: `${rotate + (drag ? -5 : hover ? 8 : 0)}deg`,
             scale: drag ? 1.14 : hover ? 1.06 : 1,
             cursor: drag ? "grabbing" : "grab",
-            filter: drag
-              ? "drop-shadow(0 16px 14px rgba(0,0,0,0.18))"
-              : "drop-shadow(0 2px 3px rgba(0,0,0,0.06))",
-            transition: `scale 450ms ${SPRING}, rotate 450ms ${SPRING}, filter 250ms ease-out`,
+            filter: drag ? "drop-shadow(0 16px 14px rgba(0,0,0,0.18))" : "none",
+            transition: `scale 450ms ${SPRING}, rotate 450ms ${SPRING}`,
           }}
         >
           <img src={src} alt="" draggable={false} className="block h-auto w-full" />
@@ -163,23 +162,11 @@ function HeroSticker({ src, delay }: { src: string; delay: number }) {
   );
 }
 
-/* ---------- page ---------- */
+/* ---------- user counter with isolated rAF ---------- */
 
-export default function Home() {
-  const [copied, setCopied] = useState(false);
-  const [pops, setPops] = useState<Pop[]>([]);
+function UserCounter() {
   const [count, setCount] = useState(0);
-  const mainRef = useRef<HTMLElement>(null);
-  const popId = useRef(0);
 
-  /* copy button feedback reset */
-  useEffect(() => {
-    if (!copied) return;
-    const timeout = setTimeout(() => setCopied(false), 1500);
-    return () => clearTimeout(timeout);
-  }, [copied]);
-
-  /* count-up for the social proof */
   useEffect(() => {
     let raf = 0;
     const t0 = performance.now() + 800;
@@ -193,6 +180,57 @@ export default function Home() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
+  return (
+    <div
+      className="mt-14 flex flex-col items-center"
+      style={{ animation: "rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 1150ms both" }}
+    >
+      <img
+        data-sticker
+        src="/stickers/Component-66.svg"
+        alt=""
+        draggable={false}
+        className="h-20 w-20 cursor-pointer select-none transition-transform duration-300 hover:scale-110 hover:-rotate-3 active:scale-95"
+        style={{ transitionTimingFunction: SPRING }}
+      />
+      <p className="-mt-4 font-sans text-base text-neutral-400">
+        Used by <span className="tabular-nums">{count.toLocaleString()}</span>+ developers
+      </p>
+    </div>
+  );
+}
+
+/* ---------- page ---------- */
+
+export default function Home() {
+  const [copied, setCopied] = useState(false);
+  const [pops, setPops] = useState<Pop[]>([]);
+  const mainRef = useRef<HTMLElement>(null);
+  const stickersLayerRef = useRef<HTMLDivElement>(null);
+  const rafParallax = useRef<number | null>(null);
+  const popId = useRef(0);
+
+  /* copy button feedback reset */
+  useEffect(() => {
+    if (!copied) return;
+    const timeout = setTimeout(() => setCopied(false), 1500);
+    return () => clearTimeout(timeout);
+  }, [copied]);
+
+  /* pause idle float once the hero stickers leave the viewport */
+  useEffect(() => {
+    const el = stickersLayerRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => {
+      el.style.animationPlayState = entry.isIntersecting ? "running" : "paused";
+      el.querySelectorAll<HTMLElement>("[data-float]").forEach((node) => {
+        node.style.animationPlayState = entry.isIntersecting ? "running" : "paused";
+      });
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   async function copyCommand() {
     try {
       await navigator.clipboard.writeText("npm i stick-it-up");
@@ -202,12 +240,18 @@ export default function Home() {
     }
   }
 
-  /* cursor parallax: write CSS vars, no re-renders */
+  /* cursor parallax: writes CSS vars ONLY to the stickers layer, throttled with rAF */
   function onPointerMove(e: React.PointerEvent<HTMLElement>) {
-    const el = mainRef.current;
-    if (!el) return;
-    el.style.setProperty("--mx", String((e.clientX / window.innerWidth - 0.5) * 2));
-    el.style.setProperty("--my", String((e.clientY / window.innerHeight - 0.5) * 2));
+    if (rafParallax.current !== null) return;
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+    rafParallax.current = requestAnimationFrame(() => {
+      rafParallax.current = null;
+      const el = stickersLayerRef.current;
+      if (!el) return;
+      el.style.setProperty("--mx", String((clientX / window.innerWidth - 0.5) * 2));
+      el.style.setProperty("--my", String((clientY / window.innerHeight - 0.5) * 2));
+    });
   }
 
   /* click empty space to stick a little sticker there */
@@ -232,7 +276,6 @@ export default function Home() {
   return (
     <main
       ref={mainRef}
-      onPointerMove={onPointerMove}
       className="relative min-h-screen w-full overflow-hidden bg-white"
     >
       <style>{`
@@ -240,9 +283,13 @@ export default function Home() {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-10px); }
         }
+        @keyframes headerRise {
+          from { opacity: 0; transform: translateY(-10px); filter: blur(6px); }
+          to { opacity: 1; transform: translateY(0); filter: none; }
+        }
         @keyframes rise {
           from { opacity: 0; transform: translateY(16px); filter: blur(6px); }
-          to { opacity: 1; transform: translateY(0); filter: blur(0); }
+          to { opacity: 1; transform: translateY(0); filter: none; }
         }
         @keyframes pop {
           0% { transform: scale(0) rotate(-20deg); opacity: 0; }
@@ -260,7 +307,12 @@ export default function Home() {
       `}</style>
 
       {/* navbar */}
-      <header className="sticky top-0 z-50 w-full px-4 py-2">
+      <header
+        className="sticky top-0 z-50 w-full px-4 py-2"
+        style={{
+          animation: "headerRise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both",
+        }}
+      >
         <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between rounded-2xl">
           {/* brand */}
           <a href="/" className="group flex items-center gap-2.5">
@@ -320,7 +372,7 @@ export default function Home() {
       </header>
 
       {/* stickers layer (draggable, parallax, floating) */}
-      <div className="pointer-events-none absolute inset-0 z-20 h-200">
+      <div ref={stickersLayerRef} className="pointer-events-none absolute inset-0 z-20 h-200">
         <DraggableSticker
           src="/stickers/blueberry.svg"
           size={128}
@@ -383,7 +435,6 @@ export default function Home() {
             left: p.x - 28,
             top: p.y - 28,
             rotate: `${p.rot}deg`,
-            filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.12))",
             animation: `pop 500ms ${SPRING} both, fadeOut 400ms ease-in 2100ms forwards`,
           }}
         />
@@ -392,6 +443,7 @@ export default function Home() {
       {/* hero */}
       <section
         onClick={onClick}
+        onPointerMove={onPointerMove}
         className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 pb-24 pt-16 text-center md:pt-24"
       >
         <h1 className="font-sans text-4xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">
@@ -535,30 +587,11 @@ export default function Home() {
         </div>
 
         {/* user counter */}
-        <div
-          className="mt-14 flex flex-col items-center"
-          style={{ animation: "rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 1150ms both" }}
-        >
-          <img
-            data-sticker
-            src="/stickers/Component-66.svg"
-            alt=""
-            draggable={false}
-            className="h-20 w-20 cursor-pointer select-none transition-transform duration-300 hover:scale-110 hover:-rotate-3 active:scale-95"
-            style={{ transitionTimingFunction: SPRING }}
-          />
-          <p className="-mt-4 font-sans text-base text-neutral-400">
-            Used by <span className="tabular-nums">{count.toLocaleString()}</span>+ developers
-          </p>
-        </div>
+        <UserCounter />
 
-      
       </section>
 
-
-
-
-      <div className="w-screen">
+      <div className="w-full">
           <Folder />
       </div>
 

@@ -9,9 +9,15 @@ const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 const EASE_OUT = "cubic-bezier(0.2, 0.8, 0.2, 1)";
 
 const GRAIN =
-  "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")";
+  "radial-gradient(rgba(0,0,0,0.18) 0.6px, transparent 0.7px)";
 
-function useInView(threshold = 0.08) {
+function useInView({
+  threshold = 0.05,
+  rootMargin = "250px 0px 100px 0px",
+}: {
+  threshold?: number;
+  rootMargin?: string;
+} = {}) {
   const ref = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -29,11 +35,11 @@ function useInView(threshold = 0.08) {
           io.disconnect();
         }
       },
-      { threshold, rootMargin: "0px 0px -20px 0px" },
+      { threshold, rootMargin },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [threshold]);
+  }, [threshold, rootMargin]);
 
   return [ref, inView] as const;
 }
@@ -41,23 +47,36 @@ function useInView(threshold = 0.08) {
 function MotionBlur({
   inView,
   delay = 0,
+  blur = 8,
   children,
   className = "",
 }: {
   inView: boolean;
   delay?: number;
+  blur?: number;
   children: ReactNode;
   className?: string;
 }) {
+  const [settled, setSettled] = useState(false);
+
+  useEffect(() => {
+    if (inView) {
+      const t = setTimeout(() => setSettled(true), delay + 850);
+      return () => clearTimeout(t);
+    }
+  }, [inView, delay]);
+
   return (
     <div
       className={className}
       style={{
         opacity: inView ? 1 : 0,
         transform: inView ? "translate3d(0, 0, 0)" : "translate3d(0, 24px, 0)",
-        filter: inView ? "blur(0px)" : "blur(8px)",
-        transition: `opacity 700ms ${EASE_OUT} ${delay}ms, transform 800ms ${EASE_OUT} ${delay}ms, filter 700ms ${EASE_OUT} ${delay}ms`,
-        willChange: inView ? "auto" : "opacity, transform, filter",
+        filter: settled ? "none" : inView ? "blur(0px)" : `blur(${blur}px)`,
+        transition: settled
+          ? "none"
+          : `opacity 650ms ${EASE_OUT} ${delay}ms, transform 750ms ${EASE_OUT} ${delay}ms, filter 650ms ${EASE_OUT} ${delay}ms`,
+        willChange: settled ? "auto" : "opacity, transform",
       }}
     >
       {children}
@@ -191,12 +210,10 @@ function DraggableSticker({
           rotate: `${rot + (drag ? -5 : hover ? 8 : 0)}deg`,
           scale: drag ? 1.14 : hover ? 1.08 : 1,
           cursor: drag ? "grabbing" : "grab",
-          filter: drag
-            ? "drop-shadow(0 14px 12px rgba(10,40,100,0.28))"
-            : "drop-shadow(0 3px 4px rgba(10,40,100,0.18))",
+          filter: drag ? "drop-shadow(0 14px 12px rgba(10,40,100,0.28))" : "none",
           transition: drag
-            ? "scale 200ms ease-out, filter 200ms ease-out"
-            : `scale 450ms ${SPRING}, rotate 450ms ${SPRING}, filter 250ms ease-out`,
+            ? "scale 200ms ease-out"
+            : `scale 450ms ${SPRING}, rotate 450ms ${SPRING}`,
         }}
       >
         <img src={src} alt="" draggable={false} className="block h-auto w-full" />
@@ -209,7 +226,7 @@ function DraggableSticker({
    footer
 ------------------------------------------------------------------- */
 export default function Footer() {
-  const [ref, inView] = useInView(0.08);
+  const [ref, inView] = useInView();
 
   return (
     <footer
@@ -224,7 +241,7 @@ export default function Footer() {
       {/* paper grain */}
       <div
         className="pointer-events-none absolute inset-0  mask-t-from-10% to-100%"
-        style={{ backgroundImage: GRAIN, opacity: 0.05, mixBlendMode: "multiply" }}
+        style={{ backgroundImage: GRAIN, backgroundSize: "3px 3px", opacity: 0.06 }}
       />
 
       {/* top: tagline + links */}

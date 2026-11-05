@@ -3,11 +3,28 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 
 const EASE_OUT = "cubic-bezier(0.2, 0.8, 0.2, 1)";
 
-function useInView(threshold = 0.08) {
+function useInView({
+  threshold = 0.05,
+  rootMargin = "250px 0px 100px 0px",
+  animateOnLoad = true,
+  loadDelay = 180,
+}: {
+  threshold?: number;
+  rootMargin?: string;
+  animateOnLoad?: boolean;
+  loadDelay?: number;
+} = {}) {
   const ref = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
+    if (animateOnLoad) {
+      timer = setTimeout(() => {
+        setInView(true);
+      }, loadDelay);
+    }
+
     const el = ref.current;
     if (!el) return;
     if (typeof IntersectionObserver === "undefined") {
@@ -21,11 +38,14 @@ function useInView(threshold = 0.08) {
           io.disconnect();
         }
       },
-      { threshold, rootMargin: "0px 0px -20px 0px" },
+      { threshold, rootMargin },
     );
     io.observe(el);
-    return () => io.disconnect();
-  }, [threshold]);
+    return () => {
+      io.disconnect();
+      if (timer) clearTimeout(timer);
+    };
+  }, [threshold, rootMargin, animateOnLoad, loadDelay]);
 
   return [ref, inView] as const;
 }
@@ -33,23 +53,36 @@ function useInView(threshold = 0.08) {
 function MotionBlur({
   inView,
   delay = 0,
+  blur = 8,
   children,
   className = "",
 }: {
   inView: boolean;
   delay?: number;
+  blur?: number;
   children: ReactNode;
   className?: string;
 }) {
+  const [settled, setSettled] = useState(false);
+
+  useEffect(() => {
+    if (inView) {
+      const t = setTimeout(() => setSettled(true), delay + 850);
+      return () => clearTimeout(t);
+    }
+  }, [inView, delay]);
+
   return (
     <div
       className={className}
       style={{
         opacity: inView ? 1 : 0,
         transform: inView ? "translate3d(0, 0, 0)" : "translate3d(0, 24px, 0)",
-        filter: inView ? "blur(0px)" : "blur(8px)",
-        transition: `opacity 700ms ${EASE_OUT} ${delay}ms, transform 800ms ${EASE_OUT} ${delay}ms, filter 700ms ${EASE_OUT} ${delay}ms`,
-        willChange: inView ? "auto" : "opacity, transform, filter",
+        filter: settled ? "none" : inView ? "blur(0px)" : `blur(${blur}px)`,
+        transition: settled
+          ? "none"
+          : `opacity 650ms ${EASE_OUT} ${delay}ms, transform 750ms ${EASE_OUT} ${delay}ms, filter 650ms ${EASE_OUT} ${delay}ms`,
+        willChange: settled ? "auto" : "opacity, transform",
       }}
     >
       {children}
@@ -73,9 +106,9 @@ const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 /* all sizes inside a folder use em; 1em = 1/56 of the folder width (cqw) */
 const UNIT = "1.78cqw";
 
-/* tiny paper grain for the tactile feel */
+/* cheap paper grain — no SVG feTurbulence (that filter is re-rasterized while scrolling) */
 const GRAIN =
-  "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")";
+  "radial-gradient(rgba(0,0,0,0.18) 0.6px, transparent 0.7px)";
 
 const WEB_AVATARS = [
   { src: "/stickers/blueberry.svg", bg: "#fbd3e2" },
@@ -201,7 +234,6 @@ function WebMock({ bg, url, brand, headline, cta, logo, stickers }: WebProps) {
               right: `${s.right}em`,
               top: `${s.top}em`,
               rotate: `${s.rot}deg`,
-              filter: "drop-shadow(0 0.2em 0.3em rgba(0,0,0,0.14))",
             }}
           />
         ))}
@@ -265,7 +297,6 @@ function PhoneMock({ bg, title, hero, heroBg, chips, tiles }: PhoneProps) {
               top: "50%",
               translate: "-50% -50%",
               rotate: "-8deg",
-              filter: "drop-shadow(0 0.3em 0.4em rgba(0,0,0,0.16))",
             }}
           />
         </div>
@@ -341,8 +372,8 @@ function Folder({ title, stamp, stampRot, cards, avatars }: FolderProps) {
             className="absolute inset-x-[6%] bottom-[-1.5%] h-[5%]"
             style={{
               borderRadius: "50%",
-              background: "rgba(0,0,0,0.22)",
-              filter: "blur(1.6em)",
+              background: "rgba(0,0,0,0.18)",
+              boxShadow: "0 0 1.6em 0.4em rgba(0,0,0,0.18)",
               scale: open ? "0.94 1" : "1 1",
               transition: "scale 300ms ease-out",
             }}
@@ -419,8 +450,8 @@ function Folder({ title, stamp, stampRot, cards, avatars }: FolderProps) {
               style={{
                 borderRadius: "inherit",
                 backgroundImage: GRAIN,
-                opacity: 0.05,
-                mixBlendMode: "multiply",
+                backgroundSize: "3px 3px",
+                opacity: 0.06,
               }}
             />
 
@@ -480,7 +511,7 @@ function Folder({ title, stamp, stampRot, cards, avatars }: FolderProps) {
 /* ---------- section ---------- */
 
 export default function FolderShowcase() {
-  const [sectionRef, inView] = useInView(0.08);
+  const [sectionRef, inView] = useInView({ loadDelay: 150 });
 
   const webMocks: ReactNode[] = [
     <WebMock
@@ -602,7 +633,7 @@ export default function FolderShowcase() {
                   src="/stickers/pink-cat2.svg"
                   alt=""
                   draggable={false}
-                  className="h-[80%] w-[80%] mt-11 -ml-2 object-contain drop-shadow-[0_3px_2px_rgba(0,0,0,0.10)] "
+                  className="h-[80%] w-[80%] mt-11 -ml-2 object-contain"
                 />
               }
             />
@@ -619,7 +650,7 @@ export default function FolderShowcase() {
                   src="/stickers/japan.svg"
                   alt=""
                   draggable={false}
-                  className="h-full w-full mt-8 -ml-2 object-contain drop-shadow-[0_3px_2px_rgba(0,0,0,0.18)]"
+                  className="h-full w-full mt-8 -ml-2 object-contain"
                 />
               }
             />

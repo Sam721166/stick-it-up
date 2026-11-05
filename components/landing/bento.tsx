@@ -18,11 +18,28 @@ export const ShownCtx = createContext<boolean>(true);
 const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 const EASE_OUT = "cubic-bezier(0.2, 0.8, 0.2, 1)";
 
-function useInView(threshold = 0.08) {
+function useInView({
+  threshold = 0.05,
+  rootMargin = "250px 0px 100px 0px",
+  animateOnLoad = true,
+  loadDelay = 280,
+}: {
+  threshold?: number;
+  rootMargin?: string;
+  animateOnLoad?: boolean;
+  loadDelay?: number;
+} = {}) {
   const ref = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
+    if (animateOnLoad) {
+      timer = setTimeout(() => {
+        setInView(true);
+      }, loadDelay);
+    }
+
     const el = ref.current;
     if (!el) return;
     if (typeof IntersectionObserver === "undefined") {
@@ -36,11 +53,14 @@ function useInView(threshold = 0.08) {
           io.disconnect();
         }
       },
-      { threshold, rootMargin: "0px 0px -20px 0px" },
+      { threshold, rootMargin },
     );
     io.observe(el);
-    return () => io.disconnect();
-  }, [threshold]);
+    return () => {
+      io.disconnect();
+      if (timer) clearTimeout(timer);
+    };
+  }, [threshold, rootMargin, animateOnLoad, loadDelay]);
 
   return [ref, inView] as const;
 }
@@ -48,23 +68,36 @@ function useInView(threshold = 0.08) {
 function MotionBlur({
   inView,
   delay = 0,
+  blur = 8,
   children,
   className = "",
 }: {
   inView: boolean;
   delay?: number;
+  blur?: number;
   children: ReactNode;
   className?: string;
 }) {
+  const [settled, setSettled] = useState(false);
+
+  useEffect(() => {
+    if (inView) {
+      const t = setTimeout(() => setSettled(true), delay + 850);
+      return () => clearTimeout(t);
+    }
+  }, [inView, delay]);
+
   return (
     <div
       className={className}
       style={{
         opacity: inView ? 1 : 0,
         transform: inView ? "translate3d(0, 0, 0)" : "translate3d(0, 24px, 0)",
-        filter: inView ? "blur(0px)" : "blur(8px)",
-        transition: `opacity 700ms ${EASE_OUT} ${delay}ms, transform 800ms ${EASE_OUT} ${delay}ms, filter 700ms ${EASE_OUT} ${delay}ms`,
-        willChange: inView ? "auto" : "opacity, transform, filter",
+        filter: settled ? "none" : inView ? "blur(0px)" : `blur(${blur}px)`,
+        transition: settled
+          ? "none"
+          : `opacity 650ms ${EASE_OUT} ${delay}ms, transform 750ms ${EASE_OUT} ${delay}ms, filter 650ms ${EASE_OUT} ${delay}ms`,
+        willChange: settled ? "auto" : "opacity, transform",
       }}
     >
       {children}
@@ -73,7 +106,7 @@ function MotionBlur({
 }
 
 const GRAIN =
-  "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")";
+  "radial-gradient(rgba(0,0,0,0.18) 0.6px, transparent 0.7px)";
 
 const TONES = {
   yellow: { from: "#fff0a0", to: "#ffd93d" },
@@ -118,7 +151,7 @@ function Card({
     >
       <div
         className="pointer-events-none absolute inset-0"
-        style={{ backgroundImage: GRAIN, opacity: 0.05, mixBlendMode: "multiply" }}
+        style={{ backgroundImage: GRAIN, backgroundSize: "3px 3px", opacity: 0.06 }}
       />
       <div className="relative z-10 flex flex-1 flex-col">{children}</div>
     </div>
@@ -202,12 +235,10 @@ function Sticker({
           rotate: `${rot + (drag ? -5 : hover ? 7 : 0)}deg`,
           scale: drag ? 1.14 : hover ? 1.06 : 1,
           cursor: drag ? "grabbing" : "grab",
-          filter: drag
-            ? "drop-shadow(0 14px 12px rgba(0,0,0,0.22))"
-            : "drop-shadow(0 2px 2px rgba(0,0,0,0.14))",
+          filter: drag ? "drop-shadow(0 14px 12px rgba(0,0,0,0.22))" : "none",
           transition: drag
-            ? "scale 200ms ease-out, filter 200ms ease-out"
-            : `scale 450ms ${SPRING}, rotate 450ms ${SPRING}, filter 250ms ease-out`,
+            ? "scale 200ms ease-out"
+            : `scale 450ms ${SPRING}, rotate 450ms ${SPRING}`,
         }}
       >
         <img src={src} alt="" draggable={false} className="block h-auto w-full" />
@@ -405,7 +436,7 @@ function Phone() {
                   style={{
                     borderRadius: 18,
                     background: t.bg,
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.08)",
+                    
                   }}
                 >
                   <img
@@ -413,7 +444,6 @@ function Phone() {
                     alt=""
                     draggable={false}
                     className="absolute left-1/2 top-1/2 h-[62%] w-[62%] -translate-x-1/2 -translate-y-1/2"
-                    style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.15))" }}
                   />
                 </div>
               ))}
@@ -466,7 +496,6 @@ function Tile({ src, bg }: { src: string; bg: string }) {
         alt=""
         draggable={false}
         className="absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2"
-        style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.16))" }}
       />
     </span>
   );
@@ -583,7 +612,7 @@ function UiStack() {
           src="/stickers/star.svg"
           alt=""
           draggable={false}
-          className="h-[54px] w-[54px] drop-shadow-[0_4px_6px_rgba(0,0,0,0.14)]"
+          className="h-[54px] w-[54px]"
         />
       </div>
     </div>
@@ -595,7 +624,7 @@ function UiStack() {
    section
 ------------------------------------------------------------------- */
 export default function Bento() {
-  const [sectionRef, inView] = useInView(0.08);
+  const [sectionRef, inView] = useInView({ loadDelay: 280 });
   const [copied, setCopied] = useState(false);
 
   /* copy button feedback reset */
@@ -661,7 +690,7 @@ export default function Bento() {
                     style={{
                       transform: inView ? "translate3d(0, 0, 0)" : "translate3d(0, 96px, 0)",
                       opacity: inView ? 1 : 0,
-                      filter: inView ? "blur(0px)" : "blur(6px)",
+                      filter: inView ? "blur(0px)" : "blur(8px)",
                       transition: `transform 900ms cubic-bezier(0.16, 1, 0.3, 1) 220ms, opacity 800ms ${EASE_OUT} 220ms, filter 700ms ${EASE_OUT} 220ms`,
                     }}
                   >
@@ -690,7 +719,7 @@ export default function Bento() {
                         "inset 0 1px 0 #fff, inset 0 -6px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.12), 0 16px 28px rgba(120,0,15,0.35)",
                       transform: inView ? "translate3d(0, 0, 0)" : "translate3d(110px, 0, 0)",
                       opacity: inView ? 1 : 0,
-                      filter: inView ? "blur(0px)" : "blur(6px)",
+                      filter: inView ? "blur(0px)" : "blur(8px)",
                       transition: `transform 900ms cubic-bezier(0.16, 1, 0.3, 1) 280ms, opacity 800ms ${EASE_OUT} 280ms, filter 700ms ${EASE_OUT} 280ms`,
                     }}
                   >
