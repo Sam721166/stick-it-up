@@ -12,9 +12,10 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/og-image.png",
-        width: 1024,
-        height: 593,
+        width: 1200,
+        height: 630,
         alt: "Stick It Up — Stickers & Badges Catalog",
+        type: "image/png",
       },
     ],
   },

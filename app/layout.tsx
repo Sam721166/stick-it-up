@@ -12,7 +12,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stickitup.vercel.app";
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "https://stickitupp.vercel.app");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -58,17 +64,10 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/og-image.png",
-        width: 1024,
-        height: 593,
+        width: 1200,
+        height: 630,
         alt: "Stick It Up — Give your website the kind of personality that makes people stick around.",
         type: "image/png",
-      },
-      {
-        url: "/og-image.webp",
-        width: 1024,
-        height: 593,
-        alt: "Stick It Up — Give your website the kind of personality that makes people stick around.",
-        type: "image/webp",
       },
     ],
   },
