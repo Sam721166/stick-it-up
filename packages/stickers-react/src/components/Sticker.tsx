@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import type { StickerProps, StickerName } from "../types";
 import { FlameSticker } from "../stickers/FlameSticker";

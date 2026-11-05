@@ -483,8 +483,8 @@ export default function Home() {
               hover:-translate-y-px active:translate-y-px active:shadow-inner
               ${
                 copied
-                  ? "border-emerald-300 from-emerald-50 to-emerald-100/70 text-emerald-800"
-                  : "border-zinc-300 from-white to-zinc-50 text-zinc-800 hover:border-zinc-400 hover:shadow-[inset_0_1px_0_white,0_2px_4px_#0000000a]"
+                  ? "border-emerald-300 from-emerald-50 to-emerald-100/70 text-emerald-700"
+                  : "border-zinc-300 from-white to-zinc-50 text-zinc-700 hover:border-zinc-400 hover:shadow-[inset_0_1px_0_white,0_2px_4px_#0000000a]"
               }`}
           >
             {/* Text swap: both states share one grid cell, so the button width never shifts */}
