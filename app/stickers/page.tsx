@@ -572,7 +572,7 @@ export default function StickersCatalogPage() {
             </li>
             <li>
               <a
-                href="/#docs"
+                href="/stickers#docs"
                 className="rounded-lg px-3.5 py-2 text-sm font-medium text-zinc-600 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900"
               >
                 Docs
@@ -592,7 +592,7 @@ export default function StickersCatalogPage() {
 
           {/* CTA / copy command */}
              <a
-            href="#docs"
+            href="/stickers#docs"
             className="group inline-flex items-center gap-2 rounded-xl
               border border-zinc-800 bg-gradient-to-b from-zinc-800 to-zinc-900
               px-4 py-2 text-sm font-medium text-white

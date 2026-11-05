@@ -332,7 +332,7 @@ export default function Home() {
           <ul className="hidden items-center gap-1 md:flex">
             {[
               { label: "Stickers", href: "/stickers" },
-              { label: "Docs", href: "#docs" },
+              { label: "Docs", href: "/stickers#docs" },
               { label: "npm", href: "https://www.npmjs.com/package/stick-it-up" },
             ].map((link) => (
               <li key={link.label}>
@@ -349,7 +349,7 @@ export default function Home() {
 
           {/* cta */}
           <a
-            href="#docs"
+            href="/stickers#docs"
             className="group inline-flex items-center gap-2 rounded-xl
               border border-zinc-800 bg-gradient-to-b from-zinc-800 to-zinc-900
               px-4 py-2 text-sm font-medium text-white

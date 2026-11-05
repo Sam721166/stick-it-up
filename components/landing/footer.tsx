@@ -104,7 +104,7 @@ const COLUMNS: FooterColumn[] = [
     title: "Product",
     links: [
       { label: "Sticker Pack", href: "/stickers", sticker: "/stickers/star.svg", rot: 12 },
-      { label: "Documentation", href: "#docs", sticker: "/stickers/Sparkles.svg", rot: -8 },
+      { label: "Documentation", href: "/stickers#docs", sticker: "/stickers/Sparkles.svg", rot: -8 },
       { label: "Components", href: "#", sticker: "/stickers/blueberry.svg", rot: 6 },
       { label: "Changelog", href: "#", sticker: "/stickers/Flame.svg", rot: -10 },
     ],
