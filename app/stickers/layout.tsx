@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Browse All 31+ Stickers & Badges",
+  title: "Browse All Stickers & Badges",
   description:
-    "Explore 31+ interactive React stickers and badges with 3D vinyl hover peel. Filter by categories, customize size, copy ready-to-use code, or download SVGs.",
+    "Explore interactive React stickers and badges with 3D vinyl hover peel. Filter by categories, customize size, copy ready-to-use code, or download SVGs.",
   openGraph: {
-    title: "Browse All 31+ Stickers & Badges | Stick It Up",
+    title: "Browse All Stickers & Badges | Stick It Up",
     description:
-      "Explore 31+ interactive React stickers and badges with 3D vinyl hover peel. Filter by categories, customize size, copy code, or download SVGs.",
+      "Explore interactive React stickers and badges with 3D vinyl hover peel. Filter by categories, customize size, copy code, or download SVGs.",
     url: "/stickers",
     images: [
       {
@@ -21,9 +21,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Browse All 31+ Stickers & Badges | Stick It Up",
+    title: "Browse All Stickers & Badges | Stick It Up",
     description:
-      "Explore 31+ interactive React stickers and badges with 3D vinyl hover peel.",
+      "Explore interactive React stickers and badges with 3D vinyl hover peel.",
     images: ["/og-image.png"],
   },
   alternates: {
