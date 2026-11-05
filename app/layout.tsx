@@ -12,18 +12,126 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stickitup.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Stick It Up — Stickers for your UI",
-  description: "Tiny stickers, big personality. A sticker library for React.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Stick It Up — Stickers for your UI",
+    template: "%s | Stick It Up",
+  },
+  description:
+    "Give your website the kind of personality that makes people stick around. A sticker library for React with 3D vinyl hover peel, chrome emblems, and playful vector decals.",
+  applicationName: "Stick It Up",
+  keywords: [
+    "stickers",
+    "react stickers",
+    "stick-it-up",
+    "vinyl peel sticker",
+    "holographic sticker",
+    "chrome stickers",
+    "interactive stickers",
+    "react component stickers",
+    "svg decals",
+    "ui stickers",
+    "web animations",
+  ],
+  authors: [{ name: "Samiran De", url: "https://github.com/Sam721166" }],
+  creator: "Samiran De",
+  publisher: "Stick It Up",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Stick It Up — Stickers for your UI",
+    description:
+      "Give your website the kind of personality that makes people stick around. A sticker library for React with 3D vinyl peel effects.",
+    url: siteUrl,
+    siteName: "Stick It Up",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1024,
+        height: 593,
+        alt: "Stick It Up — Give your website the kind of personality that makes people stick around.",
+        type: "image/png",
+      },
+      {
+        url: "/og-image.webp",
+        width: 1024,
+        height: 593,
+        alt: "Stick It Up — Give your website the kind of personality that makes people stick around.",
+        type: "image/webp",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Stick It Up — Stickers for your UI",
+    description:
+      "Give your website the kind of personality that makes people stick around. A sticker library for React.",
+    images: ["/og-image.png"],
+    creator: "@samirande",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: [
       { url: "/stickers/logo.svg", type: "image/svg+xml" },
       { url: "/favicon.ico", sizes: "any" },
     ],
-    apple: [
-      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: "Stick It Up",
+      description: "Delightful React vinyl and holographic stickers for your UI.",
+      publisher: {
+        "@type": "Person",
+        name: "Samiran De",
+        url: "https://github.com/Sam721166",
+      },
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${siteUrl}/#software`,
+      name: "stick-it-up",
+      applicationCategory: "DeveloperApplication",
+      operatingSystem: "Any",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+      },
+      description:
+        "Premium vector, holographic & chrome aesthetic sticker components for React with 3D vinyl peel.",
+      url: siteUrl,
+      downloadUrl: "https://www.npmjs.com/package/stick-it-up",
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -40,6 +148,10 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Geist+Pixel&family=Instrument+Serif&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Patrick+Hand&family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap"
           rel="stylesheet"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body className="min-h-full flex flex-col font-sans">{children}</body>
