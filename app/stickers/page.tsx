@@ -184,7 +184,18 @@ const CATALOG: CatalogItem[] = [
     svgSrc: "/stickers/cat.svg",
     description: "Curious cat head with expressive round pupils and perked ears.",
     tags: ["cat", "pet", "animal", "black", "character"],
-    defaultRotation: -7,
+    defaultRotation: 0,
+  },
+  {
+    id: "svg-catsticker",
+    name: "cat",
+    title: "serious Cat",
+    category: "characters",
+    format: "svg",
+    svgSrc: "/stickers/catsticker.svg",
+    description: "Curious catsticker head with expressive round pupils and perked ears.",
+    tags: ["cat", "pet", "animal", "black", "character"],
+    defaultRotation: 0,
   },
   {
     id: "svg-red-cat",
@@ -231,12 +242,23 @@ const CATALOG: CatalogItem[] = [
     defaultRotation: -8,
   },
   {
+    id: "svg-black-cat",
+    name: "black-cat",
+    title: "black Cat",
+    category: "characters",
+    format: "svg",
+    svgSrc: "/stickers/black-cat.svg",
+    description: "Sunlit black doodle cat with playful tilted ears.",
+    tags: ["cat", "black", "doodle", "sunny", "kitten"],
+    defaultRotation: -8,
+  },
+  {
     id: "svg-dog",
     name: "dog",
     title: "Playful Dog",
     category: "characters",
     format: "svg",
-    svgSrc: "/stickers/dog.svg",
+    svgSrc: "/stickers/dogsticker.svg",
     description: "Energetic pup with perked ears and friendly doodle smile.",
     tags: ["dog", "pup", "pet", "animal", "friendly"],
     defaultRotation: 8,
@@ -251,6 +273,17 @@ const CATALOG: CatalogItem[] = [
     description: "Punchy dual-tone fire sticker for streaks, heat, and highlights.",
     tags: ["flame", "fire", "streak", "orange", "energy"],
     defaultRotation: -5,
+  },
+  {
+    id: "svg-peace-hand",
+    name: "peace-hand",
+    title: "Peace Hand",
+    category: "symbols",
+    format: "svg",
+    svgSrc: "/stickers/Peace-hand.svg",
+    description: "Pastel neon peace sign hand with a bold graphic contour line.",
+    tags: ["peace", "hand", "v-sign", "victory", "neon"],
+    defaultRotation: 14,
   },
   {
     id: "svg-sparkles",
@@ -273,17 +306,6 @@ const CATALOG: CatalogItem[] = [
     description: "Cascading trio of magic twinkle stars for rewards and alerts.",
     tags: ["sparkles", "trio", "three", "stars", "magic"],
     defaultRotation: -6,
-  },
-  {
-    id: "svg-peace-hand",
-    name: "peace-hand",
-    title: "Peace Hand",
-    category: "symbols",
-    format: "svg",
-    svgSrc: "/stickers/Peace-hand.svg",
-    description: "Pastel neon peace sign hand with a bold graphic contour line.",
-    tags: ["peace", "hand", "v-sign", "victory", "neon"],
-    defaultRotation: 14,
   },
   {
     id: "svg-cosmic-eye",
@@ -467,7 +489,7 @@ export default function StickersCatalogPage() {
   async function copyGuideCode() {
     const code =
       guideTab === "react"
-        ? `import { Sticker } from "stick-it-up";\n\nexport default function Example() {\n  return (\n    <Sticker \n      name="${guideSticker}" \n      size={${guideSize}}${
+        ? `import { Sticker } from "stick-it-up";\n\nexport default function Hero() {\n  return (\n    <Sticker \n      name="${guideSticker}" \n      size={${guideSize}}${
             guidePeel ? " \n      peel" : ""
           } \n    />\n  );\n}`
         : `<img src="/stickers/star.svg" alt="Star sticker" width={${guideSize}} height={${guideSize}} />`;
@@ -870,116 +892,116 @@ export default function StickersCatalogPage() {
     guideTab, guidePm, guideSticker, guidePeel, guideSize, guideCopied,
     pmCommands, copyGuideInstall, copyGuideCode
 ------------------------------------------------------------------- */}
-<section
-  id="docs"
-  className="scroll-mt-24 border-t border-zinc-200 bg-white px-6 py-20"
->
-  <div className="mx-auto max-w-3xl">
-    {/* Header */}
-    <header>
-      <h2 className="font-sans text-2xl font-semibold tracking-tight text-zinc-900">
-        Usage
-      </h2>
-      <p className="mt-1.5 text-sm text-zinc-500">
-        Add stickers to a React or Next.js app.
-      </p>
-    </header>
-
-    {/* Tabs */}
-    <div role="tablist" className="mt-8 flex gap-6 border-b border-zinc-200 text-sm">
-      {(
-        [
-          { id: "react", label: "React" },
-          { id: "svg", label: "SVG" },
-        ] as const
-      ).map((t) => (
-        <button
-          key={t.id}
-          type="button"
-          role="tab"
-          aria-selected={guideTab === t.id}
-          onClick={() => setGuideTab(t.id)}
-          className={`-mb-px cursor-pointer border-b-2 pb-2.5 font-medium transition-colors ${
-            guideTab === t.id
-              ? "border-zinc-900 text-zinc-900"
-              : "border-transparent text-zinc-400 hover:text-zinc-700"
-          }`}
+        <section
+        id="docs"
+        className="scroll-mt-24 border-t border-zinc-200 bg-white px-6 py-20"
         >
-          {t.label}
-        </button>
-      ))}
-    </div>
+        <div className="mx-auto max-w-3xl">
+            {/* Header */}
+            <header>
+            <h2 className="font-sans text-2xl font-semibold tracking-tight text-zinc-900">
+                Usage
+            </h2>
+            <p className="mt-1.5 text-sm text-zinc-500">
+                Add stickers to a React or Next.js app.
+            </p>
+            </header>
 
-    {guideTab === "react" ? (
-      <div className="mt-10 space-y-12">
-        {/* 1. Install */}
-        <div>
-          <h3 className="text-sm font-medium text-zinc-900">
-            <span className="mr-2 font-mono text-zinc-400">01</span>Install
-          </h3>
-
-          <div className="mt-4 overflow-hidden rounded-xl border border-zinc-200">
-            <div className="flex gap-4 border-b border-zinc-200 bg-zinc-50 px-4 py-2 font-mono text-[11px]">
-              {(["npm", "pnpm", "bun", "yarn"] as const).map((pm) => (
+            {/* Tabs */}
+            <div role="tablist" className="mt-8 flex gap-6 border-b border-zinc-200 text-sm">
+            {(
+                [
+                { id: "react", label: "React" },
+                { id: "svg", label: "SVG" },
+                ] as const
+            ).map((t) => (
                 <button
-                  key={pm}
-                  type="button"
-                  onClick={() => setGuidePm(pm)}
-                  className={`cursor-pointer transition-colors ${
-                    guidePm === pm
-                      ? "font-semibold text-zinc-900"
-                      : "text-zinc-400 hover:text-zinc-700"
-                  }`}
-                >
-                  {pm}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center justify-between bg-white px-4 py-3 font-mono text-xs text-zinc-800">
-              <span>
-                <span className="mr-2 select-none text-zinc-400">$</span>
-                {pmCommands[guidePm]}
-              </span>
-              <button
+                key={t.id}
                 type="button"
-                onClick={copyGuideInstall}
-                className={`cursor-pointer font-sans text-[11px] font-medium transition-colors  px-2 py-1 ${
-                  guideCopied === "install"
-                    ? "text-emerald-500"
-                    : "text-zinc-400 hover:text-zinc-600"
+                role="tab"
+                aria-selected={guideTab === t.id}
+                onClick={() => setGuideTab(t.id)}
+                className={`-mb-px cursor-pointer border-b-2 pb-2.5 font-medium transition-colors ${
+                    guideTab === t.id
+                    ? "border-zinc-900 text-zinc-900"
+                    : "border-transparent text-zinc-400 hover:text-zinc-700"
                 }`}
-              >
-                {guideCopied === "install" ? "Copied" : "Copy"}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* 2. Use */}
-        <div>
-          <h3 className="text-sm font-medium text-zinc-900">
-            <span className="mr-2 font-mono text-zinc-400">02</span>Use
-          </h3>
-
-          <div className="mt-4 grid gap-4 md:grid-cols-5">
-            {/* Code */}
-            <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white md:col-span-3">
-              <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-50 px-4 py-2">
-                <span className="font-mono text-[11px] text-zinc-500">Hero.tsx</span>
-                <button
-                  type="button"
-                  onClick={copyGuideCode}
-                  className={`cursor-pointer text-[11px] font-medium transition-colors ${
-                    guideCopied === "code"
-                      ? "text-emerald-400"
-                      : "text-zinc-400 hover:text-zinc-600"
-                  }`}
                 >
-                  {guideCopied === "code" ? "Copied" : "Copy"}
+                {t.label}
                 </button>
-              </div>
-              <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-zinc-950">
-                <code>{`import { Sticker } from "stick-it-up";
+            ))}
+            </div>
+
+            {guideTab === "react" ? (
+            <div className="mt-10 space-y-12">
+                {/* 1. Install */}
+                <div>
+                <h3 className="text-sm font-medium text-zinc-900">
+                    <span className="mr-2 font-mono text-zinc-400">01</span>Install
+                </h3>
+
+                <div className="mt-4 overflow-hidden rounded-xl border border-zinc-200">
+                    <div className="flex gap-4 border-b border-zinc-200 bg-zinc-50 px-4 py-2 font-mono text-[11px]">
+                    {(["npm", "pnpm", "bun", "yarn"] as const).map((pm) => (
+                        <button
+                        key={pm}
+                        type="button"
+                        onClick={() => setGuidePm(pm)}
+                        className={`cursor-pointer transition-colors ${
+                            guidePm === pm
+                            ? "font-semibold text-zinc-900"
+                            : "text-zinc-400 hover:text-zinc-700"
+                        }`}
+                        >
+                        {pm}
+                        </button>
+                    ))}
+                    </div>
+                    <div className="flex items-center justify-between bg-white px-4 py-3 font-mono text-xs text-zinc-800">
+                    <span>
+                        <span className="mr-2 select-none text-zinc-400">$</span>
+                        {pmCommands[guidePm]}
+                    </span>
+                    <button
+                        type="button"
+                        onClick={copyGuideInstall}
+                        className={`cursor-pointer font-sans text-[11px] font-medium transition-colors  px-2 py-1 ${
+                        guideCopied === "install"
+                            ? "text-emerald-500"
+                            : "text-zinc-400 hover:text-zinc-600"
+                        }`}
+                    >
+                        {guideCopied === "install" ? "Copied" : "Copy"}
+                    </button>
+                    </div>
+                </div>
+                </div>
+
+                {/* 2. Use */}
+                <div>
+                <h3 className="text-sm font-medium text-zinc-900">
+                    <span className="mr-2 font-mono text-zinc-400">02</span>Use
+                </h3>
+
+                <div className="mt-4 grid gap-4 md:grid-cols-5">
+                    {/* Code */}
+                    <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white md:col-span-3">
+                    <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-50 px-4 py-2">
+                        <span className="font-mono text-[11px] text-zinc-500">Hero.tsx</span>
+                        <button
+                        type="button"
+                        onClick={copyGuideCode}
+                        className={`cursor-pointer text-[11px] font-medium transition-colors ${
+                            guideCopied === "code"
+                            ? "text-emerald-600 font-semibold"
+                            : "text-zinc-400 hover:text-zinc-600"
+                        }`}
+                        >
+                        {guideCopied === "code" ? "Copied" : "Copy"}
+                        </button>
+                    </div>
+                    <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-zinc-950">
+                        <code>{`import { Sticker } from "stick-it-up";
 
 export default function Hero() {
   return (
@@ -989,281 +1011,406 @@ export default function Hero() {
     />
   );
 }`}</code>
-              </pre>
-            </div>
+                    </pre>
+                    </div>
 
-            {/* Preview + controls */}
-            <div className="flex flex-col overflow-hidden rounded-xl border border-zinc-200 md:col-span-2">
-              <div className="flex min-h-[160px] flex-1 items-center justify-center bg-zinc-50 p-6">
-                <Sticker name={guideSticker} size={guideSize} peel={guidePeel} />
-              </div>
+                    {/* Preview + controls */}
+                    <div className="flex flex-col overflow-hidden rounded-xl border border-zinc-200 md:col-span-2">
+                    <div className="flex min-h-[160px] flex-1 items-center justify-center bg-zinc-50 p-6">
+                        <Sticker name={guideSticker} size={guideSize} peel={guidePeel} />
+                    </div>
 
-              <dl className="divide-y divide-zinc-200 border-t border-zinc-200 bg-white text-[11px]">
-                <div className="flex items-center justify-between gap-2 px-3 py-2">
-                  <dt className="text-zinc-500">Sticker</dt>
-                  <dd className="flex flex-wrap justify-end gap-1">
-                    {(
-                      [
-                        { id: "flame", label: "flame" },
-                        { id: "star-burst", label: "star" },
-                        { id: "metal", label: "metal" },
-                        { id: "devil-cone", label: "devil" },
-                      ] as const
-                    ).map((s) => (
-                      <button
-                        key={s.id}
-                        type="button"
-                        onClick={() => setGuideSticker(s.id)}
-                        className={`cursor-pointer rounded-md px-1.5 py-0.5 transition-colors ${
-                          guideSticker === s.id
-                            ? "bg-zinc-900 text-white"
-                            : "text-zinc-500 hover:text-zinc-900"
-                        }`}
-                      >
-                        {s.label}
-                      </button>
-                    ))}
-                  </dd>
+                    <dl className="divide-y divide-zinc-200 border-t border-zinc-200 bg-white text-[11px]">
+                        <div className="flex items-center justify-between gap-2 px-3 py-2">
+                        <dt className="text-zinc-500">Sticker</dt>
+                        <dd className="flex flex-wrap justify-end gap-1">
+                            {(
+                            [
+                                { id: "flame", label: "flame" },
+                                { id: "star-burst", label: "star" },
+                                { id: "metal", label: "metal" },
+                                { id: "devil-cone", label: "devil" },
+                            ] as const
+                            ).map((s) => (
+                            <button
+                                key={s.id}
+                                type="button"
+                                onClick={() => setGuideSticker(s.id)}
+                                className={`cursor-pointer rounded-md px-1.5 py-0.5 transition-colors ${
+                                guideSticker === s.id
+                                    ? "bg-zinc-900 text-white"
+                                    : "text-zinc-500 hover:text-zinc-900"
+                                }`}
+                            >
+                                {s.label}
+                            </button>
+                            ))}
+                        </dd>
+                        </div>
+
+                        <div className="flex items-center justify-between px-3 py-2">
+                        <dt className="text-zinc-500">Size</dt>
+                        <dd className="flex gap-1 font-mono">
+                            {[64, 96, 120].map((sz) => (
+                            <button
+                                key={sz}
+                                type="button"
+                                onClick={() => setGuideSize(sz)}
+                                className={`cursor-pointer rounded-md px-1.5 py-0.5 transition-colors ${
+                                guideSize === sz
+                                    ? "bg-zinc-900 text-white"
+                                    : "text-zinc-500 hover:text-zinc-900"
+                                }`}
+                            >
+                                {sz}
+                            </button>
+                            ))}
+                        </dd>
+                        </div>
+
+                        <div className="flex items-center justify-between px-3 py-2">
+                        <dt className="text-zinc-500">Peel on hover</dt>
+                        <dd>
+                            <button
+                            type="button"
+                            role="switch"
+                            aria-checked={guidePeel}
+                            aria-label="Peel on hover"
+                            onClick={() => setGuidePeel(!guidePeel)}
+                            className={`relative inline-flex h-4 w-7 cursor-pointer items-center rounded-full transition-colors ${
+                                guidePeel ? "bg-zinc-900" : "bg-zinc-300"
+                            }`}
+                            >
+                            <span
+                                className={`inline-block h-3 w-3 rounded-full bg-white transition-transform ${
+                                guidePeel ? "translate-x-3.5" : "translate-x-0.5"
+                                }`}
+                            />
+                            </button>
+                        </dd>
+                        </div>
+                    </dl>
+                    </div>
+                </div>
                 </div>
 
-                <div className="flex items-center justify-between px-3 py-2">
-                  <dt className="text-zinc-500">Size</dt>
-                  <dd className="flex gap-1 font-mono">
-                    {[64, 96, 120].map((sz) => (
-                      <button
-                        key={sz}
-                        type="button"
-                        onClick={() => setGuideSize(sz)}
-                        className={`cursor-pointer rounded-md px-1.5 py-0.5 transition-colors ${
-                          guideSize === sz
-                            ? "bg-zinc-900 text-white"
-                            : "text-zinc-500 hover:text-zinc-900"
-                        }`}
-                      >
-                        {sz}
-                      </button>
-                    ))}
-                  </dd>
-                </div>
+                {/* 3. Props */}
+                <div>
+                <h3 className="text-sm font-medium text-zinc-900">
+                    <span className="mr-2 font-mono text-zinc-400">03</span>Props
+                </h3>
 
-                <div className="flex items-center justify-between px-3 py-2">
-                  <dt className="text-zinc-500">Peel on hover</dt>
-                  <dd>
-                    <button
-                      type="button"
-                      role="switch"
-                      aria-checked={guidePeel}
-                      aria-label="Peel on hover"
-                      onClick={() => setGuidePeel(!guidePeel)}
-                      className={`relative inline-flex h-4 w-7 cursor-pointer items-center rounded-full transition-colors ${
-                        guidePeel ? "bg-zinc-900" : "bg-zinc-300"
-                      }`}
+                <dl className="mt-4 divide-y divide-zinc-200 border-y border-zinc-200">
+                    {[
+                    { name: "name", type: "string", desc: 'Sticker ID, e.g. "star-burst". Required.' },
+                    { name: "size", type: "number | string", desc: "Width and height in pixels. Default 96." },
+                    { name: "peel", type: "boolean", desc: "3D tilt and shadow on hover." },
+                    { name: "className", type: "string", desc: "Extra classes for rotation, margin, etc." },
+                    ].map((p) => (
+                    <div
+                        key={p.name}
+                        className="grid items-baseline gap-x-4 gap-y-1 py-3 text-xs sm:grid-cols-[7rem_9rem_1fr]"
                     >
-                      <span
-                        className={`inline-block h-3 w-3 rounded-full bg-white transition-transform ${
-                          guidePeel ? "translate-x-3.5" : "translate-x-0.5"
-                        }`}
-                      />
-                    </button>
-                  </dd>
+                        <dt className="font-mono font-semibold text-zinc-900">{p.name}</dt>
+                        <dd className="font-mono text-zinc-400">{p.type}</dd>
+                        <dd className="text-zinc-600">{p.desc}</dd>
+                    </div>
+                    ))}
+                </dl>
                 </div>
-              </dl>
             </div>
-          </div>
-        </div>
+            ) : (
+            <div className="mt-10 space-y-4">
+                <p className="text-sm text-zinc-500">
+                Static vector files live in{" "}
+                <code className="font-mono text-xs text-zinc-800">/public/stickers/</code>. No
+                dependencies needed.
+                </p>
 
-        {/* 3. Props */}
-        <div>
-          <h3 className="text-sm font-medium text-zinc-900">
-            <span className="mr-2 font-mono text-zinc-400">03</span>Props
-          </h3>
-
-          <dl className="mt-4 divide-y divide-zinc-200 border-y border-zinc-200">
-            {[
-              { name: "name", type: "string", desc: 'Sticker ID, e.g. "star-burst". Required.' },
-              { name: "size", type: "number | string", desc: "Width and height in pixels. Default 96." },
-              { name: "peel", type: "boolean", desc: "3D tilt and shadow on hover." },
-              { name: "className", type: "string", desc: "Extra classes for rotation, margin, etc." },
-            ].map((p) => (
-              <div
-                key={p.name}
-                className="grid items-baseline gap-x-4 gap-y-1 py-3 text-xs sm:grid-cols-[7rem_9rem_1fr]"
-              >
-                <dt className="font-mono font-semibold text-zinc-900">{p.name}</dt>
-                <dd className="font-mono text-zinc-400">{p.type}</dd>
-                <dd className="text-zinc-600">{p.desc}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </div>
-    ) : (
-      <div className="mt-10 space-y-4">
-        <p className="text-sm text-zinc-500">
-          Static vector files live in{" "}
-          <code className="font-mono text-xs text-zinc-800">/public/stickers/</code>. No
-          dependencies needed.
-        </p>
-
-        <div className="overflow-hidden rounded-xl border border-zinc-200 bg-zinc-950">
-          <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-2">
-            <span className="font-mono text-[11px] text-zinc-500">index.html</span>
-            <button
-              type="button"
-              onClick={copyGuideCode}
-              className={`cursor-pointer text-[11px] font-medium transition-colors ${
-                guideCopied === "code"
-                  ? "text-emerald-400"
-                  : "text-zinc-400 hover:text-white"
-              }`}
-            >
-              {guideCopied === "code" ? "Copied" : "Copy"}
-            </button>
-          </div>
-          <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-zinc-300">
-            <code>{`<img
-  src="/stickers/star.svg"
-  alt="Star sticker"
+                <div className="overflow-hidden rounded-xl border border-zinc-800 bg-[#0c0d0e]">
+                <div className="flex items-center justify-between border-b border-zinc-800/80 bg-[#141517] px-4 py-2">
+                    <div className="flex items-center gap-2">
+                    <div className="flex gap-1.5">
+                        <span className="h-2 w-2 rounded-full bg-red-500/80" />
+                        <span className="h-2 w-2 rounded-full bg-amber-500/80" />
+                        <span className="h-2 w-2 rounded-full bg-emerald-500/80" />
+                    </div>
+                    <span className="ml-1.5 font-mono text-[11px] text-zinc-400">index.html</span>
+                    </div>
+                    <button
+                    type="button"
+                    onClick={copyGuideCode}
+                    className={`cursor-pointer text-[11px] font-medium transition-colors ${
+                        guideCopied === "code"
+                        ? "text-emerald-400 font-semibold"
+                        : "text-zinc-400 hover:text-white"
+                    }`}
+                    >
+                    {guideCopied === "code" ? "Copied ✓" : "Copy"}
+                    </button>
+                </div>
+                <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-zinc-300">
+                    <code>{`<img
+  src="/stickers/Flame.svg"
+  alt="Flame sticker"
   width={${guideSize}}
   height={${guideSize}}
 />`}</code>
-          </pre>
+                </pre>
+                </div>
+            </div>
+            )}
         </div>
-      </div>
-    )}
-  </div>
-</section>
+        </section>
 
       {/* ------------------------------------------------------------------
           INSPECTOR / PREVIEW MODAL
       ------------------------------------------------------------------- */}
-      {activeItem && (
+        {/* ------------------------------------------------------------------
+    INSPECTOR MODAL (drop-in replacement)
+    Uses existing page state: activeItem, setActiveItem, inspectorBg,
+    setInspectorBg, inspectorSize, setInspectorSize, inspectorPeel,
+    setInspectorPeel, copiedId, setCopiedId, StickerVisual
+------------------------------------------------------------------- */}
+{activeItem &&
+  (() => {
+    const isComponent = activeItem.format === "component";
+
+    // The snippet shown below is exactly what gets copied.
+    const code = isComponent
+      ? `import { Sticker } from "stick-it-up";\n\n<Sticker\n  name="${activeItem.componentName}"\n  size={${inspectorSize}}${
+          inspectorPeel ? "\n  peel" : ""
+        }\n/>`
+      : `<img\n  src="${activeItem.svgSrc}"\n  alt="${activeItem.title}"\n  width={${inspectorSize}}\n  height={${inspectorSize}}${
+          inspectorPeel ? "\n  peel" : ""
+        }\n/>`;
+
+    const copied = copiedId === activeItem.id;
+
+    async function copySnippet() {
+      try {
+        await navigator.clipboard.writeText(code);
+        setCopiedId(activeItem!.id);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function downloadSvg() {
+      if (activeItem?.svgSrc) {
+        const a = document.createElement("a");
+        a.href = activeItem.svgSrc;
+        a.download = `${activeItem.name}.svg`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return;
+      }
+      const stage = document.getElementById("inspector-sticker-stage");
+      const svgEl = stage?.querySelector("svg");
+      if (svgEl) {
+        const svgClone = svgEl.cloneNode(true) as SVGSVGElement;
+        svgClone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        const svgData = new XMLSerializer().serializeToString(svgClone);
+        const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${activeItem?.name || "sticker"}.svg`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    const backgrounds = [
+      { id: "white", label: "White", swatch: "bg-white border-zinc-300", stage: "bg-white" },
+      { id: "zinc", label: "Dark", swatch: "bg-zinc-900 border-zinc-700", stage: "bg-zinc-950" },
+      { id: "warm", label: "Warm", swatch: "bg-amber-100 border-amber-300", stage: "bg-[#fff7ed]" },
+      { id: "blue", label: "Cool", swatch: "bg-blue-100 border-blue-300", stage: "bg-[#eff6ff]" },
+    ] as const;
+
+    const stage = backgrounds.find((b) => b.id === inspectorBg) ?? backgrounds[0];
+    const dark = inspectorBg === "zinc";
+
+    return (
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${activeItem.title} sticker`}
+        onClick={() => setActiveItem(null)}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+      >
         <div
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setActiveItem(null)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm transition-opacity"
+          onClick={(e) => e.stopPropagation()}
+          className="relative flex max-h-[92vh] w-full max-w-md flex-col overflow-y-auto rounded-3xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.08),0_24px_60px_rgba(0,0,0,0.18)] animate-in fade-in zoom-in-95 duration-200"
         >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative flex w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-2xl animate-in fade-in zoom-in-95 duration-200"
-          >
-            {/* Close button */}
+          {/* Header */}
+          <div className="flex items-start justify-between gap-4 px-6 pt-6">
+            <div>
+              <h3 className="font-sans text-xl font-semibold tracking-tight text-zinc-900">
+                {activeItem.title}
+              </h3>
+            </div>
             <button
+              type="button"
               onClick={() => setActiveItem(null)}
-              className="absolute right-5 top-5 cursor-pointer rounded-full p-2 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
+              aria-label="Close"
+              className="-mr-2 -mt-1 shrink-0 cursor-pointer rounded-full p-2 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
                 <path d="M18 6 6 18M6 6l12 12" />
               </svg>
             </button>
+          </div>
 
-            {/* Modal Header */}
-            <div className="pr-8">
-              <h3 className="font-sans text-xl font-semibold tracking-tight text-zinc-900">
-                {activeItem.title}
-              </h3>
-            </div>
-
-            {/* Preview stage */}
+          {/* Preview */}
+          <div className="px-6 pt-5">
             <div
-              className={`mt-6 flex h-48 items-center justify-center rounded-2xl border transition-colors ${
-                inspectorBg === "white"
-                  ? "bg-white border-zinc-200"
-                  : inspectorBg === "zinc"
-                  ? "bg-zinc-950 border-zinc-800"
-                  : inspectorBg === "warm"
-                  ? "bg-[#fff7ed] border-amber-200"
-                  : "bg-[#eff6ff] border-blue-200"
-              }`}
+              className={`relative flex h-48 items-center justify-center overflow-hidden rounded-2xl border border-zinc-200 transition-colors duration-300 ${stage.stage}`}
             >
-              <StickerVisual
-                item={activeItem}
-                size={inspectorSize}
-                peel={activeItem.format === "component" ? inspectorPeel : false}
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  backgroundImage: `radial-gradient(${
+                    dark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.07)"
+                  } 1px, transparent 1px)`,
+                  backgroundSize: "14px 14px",
+                }}
               />
+              <div id="inspector-sticker-stage" className="relative">
+                <StickerVisual
+                  item={activeItem}
+                  size={inspectorSize}
+                  peel={isComponent ? inspectorPeel : false}
+                  className={
+                    !isComponent && inspectorPeel
+                      ? "transition-all duration-300 hover:scale-105 hover:-rotate-2 hover:drop-shadow-[0_20px_25px_rgba(0,0,0,0.25)] cursor-pointer"
+                      : ""
+                  }
+                />
+              </div>
+              {inspectorPeel && (
+                <span
+                  className={`absolute bottom-2.5 text-[11px] ${
+                    dark ? "text-zinc-500" : "text-zinc-400"
+                  }`}
+                >
+                  Hover the sticker to peel it
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Controls */}
+          <div className="space-y-3.5 px-6 pt-5 text-xs">
+            <div className="flex items-center gap-4">
+              <span className="w-20 shrink-0 font-medium text-zinc-500">Size</span>
+              <input
+                type="range"
+                min="48"
+                max="180"
+                value={inspectorSize}
+                onChange={(e) => setInspectorSize(Number(e.target.value))}
+                aria-label="Sticker size"
+                className="h-1 flex-1 cursor-pointer accent-zinc-900"
+              />
+              <span className="w-11 text-right font-mono text-[11px] text-zinc-500">
+                {inspectorSize}px
+              </span>
             </div>
 
-            {/* Customizer controls */}
-            <div className="mt-5 space-y-4 rounded-xl bg-zinc-50 p-3.5 border border-zinc-200/60 text-xs">
-              {/* Background selector */}
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-zinc-600">Background:</span>
-                <div className="flex items-center gap-1.5">
-                  {[
-                    { id: "white", bg: "bg-white", border: "border-zinc-300" },
-                    { id: "zinc", bg: "bg-zinc-900", border: "border-zinc-700" },
-                    { id: "warm", bg: "bg-amber-100", border: "border-amber-300" },
-                    { id: "blue", bg: "bg-blue-100", border: "border-blue-300" },
-                  ].map((b) => (
+            {/* Background + Peel effect (same flex row, justify-between) */}
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span className="font-medium text-zinc-500">Background</span>
+                <div className="flex items-center gap-2">
+                  {backgrounds.map((b) => (
                     <button
                       key={b.id}
-                      onClick={() => setInspectorBg(b.id as any)}
-                      className={`h-5 w-5 rounded-full border ${b.bg} ${b.border} cursor-pointer transition-transform ${
-                        inspectorBg === b.id ? "scale-125 ring-2 ring-zinc-400 ring-offset-1" : "hover:scale-110"
+                      type="button"
+                      title={b.label}
+                      aria-label={`${b.label} background`}
+                      aria-pressed={inspectorBg === b.id}
+                      onClick={() => setInspectorBg(b.id)}
+                      className={`h-5 w-5 cursor-pointer rounded-full border transition-transform ${b.swatch} ${
+                        inspectorBg === b.id
+                          ? "scale-110 ring-2 ring-zinc-900 ring-offset-2"
+                          : "hover:scale-110"
                       }`}
                     />
                   ))}
                 </div>
               </div>
 
-              {/* Size slider */}
-              <div className="flex items-center justify-between gap-4">
-                <span className="font-medium text-zinc-600">Size:</span>
-                <div className="flex flex-1 items-center gap-2">
-                  <input
-                    type="range"
-                    min="48"
-                    max="180"
-                    value={inspectorSize}
-                    onChange={(e) => setInspectorSize(Number(e.target.value))}
-                    className="w-full accent-zinc-900 cursor-pointer"
-                  />
-                  <span className="font-mono text-[11px] text-zinc-500 w-10 text-right">
-                    {inspectorSize}px
-                  </span>
-                </div>
-              </div>
-
-              {/* Peel toggle for React components */}
-              {activeItem.format === "component" && (
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-zinc-600">Hover Peel Effect:</span>
-                  <button
-                    onClick={() => setInspectorPeel(!inspectorPeel)}
-                    className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                      inspectorPeel ? "bg-zinc-900" : "bg-zinc-300"
+              <div className="flex items-center gap-3">
+                <span className="font-medium text-zinc-500">Peel effect</span>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={inspectorPeel}
+                  aria-label="Peel effect on hover"
+                  onClick={() => setInspectorPeel(!inspectorPeel)}
+                  className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 ${
+                    inspectorPeel ? "bg-zinc-900" : "bg-zinc-300"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform duration-200 ${
+                      inspectorPeel ? "translate-x-[18px]" : "translate-x-0.5"
                     }`}
-                  >
-                    <span
-                      className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                        inspectorPeel ? "translate-x-4" : "translate-x-0"
-                      }`}
-                    />
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Code Output block */}
-            <div className="mt-4 flex items-center justify-between rounded-xl bg-zinc-900 p-3 font-mono text-xs text-zinc-200">
-              <code className="truncate pr-3">
-                {activeItem.format === "component"
-                  ? `<Sticker name="${activeItem.componentName}" size={${inspectorSize}}${
-                      inspectorPeel ? " peel" : ""
-                    } />`
-                  : `<img src="${activeItem.svgSrc}" alt="${activeItem.title}" width={${inspectorSize}} height={${inspectorSize}} />`}
-              </code>
-              <button
-                onClick={() => copyCode(activeItem)}
-                className="shrink-0 cursor-pointer rounded-lg bg-white/10 px-3 py-1 font-sans text-xs font-medium text-white transition-all hover:bg-white/20 active:scale-95"
-              >
-                {copiedId === activeItem.id ? "Copied! ✓" : "Copy Code"}
-              </button>
+                  />
+                </button>
+              </div>
             </div>
           </div>
+
+          {/* Usage */}
+          <div className="px-6 pb-6 pt-6">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-zinc-900">Usage</span>
+              <button
+                type="button"
+                onClick={downloadSvg}
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-100 px-2.5 py-1 text-[11px] font-medium text-zinc-700 transition-colors hover:bg-zinc-200 hover:text-zinc-900 active:scale-95"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                </svg>
+                Download SVG
+              </button>
+            </div>
+
+            <div className="mt-2.5 overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50">
+              <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-2">
+                <span className="font-mono text-[11px] text-zinc-400">
+                  {isComponent ? "Component.tsx" : "index.html"}
+                </span>
+                <button
+                  type="button"
+                  onClick={copySnippet}
+                  className={`cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium transition-all active:scale-95 ${
+                    copied
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-white text-zinc-700 shadow-[0_0_0_1px_rgba(0,0,0,0.08)] hover:bg-zinc-100"
+                  }`}
+                >
+                  {copied ? "Copied ✓" : "Copy code"}
+                </button>
+              </div>
+              <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-zinc-800">
+                <code>{code}</code>
+              </pre>
+            </div>
+
+            
+          </div>
         </div>
-      )}
+      </div>
+    );
+  })()}
+
 
       {/* ------------------------------------------------------------------
           FOOTER (shared from landing page)
