@@ -1,3 +1,5 @@
+"use client";
+
 export * from "./types";
 export * from "./components/Sticker";
 export { FlameSticker } from "./stickers/FlameSticker";

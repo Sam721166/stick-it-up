@@ -1291,15 +1291,7 @@ export default function Hero() {
                   }
                 />
               </div>
-              {inspectorPeel && (
-                <span
-                  className={`absolute bottom-2.5 text-[11px] ${
-                    dark ? "text-zinc-500" : "text-zinc-400"
-                  }`}
-                >
-                  Hover the sticker to peel it
-                </span>
-              )}
+              
             </div>
           </div>
 

@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["stick-it-up"],
   /* config options here */
   experimental: {
     agentFeedback: true,
