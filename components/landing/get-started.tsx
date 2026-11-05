@@ -192,7 +192,7 @@ export default function GetStarted() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
             {/* Get started button */}
             <a
-              href="#stickers"
+               href="/stickers"
               className="group inline-flex cursor-pointer items-center gap-2.5 rounded-xl
                 border border-zinc-800 bg-gradient-to-b from-zinc-800 to-zinc-900
                 px-6 py-3.5 text-sm font-medium text-white

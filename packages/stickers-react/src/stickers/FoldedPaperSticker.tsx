@@ -1,5 +1,6 @@
 import React, { useId } from "react";
 import type { StickerProps } from "../types";
+import { usePeel } from "../utils/usePeel";
 
 export const FoldedPaperSticker: React.FC<StickerProps> = ({
   size = 120,
@@ -26,9 +27,7 @@ export const FoldedPaperSticker: React.FC<StickerProps> = ({
   const finalWidth = width ?? size;
   const finalHeight = height ?? size;
 
-  const peelClass = peel
-    ? "transition-all duration-300 hover:scale-105 hover:rotate-2 hover:drop-shadow-[0_20px_25px_rgba(0,0,0,0.35)] cursor-pointer"
-    : "";
+  const { style: peelStyle, onMouseEnter, onMouseLeave } = usePeel(peel, style);
 
   return (
     <svg
@@ -37,8 +36,10 @@ export const FoldedPaperSticker: React.FC<StickerProps> = ({
       viewBox="0 0 676 562"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={`inline-block ${peelClass} ${className}`.trim()}
-      style={style}
+      className={className}
+      style={peelStyle}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       aria-label="Folded Paper Ribbon Sticker"
       role="img"
       {...props}

@@ -112,7 +112,7 @@ const COLUMNS: FooterColumn[] = [
   {
     title: "Resources",
     links: [
-      { label: "GitHub", href: "https://github.com", sticker: "/stickers/cat.svg", rot: 8 },
+      { label: "GitHub", href: "https://github.com/Sam721166/stick-it-up", sticker: "/stickers/cat.svg", rot: 8 },
       { label: "npm Package", href: "https://www.npmjs.com/package/stick-it-up", sticker: "/stickers/flower.svg", rot: -12 },
       { label: "Showcase", href: "#", sticker: "/stickers/face.svg", rot: 10 },
       { label: "Playground", href: "#", sticker: "/stickers/SparkleTrio.svg", rot: -6 },

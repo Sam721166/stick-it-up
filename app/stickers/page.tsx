@@ -130,13 +130,14 @@ const CATALOG: CatalogItem[] = [
     defaultRotation: 7,
   },
 
-  /* Vector SVG Stickers */
+  /* Stickers */
   {
     id: "svg-blueberry",
     name: "blueberry",
     title: "Blueberry",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "blueberry",
     svgSrc: "/stickers/blueberry.svg",
     description: "Hand-drawn pastel blueberry with a soft organic highlight.",
     tags: ["fruit", "blueberry", "pastel", "food", "cute"],
@@ -147,7 +148,8 @@ const CATALOG: CatalogItem[] = [
     name: "face",
     title: "Smiley Face",
     category: "characters",
-    format: "svg",
+    format: "component",
+    componentName: "face",
     svgSrc: "/stickers/face.svg",
     description: "Cheerful classic yellow smiley face with warm blushing eyes.",
     tags: ["face", "smiley", "yellow", "happy", "character"],
@@ -158,7 +160,8 @@ const CATALOG: CatalogItem[] = [
     name: "star",
     title: "Golden Star",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "star",
     svgSrc: "/stickers/star.svg",
     description: "Hand-crafted five-point doodle star in sunny warm gold.",
     tags: ["star", "gold", "yellow", "doodle", "sparkle"],
@@ -169,7 +172,8 @@ const CATALOG: CatalogItem[] = [
     name: "flower",
     title: "Spring Flower",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "flower",
     svgSrc: "/stickers/flower.svg",
     description: "Pastel green daisy with a looping stem and retro botanical character.",
     tags: ["flower", "plant", "green", "daisy", "nature"],
@@ -180,7 +184,8 @@ const CATALOG: CatalogItem[] = [
     name: "cat",
     title: "Monochrome Cat",
     category: "characters",
-    format: "svg",
+    format: "component",
+    componentName: "cat",
     svgSrc: "/stickers/cat.svg",
     description: "Curious cat head with expressive round pupils and perked ears.",
     tags: ["cat", "pet", "animal", "black", "character"],
@@ -188,10 +193,11 @@ const CATALOG: CatalogItem[] = [
   },
   {
     id: "svg-catsticker",
-    name: "cat",
-    title: "serious Cat",
+    name: "cat-serious",
+    title: "Serious Cat",
     category: "characters",
-    format: "svg",
+    format: "component",
+    componentName: "cat-serious",
     svgSrc: "/stickers/catsticker.svg",
     description: "Curious catsticker head with expressive round pupils and perked ears.",
     tags: ["cat", "pet", "animal", "black", "character"],
@@ -202,7 +208,8 @@ const CATALOG: CatalogItem[] = [
     name: "red-cat",
     title: "Mochi Cat",
     category: "characters",
-    format: "svg",
+    format: "component",
+    componentName: "red-cat",
     svgSrc: "/stickers/red_cat.svg",
     description: "Vibrant scarlet silhouette cat with a wide, alert stare.",
     tags: ["cat", "red", "mochi", "kitty", "character"],
@@ -213,7 +220,8 @@ const CATALOG: CatalogItem[] = [
     name: "pink-cat",
     title: "Pink Kitty",
     category: "characters",
-    format: "svg",
+    format: "component",
+    componentName: "pink-cat",
     svgSrc: "/stickers/pink-cat.svg",
     description: "Soft pastel pink kitten head with delicate whiskers.",
     tags: ["cat", "pink", "kitten", "cute", "whiskers"],
@@ -224,7 +232,8 @@ const CATALOG: CatalogItem[] = [
     name: "pink-cat-stamp",
     title: "Bubblegum Stamp",
     category: "characters",
-    format: "svg",
+    format: "component",
+    componentName: "pink-cat-stamp",
     svgSrc: "/stickers/pink-cat2.svg",
     description: "Warm bubblegum pink feline stamp with vintage postal edges.",
     tags: ["cat", "stamp", "postal", "pink", "bubblegum"],
@@ -235,7 +244,8 @@ const CATALOG: CatalogItem[] = [
     name: "yellow-cat",
     title: "Yellow Cat",
     category: "characters",
-    format: "svg",
+    format: "component",
+    componentName: "yellow-cat",
     svgSrc: "/stickers/yellow-cat.svg",
     description: "Sunlit yellow doodle cat with playful tilted ears.",
     tags: ["cat", "yellow", "doodle", "sunny", "kitten"],
@@ -244,9 +254,10 @@ const CATALOG: CatalogItem[] = [
   {
     id: "svg-black-cat",
     name: "black-cat",
-    title: "black Cat",
+    title: "Black Cat",
     category: "characters",
-    format: "svg",
+    format: "component",
+    componentName: "black-cat",
     svgSrc: "/stickers/black-cat.svg",
     description: "Sunlit black doodle cat with playful tilted ears.",
     tags: ["cat", "black", "doodle", "sunny", "kitten"],
@@ -257,29 +268,20 @@ const CATALOG: CatalogItem[] = [
     name: "dog",
     title: "Playful Dog",
     category: "characters",
-    format: "svg",
+    format: "component",
+    componentName: "dog",
     svgSrc: "/stickers/dogsticker.svg",
     description: "Energetic pup with perked ears and friendly doodle smile.",
     tags: ["dog", "pup", "pet", "animal", "friendly"],
     defaultRotation: 8,
   },
   {
-    id: "svg-flame",
-    name: "flame",
-    title: "Orange Flame",
-    category: "symbols",
-    format: "svg",
-    svgSrc: "/stickers/Flame.svg",
-    description: "Punchy dual-tone fire sticker for streaks, heat, and highlights.",
-    tags: ["flame", "fire", "streak", "orange", "energy"],
-    defaultRotation: -5,
-  },
-  {
     id: "svg-peace-hand",
     name: "peace-hand",
     title: "Peace Hand",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "peace-hand",
     svgSrc: "/stickers/Peace-hand.svg",
     description: "Pastel neon peace sign hand with a bold graphic contour line.",
     tags: ["peace", "hand", "v-sign", "victory", "neon"],
@@ -290,7 +292,8 @@ const CATALOG: CatalogItem[] = [
     name: "sparkles",
     title: "Golden Sparkles",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "sparkles",
     svgSrc: "/stickers/Sparkles.svg",
     description: "Crisp four-point sparkle cluster in warm metallic gold.",
     tags: ["sparkles", "twinkle", "magic", "stars", "gold"],
@@ -301,7 +304,8 @@ const CATALOG: CatalogItem[] = [
     name: "sparkle-trio",
     title: "Sparkle Trio",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "sparkle-trio",
     svgSrc: "/stickers/SparkleTrio.svg",
     description: "Cascading trio of magic twinkle stars for rewards and alerts.",
     tags: ["sparkles", "trio", "three", "stars", "magic"],
@@ -312,7 +316,8 @@ const CATALOG: CatalogItem[] = [
     name: "cosmic-eye",
     title: "Cosmic Eye",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "cosmic-eye",
     svgSrc: "/stickers/Cosmiceye.svg",
     description: "Explosive starburst eye badge with vivid cobalt and crimson rays.",
     tags: ["eye", "cosmic", "trippy", "starburst", "vision"],
@@ -323,7 +328,8 @@ const CATALOG: CatalogItem[] = [
     name: "curious-globe",
     title: "Curious Globe",
     category: "characters",
-    format: "svg",
+    format: "component",
+    componentName: "curious-globe",
     svgSrc: "/stickers/Curious%20blue%20globe.svg",
     description: "Blue wireframe world sphere with peeking curious cartoon eyes.",
     tags: ["globe", "world", "earth", "eyes", "curious"],
@@ -334,7 +340,8 @@ const CATALOG: CatalogItem[] = [
     name: "spiral",
     title: "Hypnotic Spiral",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "spiral",
     svgSrc: "/stickers/Spiral.svg",
     description: "Vortex coil sticker with tactile hand-inked line weights.",
     tags: ["spiral", "vortex", "hypnotic", "doodle", "black"],
@@ -345,7 +352,8 @@ const CATALOG: CatalogItem[] = [
     name: "eye-splat",
     title: "Eye Splat",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "eye-splat",
     svgSrc: "/stickers/Eye Splat.svg",
     description: "Graffiti-inspired drip splat with an observant eye core.",
     tags: ["splat", "eye", "drip", "graffiti", "street"],
@@ -356,7 +364,8 @@ const CATALOG: CatalogItem[] = [
     name: "japan-badge",
     title: "Tokyo Graphic",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "japan-badge",
     svgSrc: "/stickers/japan.svg",
     description: "Tokyo-inspired graphic emblem stamp with stylized kanji character.",
     tags: ["japan", "tokyo", "stamp", "badge", "kanji"],
@@ -367,7 +376,8 @@ const CATALOG: CatalogItem[] = [
     name: "cone",
     title: "Traffic Cone",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "cone",
     svgSrc: "/stickers/vlc2.svg",
     description: "Playful striped orange construction cone sticker for under-construction or alerts.",
     tags: ["cone", "traffic", "orange", "construction", "alert"],
@@ -378,7 +388,8 @@ const CATALOG: CatalogItem[] = [
     name: "icy-fleur",
     title: "Icy Fleur-de-lis",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "icy-fleur",
     svgSrc: "/stickers/Icy chrome fleur-de-lis sticker.svg",
     description: "Liquid chrome heraldic fleur-de-lis with cold mirror reflections.",
     tags: ["fleur", "chrome", "heraldic", "metal", "silver"],
@@ -389,7 +400,8 @@ const CATALOG: CatalogItem[] = [
     name: "app-badge",
     title: "Icon Badge",
     category: "symbols",
-    format: "svg",
+    format: "component",
+    componentName: "app-badge",
     svgSrc: "/stickers/Component-66.svg",
     description: "Tactile app icon badge with rounded square frame and pastel tone.",
     tags: ["app", "badge", "icon", "squircle", "pastel"],
@@ -412,32 +424,15 @@ function StickerVisual({
   peel?: boolean;
   className?: string;
 }) {
-  if (item.format === "component" && item.componentName) {
-    return (
-      <Sticker
-        name={item.componentName}
-        size={size}
-        peel={peel}
-        className={className}
-      />
-    );
-  }
-
-  if (item.svgSrc) {
-    return (
-      <img
-        src={item.svgSrc}
-        alt={item.title}
-        width={size}
-        height={size}
-        draggable={false}
-        className={`select-none object-contain ${className}`}
-        style={{ width: size, height: size }}
-      />
-    );
-  }
-
-  return null;
+  const stickerName = (item.componentName || item.name) as StickerName;
+  return (
+    <Sticker
+      name={stickerName}
+      size={size}
+      peel={peel}
+      className={className}
+    />
+  );
 }
 
 /* ------------------------------------------------------------------
@@ -554,10 +549,8 @@ export default function StickersCatalogPage() {
 
   async function copyCode(item: CatalogItem, e?: React.MouseEvent) {
     if (e) e.stopPropagation();
-    const code =
-      item.format === "component"
-        ? `<Sticker name="${item.componentName}" size={96} peel />`
-        : `<img src="${item.svgSrc}" alt="${item.title}" width={80} height={80} />`;
+    const stickerName = item.componentName || item.name;
+    const code = `<Sticker name="${stickerName}" size={96} peel />`;
 
     try {
       await navigator.clipboard.writeText(code);
@@ -727,7 +720,7 @@ export default function StickersCatalogPage() {
           </button>
 
           <a
-            href="https://github.com"
+            href="https://github.com/Sam721166/stick-it-up"
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub Repository"
@@ -875,9 +868,9 @@ export default function StickersCatalogPage() {
                     </div>
                   </div>
 
-                  {/* Name in Geist font */}
-                  <span className="w-full truncate text-center font-sans text-xs font-medium text-zinc-600 transition-colors duration-150 group-hover:text-zinc-950">
-                    {item.title}
+                  {/* Name matches code prop */}
+                  <span className="w-full truncate text-center font-sans text-xs font-medium text-zinc-600  transition-colors duration-150 group-hover:text-zinc-950">
+                    {item.name}
                   </span>
                 </div>
               );
@@ -1174,16 +1167,12 @@ export default function Hero() {
 ------------------------------------------------------------------- */}
 {activeItem &&
   (() => {
-    const isComponent = activeItem.format === "component";
+    const stickerName = activeItem.componentName || activeItem.name;
 
     // The snippet shown below is exactly what gets copied.
-    const code = isComponent
-      ? `import { Sticker } from "stick-it-up";\n\n<Sticker\n  name="${activeItem.componentName}"\n  size={${inspectorSize}}${
-          inspectorPeel ? "\n  peel" : ""
-        }\n/>`
-      : `<img\n  src="${activeItem.svgSrc}"\n  alt="${activeItem.title}"\n  width={${inspectorSize}}\n  height={${inspectorSize}}${
-          inspectorPeel ? "\n  peel" : ""
-        }\n/>`;
+    const code = `import { Sticker } from "stick-it-up";\n\n<Sticker\n  name="${stickerName}"\n  size={${inspectorSize}}${
+      inspectorPeel ? "\n  peel" : ""
+    }\n/>`;
 
     const copied = copiedId === activeItem.id;
 
@@ -1249,8 +1238,8 @@ export default function Hero() {
           {/* Header */}
           <div className="flex items-start justify-between gap-4 px-6 pt-6">
             <div>
-              <h3 className="font-sans text-xl font-semibold tracking-tight text-zinc-900">
-                {activeItem.title}
+              <h3 className="font-mono text-lg font-semibold tracking-tight text-zinc-900">
+                {activeItem.name}
               </h3>
             </div>
             <button
@@ -1283,12 +1272,7 @@ export default function Hero() {
                 <StickerVisual
                   item={activeItem}
                   size={inspectorSize}
-                  peel={isComponent ? inspectorPeel : false}
-                  className={
-                    !isComponent && inspectorPeel
-                      ? "transition-all duration-300 hover:scale-105 hover:-rotate-2 hover:drop-shadow-[0_20px_25px_rgba(0,0,0,0.25)] cursor-pointer"
-                      : ""
-                  }
+                  peel={inspectorPeel}
                 />
               </div>
               
@@ -1377,7 +1361,7 @@ export default function Hero() {
             <div className="mt-2.5 overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50">
               <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-2">
                 <span className="font-mono text-[11px] text-zinc-400">
-                  {isComponent ? "Component.tsx" : "index.html"}
+                  Component.tsx
                 </span>
                 <button
                   type="button"
@@ -1388,7 +1372,26 @@ export default function Hero() {
                       : "bg-white text-zinc-700 shadow-[0_0_0_1px_rgba(0,0,0,0.08)] hover:bg-zinc-100"
                   }`}
                 >
-                  {copied ? "Copied ✓" : "Copy code"}
+                  {copied ? (
+                    <span className="inline-flex items-center gap-1 ">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        className="h-3 w-3"
+                      >
+                        <path
+                          d="m5 13 4 4L19 7"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      Copied
+                    </span>
+                  ) : (
+                    "Copy code"
+                  )}
                 </button>
               </div>
               <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-zinc-800">

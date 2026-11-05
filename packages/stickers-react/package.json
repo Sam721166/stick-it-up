@@ -2,6 +2,18 @@
   "name": "stick-it-up",
   "version": "0.1.0",
   "description": "Premium vector, holographic & chrome aesthetic sticker components for React",
+  "author": {
+    "name": "Samiran De",
+    "url": "https://github.com/Sam721166"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sam721166/stick-it-up.git"
+  },
+  "homepage": "https://github.com/Sam721166/stick-it-up#readme",
+  "bugs": {
+    "url": "https://github.com/Sam721166/stick-it-up/issues"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -14,7 +26,8 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsup",
