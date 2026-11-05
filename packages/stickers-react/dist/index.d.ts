@@ -19,7 +19,7 @@ interface StickerProps extends SVGProps<SVGSVGElement> {
      */
     style?: CSSProperties;
 }
-type StickerName = "metal" | "blob-burst" | "star-burst" | "devil-cone" | "flame-star" | "folded-paper" | "badge-smiley" | "cosmic-pill";
+type StickerName = "flame" | "metal" | "blob-burst" | "star-burst" | "devil-cone" | "flame-star" | "folded-paper" | "badge-smiley" | "cosmic-pill";
 
 declare const STICKER_MAP: Record<StickerName, React.FC<StickerProps>>;
 interface DynamicStickerProps extends StickerProps {
@@ -34,6 +34,8 @@ interface DynamicStickerProps extends StickerProps {
  * ```
  */
 declare const Sticker: React.FC<DynamicStickerProps>;
+
+declare const FlameSticker: React.FC<StickerProps>;
 
 declare const MetalSticker: React.FC<StickerProps>;
 
@@ -51,5 +53,5 @@ declare const BadgeSmileySticker: React.FC<StickerProps>;
 
 declare const CosmicPillSticker: React.FC<StickerProps>;
 
-export { BadgeSmileySticker, BlobBurstSticker, CosmicPillSticker, DevilConeSticker, FlameStarSticker, FoldedPaperSticker, MetalSticker, STICKER_MAP, StarBurstSticker, Sticker, Sticker as default };
+export { BadgeSmileySticker, BlobBurstSticker, CosmicPillSticker, DevilConeSticker, FlameStarSticker, FlameSticker, FoldedPaperSticker, MetalSticker, STICKER_MAP, StarBurstSticker, Sticker, Sticker as default };
 export type { DynamicStickerProps, StickerName, StickerProps };

@@ -1,5 +1,6 @@
 export * from "./types";
 export * from "./components/Sticker";
+export { FlameSticker } from "./stickers/FlameSticker";
 export { MetalSticker } from "./stickers/MetalSticker";
 export { BlobBurstSticker } from "./stickers/BlobBurstSticker";
 export { StarBurstSticker } from "./stickers/StarBurstSticker";

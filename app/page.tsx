@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import Folder from "../components/landing/folder"
 import Bento from "../components/landing/bento"
 import GetStarted from "../components/landing/get-started"
@@ -330,7 +331,7 @@ export default function Home() {
           {/* links */}
           <ul className="hidden items-center gap-1 md:flex">
             {[
-              { label: "Stickers", href: "#stickers" },
+              { label: "Stickers", href: "/stickers" },
               { label: "Docs", href: "#docs" },
               { label: "npm", href: "https://www.npmjs.com/package/stick-it-up" },
             ].map((link) => (
@@ -348,7 +349,7 @@ export default function Home() {
 
           {/* cta */}
           <a
-            href="#stickers"
+            href="#docs"
             className="group inline-flex items-center gap-2 rounded-xl
               border border-zinc-800 bg-gradient-to-b from-zinc-800 to-zinc-900
               px-4 py-2 text-sm font-medium text-white
@@ -563,8 +564,8 @@ export default function Home() {
           </button>
 
           {/* Explore button */}
-          <a
-            href="#stickers"
+          <Link
+            href="/stickers"
             className="group inline-flex cursor-pointer items-center gap-2 rounded-xl
               border border-zinc-800 bg-gradient-to-b from-zinc-800 to-zinc-900
               px-5 py-3 text-sm font-medium text-white
@@ -583,7 +584,7 @@ export default function Home() {
             >
               <path d="M7 17 17 7M7 7h10v10" />
             </svg>
-          </a>
+          </Link>
         </div>
 
         {/* user counter */}

@@ -21,6 +21,7 @@ export interface StickerProps extends SVGProps<SVGSVGElement> {
 }
 
 export type StickerName =
+  | "flame"
   | "metal"
   | "blob-burst"
   | "star-burst"
