@@ -11,6 +11,9 @@ export { StarBurstSticker } from "./stickers/StarBurstSticker";
 export { DevilConeSticker } from "./stickers/DevilConeSticker";
 export { FlameStarSticker } from "./stickers/FlameStarSticker";
 export { FoldedPaperSticker } from "./stickers/FoldedPaperSticker";
+export { RedBerrySticker } from "./stickers/RedBerrySticker";
+export { BlueberrySticker } from "./stickers/BlueberrySticker";
+export { BerriesSticker } from "./stickers/BerriesSticker";
 export { BadgeSmileySticker } from "./stickers/BadgeSmileySticker";
 export { CosmicPillSticker } from "./stickers/CosmicPillSticker";
 
@@ -23,7 +26,6 @@ export { BlackCatSticker } from "./stickers/BlackCatSticker";
 export { CatSticker } from "./stickers/CatSticker";
 export { CatSeriousSticker } from "./stickers/CatSeriousSticker";
 export { DogSticker } from "./stickers/DogSticker";
-export { BlueberrySticker } from "./stickers/BlueberrySticker";
 export { FaceSticker } from "./stickers/FaceSticker";
 export { FlowerSticker } from "./stickers/FlowerSticker";
 export { PeaceHandSticker } from "./stickers/PeaceHandSticker";

@@ -9,6 +9,9 @@ import { StarBurstSticker } from "../stickers/StarBurstSticker";
 import { DevilConeSticker } from "../stickers/DevilConeSticker";
 import { FlameStarSticker } from "../stickers/FlameStarSticker";
 import { FoldedPaperSticker } from "../stickers/FoldedPaperSticker";
+import { RedBerrySticker } from "../stickers/RedBerrySticker";
+import { BlueberrySticker } from "../stickers/BlueberrySticker";
+import { BerriesSticker } from "../stickers/BerriesSticker";
 import { BadgeSmileySticker } from "../stickers/BadgeSmileySticker";
 import { CosmicPillSticker } from "../stickers/CosmicPillSticker";
 
@@ -21,7 +24,6 @@ import { BlackCatSticker } from "../stickers/BlackCatSticker";
 import { CatSticker } from "../stickers/CatSticker";
 import { CatSeriousSticker } from "../stickers/CatSeriousSticker";
 import { DogSticker } from "../stickers/DogSticker";
-import { BlueberrySticker } from "../stickers/BlueberrySticker";
 import { FaceSticker } from "../stickers/FaceSticker";
 import { FlowerSticker } from "../stickers/FlowerSticker";
 import { PeaceHandSticker } from "../stickers/PeaceHandSticker";
@@ -41,12 +43,14 @@ export const STICKER_MAP: Record<StickerName, React.FC<StickerProps>> = {
   metal: MetalSticker,
   "blob-burst": BlobBurstSticker,
   "star-burst": StarBurstSticker,
-  star: StarBurstSticker,
   "devil-cone": DevilConeSticker,
   "flame-star": FlameStarSticker,
   "folded-paper": FoldedPaperSticker,
-  "badge-smiley": BadgeSmileySticker,
-  "cosmic-pill": CosmicPillSticker,
+  "red-berry": RedBerrySticker,
+  blueberry: BlueberrySticker,
+  berries: BerriesSticker,
+  "badge-smiley": RedBerrySticker,
+  "cosmic-pill": BlueberrySticker,
 
   // Characters & Symbols
   "red-cat": RedCatSticker,
@@ -57,7 +61,6 @@ export const STICKER_MAP: Record<StickerName, React.FC<StickerProps>> = {
   cat: CatSticker,
   "cat-serious": CatSeriousSticker,
   dog: DogSticker,
-  blueberry: BlueberrySticker,
   face: FaceSticker,
   flower: FlowerSticker,
   "peace-hand": PeaceHandSticker,

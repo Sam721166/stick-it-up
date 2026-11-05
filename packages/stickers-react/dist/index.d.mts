@@ -19,7 +19,7 @@ interface StickerProps extends SVGProps<SVGSVGElement> {
      */
     style?: CSSProperties;
 }
-type StickerName = "flame" | "metal" | "blob-burst" | "star-burst" | "star" | "devil-cone" | "flame-star" | "folded-paper" | "badge-smiley" | "cosmic-pill" | "red-cat" | "pink-cat" | "pink-cat-stamp" | "yellow-cat" | "black-cat" | "cat" | "cat-serious" | "dog" | "blueberry" | "face" | "flower" | "peace-hand" | "sparkles" | "sparkle-trio" | "cosmic-eye" | "curious-globe" | "spiral" | "eye-splat" | "japan-badge" | "cone" | "icy-fleur" | "app-badge";
+type StickerName = "flame" | "metal" | "blob-burst" | "star-burst" | "devil-cone" | "flame-star" | "folded-paper" | "red-berry" | "blueberry" | "berries" | "badge-smiley" | "cosmic-pill" | "red-cat" | "pink-cat" | "pink-cat-stamp" | "yellow-cat" | "black-cat" | "cat" | "cat-serious" | "dog" | "blueberry" | "face" | "flower" | "peace-hand" | "sparkles" | "sparkle-trio" | "cosmic-eye" | "curious-globe" | "spiral" | "eye-splat" | "japan-badge" | "cone" | "icy-fleur" | "app-badge";
 
 declare const STICKER_MAP: Record<StickerName, React.FC<StickerProps>>;
 interface DynamicStickerProps extends StickerProps {
@@ -52,9 +52,11 @@ declare const FlameStarSticker: React.FC<StickerProps>;
 
 declare const FoldedPaperSticker: React.FC<StickerProps>;
 
-declare const BadgeSmileySticker: React.FC<StickerProps>;
+declare const RedBerrySticker: React.FC<StickerProps>;
 
-declare const CosmicPillSticker: React.FC<StickerProps>;
+declare const BlueberrySticker: React.FC<StickerProps>;
+
+declare const BerriesSticker: React.FC<StickerProps>;
 
 declare const RedCatSticker: React.FC<StickerProps>;
 
@@ -71,8 +73,6 @@ declare const CatSticker: React.FC<StickerProps>;
 declare const CatSeriousSticker: React.FC<StickerProps>;
 
 declare const DogSticker: React.FC<StickerProps>;
-
-declare const BlueberrySticker: React.FC<StickerProps>;
 
 declare const FaceSticker: React.FC<StickerProps>;
 
@@ -100,5 +100,5 @@ declare const IcyFleurSticker: React.FC<StickerProps>;
 
 declare const AppBadgeSticker: React.FC<StickerProps>;
 
-export { AppBadgeSticker, BadgeSmileySticker, BlackCatSticker, BlobBurstSticker, BlueberrySticker, CatSeriousSticker, CatSticker, ConeSticker, CosmicEyeSticker, CosmicPillSticker, CuriousGlobeSticker, DevilConeSticker, DogSticker, EyeSplatSticker, FaceSticker, FlameStarSticker, FlameSticker, FlowerSticker, FoldedPaperSticker, IcyFleurSticker, JapanBadgeSticker, MetalSticker, PeaceHandSticker, PinkCatStampSticker, PinkCatSticker, RedCatSticker, STICKER_MAP, SparkleTrioSticker, SparklesSticker, SpiralSticker, StarBurstSticker, Sticker, YellowCatSticker, Sticker as default };
+export { AppBadgeSticker, RedBerrySticker as BadgeSmileySticker, BerriesSticker, BlackCatSticker, BlobBurstSticker, BlueberrySticker, CatSeriousSticker, CatSticker, ConeSticker, CosmicEyeSticker, BlueberrySticker as CosmicPillSticker, CuriousGlobeSticker, DevilConeSticker, DogSticker, EyeSplatSticker, FaceSticker, FlameStarSticker, FlameSticker, FlowerSticker, FoldedPaperSticker, IcyFleurSticker, JapanBadgeSticker, MetalSticker, PeaceHandSticker, PinkCatStampSticker, PinkCatSticker, RedBerrySticker, RedCatSticker, STICKER_MAP, SparkleTrioSticker, SparklesSticker, SpiralSticker, StarBurstSticker, Sticker, YellowCatSticker, Sticker as default };
 export type { DynamicStickerProps, StickerName, StickerProps };

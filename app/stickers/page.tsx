@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import { LuCopyCheck, LuCopy } from "react-icons/lu";
 import { Sticker, type StickerName } from "stick-it-up";
 import Footer from "../../components/landing/footer";
 
@@ -30,7 +31,186 @@ interface CatalogItem {
 
 const CATALOG: CatalogItem[] = [
   /* Built-in React Components (stick-it-up) */
+  
   {
+    id: "comp-devil-cone",
+    name: "devil-cone",
+    title: "Devil Cone",
+    category: "components",
+    format: "component",
+    componentName: "devil-cone",
+    description: "Spiked horned cone emblem with polished metallic bevels.",
+    tags: ["cone", "devil", "horns", "spikes", "metal"],
+    defaultRotation: 5,
+  },
+  {
+    id: "svg-japan",
+    name: "japan-badge",
+    title: "Tokyo Graphic",
+    category: "symbols",
+    format: "component",
+    componentName: "japan-badge",
+    svgSrc: "/stickers/japan.svg",
+    description: "Tokyo-inspired graphic emblem stamp with stylized kanji character.",
+    tags: ["japan", "tokyo", "stamp", "badge", "kanji"],
+    defaultRotation: -5,
+  },
+  {
+    id: "svg-dog",
+    name: "dog",
+    title: "Playful Dog",
+    category: "characters",
+    format: "component",
+    componentName: "dog",
+    svgSrc: "/stickers/dogsticker.svg",
+    description: "Energetic pup with perked ears and friendly doodle smile.",
+    tags: ["dog", "pup", "pet", "animal", "friendly"],
+    defaultRotation: 8,
+  },
+  {
+    id: "comp-red-berry",
+    name: "red-berry",
+    title: "Red Berry",
+    category: "symbols",
+    format: "component",
+    componentName: "red-berry",
+    description: "Sweet scarlet berry sticker with leafy crown and soft blush highlight.",
+    tags: ["berry", "red-berry", "fruit", "sweet", "cute"],
+    defaultRotation: -5,
+  },
+  {
+    id: "comp-blueberry",
+    name: "blueberry",
+    title: "Blueberry",
+    category: "symbols",
+    format: "component",
+    componentName: "blueberry",
+    description: "Plump indigo blueberry decal with five-point star calyx.",
+    tags: ["fruit", "blueberry", "berry", "indigo", "cute"],
+    defaultRotation: 0,
+  },
+  {
+    id: "svg-black-cat",
+    name: "black-cat",
+    title: "Black Cat",
+    category: "characters",
+    format: "component",
+    componentName: "black-cat",
+    svgSrc: "/stickers/black-cat.svg",
+    description: "Sunlit black doodle cat with playful tilted ears.",
+    tags: ["cat", "black", "doodle", "sunny", "kitten"],
+    defaultRotation: -8,
+  },
+  {
+    id: "svg-red-cat",
+    name: "red-cat",
+    title: "Mochi Cat",
+    category: "characters",
+    format: "component",
+    componentName: "red-cat",
+    svgSrc: "/stickers/red_cat.svg",
+    description: "Vibrant scarlet silhouette cat with a wide, alert stare.",
+    tags: ["cat", "red", "mochi", "kitty", "character"],
+    defaultRotation: 6,
+  },
+  {
+    id: "svg-pink-cat2",
+    name: "pink-cat-stamp",
+    title: "Bubblegum Stamp",
+    category: "characters",
+    format: "component",
+    componentName: "pink-cat-stamp",
+    svgSrc: "/stickers/pink-cat2.svg",
+    description: "Warm bubblegum pink feline stamp with vintage postal edges.",
+    tags: ["cat", "stamp", "postal", "pink", "bubblegum"],
+    defaultRotation: 5,
+  },
+  {
+    id: "svg-yellow-cat",
+    name: "yellow-cat",
+    title: "Yellow Cat",
+    category: "characters",
+    format: "component",
+    componentName: "yellow-cat",
+    svgSrc: "/stickers/yellow-cat.svg",
+    description: "Sunlit yellow doodle cat with playful tilted ears.",
+    tags: ["cat", "yellow", "doodle", "sunny", "kitten"],
+    defaultRotation: -8,
+  },
+
+  /* Stickers */
+  {
+    id: "svg-berries",
+    name: "berries",
+    title: "Berries",
+    category: "symbols",
+    format: "component",
+    componentName: "berries",
+    svgSrc: "/stickers/blueberry.svg",
+    description: "Duo of fresh ripe blueberries and sweet red berries together.",
+    tags: ["berries", "blueberry", "red-berry", "fruit", "pair"],
+    defaultRotation: -6,
+  },
+  {
+    id: "svg-face",
+    name: "face",
+    title: "Smiley Face",
+    category: "characters",
+    format: "component",
+    componentName: "face",
+    svgSrc: "/stickers/face.svg",
+    description: "Cheerful classic yellow smiley face with warm blushing eyes.",
+    tags: ["face", "smiley", "yellow", "happy", "character"],
+    defaultRotation: 8,
+  },
+  {
+    id: "svg-flower",
+    name: "flower",
+    title: "Spring Flower",
+    category: "symbols",
+    format: "component",
+    componentName: "flower",
+    svgSrc: "/stickers/flower.svg",
+    description: "Pastel green daisy with a looping stem and retro botanical character.",
+    tags: ["flower", "plant", "green", "daisy", "nature"],
+    defaultRotation: 12,
+  },
+  {
+    id: "svg-cat",
+    name: "cat",
+    title: "Monochrome Cat",
+    category: "characters",
+    format: "component",
+    componentName: "cat",
+    svgSrc: "/stickers/cat.svg",
+    description: "Curious cat head with expressive round pupils and perked ears.",
+    tags: ["cat", "pet", "animal", "black", "character"],
+    defaultRotation: 0,
+  },
+  {
+    id: "svg-catsticker",
+    name: "cat-serious",
+    title: "Serious Cat",
+    category: "characters",
+    format: "component",
+    componentName: "cat-serious",
+    svgSrc: "/stickers/catsticker.svg",
+    description: "Curious catsticker head with expressive round pupils and perked ears.",
+    tags: ["cat", "pet", "animal", "black", "character"],
+    defaultRotation: 0,
+  },
+  {
+    id: "svg-peace-hand",
+    name: "peace-hand",
+    title: "Peace Hand",
+    category: "symbols",
+    format: "component",
+    componentName: "peace-hand",
+    svgSrc: "/stickers/Peace-hand.svg",
+    description: "Pastel neon peace sign hand with a bold graphic contour line.",
+    tags: ["peace", "hand", "v-sign", "victory", "neon"],
+    defaultRotation: 14,
+  },{
     id: "comp-flame",
     name: "flame",
     title: "Orange Flame",
@@ -73,219 +253,6 @@ const CATALOG: CatalogItem[] = [
     description: "Liquid fluid blob star with smooth bevels and glassy chrome depth.",
     tags: ["blob", "liquid", "burst", "organic", "fluid"],
     defaultRotation: -6,
-  },
-  {
-    id: "comp-devil-cone",
-    name: "devil-cone",
-    title: "Devil Cone",
-    category: "components",
-    format: "component",
-    componentName: "devil-cone",
-    description: "Spiked horned cone emblem with polished metallic bevels.",
-    tags: ["cone", "devil", "horns", "spikes", "metal"],
-    defaultRotation: 5,
-  },
-  {
-    id: "comp-flame-star",
-    name: "flame-star",
-    title: "Flame Star",
-    category: "components",
-    format: "component",
-    componentName: "flame-star",
-    description: "Fiery star emblem combining liquid flame tongues and star rays.",
-    tags: ["flame", "star", "fire", "hot", "chrome"],
-    defaultRotation: -8,
-  },
-  {
-    id: "comp-folded-paper",
-    name: "folded-paper",
-    title: "Folded Paper",
-    category: "components",
-    format: "component",
-    componentName: "folded-paper",
-    description: "Tactile origami paper decal with multi-plane faceted geometry.",
-    tags: ["paper", "folded", "origami", "badge", "minimal"],
-    defaultRotation: 4,
-  },
-  {
-    id: "comp-badge-smiley",
-    name: "badge-smiley",
-    title: "Badge Smiley",
-    category: "components",
-    format: "component",
-    componentName: "badge-smiley",
-    description: "Playful distorted smiley emblem with holographic edge contour.",
-    tags: ["smiley", "face", "badge", "happy", "distorted"],
-    defaultRotation: -5,
-  },
-  {
-    id: "comp-cosmic-pill",
-    name: "cosmic-pill",
-    title: "Cosmic Pill",
-    category: "components",
-    format: "component",
-    componentName: "cosmic-pill",
-    description: "Futuristic chrome capsule badge with metallic specular refraction.",
-    tags: ["pill", "capsule", "cosmic", "cyber", "chrome"],
-    defaultRotation: 7,
-  },
-
-  /* Stickers */
-  {
-    id: "svg-blueberry",
-    name: "blueberry",
-    title: "Blueberry",
-    category: "symbols",
-    format: "component",
-    componentName: "blueberry",
-    svgSrc: "/stickers/blueberry.svg",
-    description: "Hand-drawn pastel blueberry with a soft organic highlight.",
-    tags: ["fruit", "blueberry", "pastel", "food", "cute"],
-    defaultRotation: -6,
-  },
-  {
-    id: "svg-face",
-    name: "face",
-    title: "Smiley Face",
-    category: "characters",
-    format: "component",
-    componentName: "face",
-    svgSrc: "/stickers/face.svg",
-    description: "Cheerful classic yellow smiley face with warm blushing eyes.",
-    tags: ["face", "smiley", "yellow", "happy", "character"],
-    defaultRotation: 8,
-  },
-  {
-    id: "svg-star",
-    name: "star",
-    title: "Golden Star",
-    category: "symbols",
-    format: "component",
-    componentName: "star",
-    svgSrc: "/stickers/star.svg",
-    description: "Hand-crafted five-point doodle star in sunny warm gold.",
-    tags: ["star", "gold", "yellow", "doodle", "sparkle"],
-    defaultRotation: -10,
-  },
-  {
-    id: "svg-flower",
-    name: "flower",
-    title: "Spring Flower",
-    category: "symbols",
-    format: "component",
-    componentName: "flower",
-    svgSrc: "/stickers/flower.svg",
-    description: "Pastel green daisy with a looping stem and retro botanical character.",
-    tags: ["flower", "plant", "green", "daisy", "nature"],
-    defaultRotation: 12,
-  },
-  {
-    id: "svg-cat",
-    name: "cat",
-    title: "Monochrome Cat",
-    category: "characters",
-    format: "component",
-    componentName: "cat",
-    svgSrc: "/stickers/cat.svg",
-    description: "Curious cat head with expressive round pupils and perked ears.",
-    tags: ["cat", "pet", "animal", "black", "character"],
-    defaultRotation: 0,
-  },
-  {
-    id: "svg-catsticker",
-    name: "cat-serious",
-    title: "Serious Cat",
-    category: "characters",
-    format: "component",
-    componentName: "cat-serious",
-    svgSrc: "/stickers/catsticker.svg",
-    description: "Curious catsticker head with expressive round pupils and perked ears.",
-    tags: ["cat", "pet", "animal", "black", "character"],
-    defaultRotation: 0,
-  },
-  {
-    id: "svg-red-cat",
-    name: "red-cat",
-    title: "Mochi Cat",
-    category: "characters",
-    format: "component",
-    componentName: "red-cat",
-    svgSrc: "/stickers/red_cat.svg",
-    description: "Vibrant scarlet silhouette cat with a wide, alert stare.",
-    tags: ["cat", "red", "mochi", "kitty", "character"],
-    defaultRotation: 6,
-  },
-  {
-    id: "svg-pink-cat",
-    name: "pink-cat",
-    title: "Pink Kitty",
-    category: "characters",
-    format: "component",
-    componentName: "pink-cat",
-    svgSrc: "/stickers/pink-cat.svg",
-    description: "Soft pastel pink kitten head with delicate whiskers.",
-    tags: ["cat", "pink", "kitten", "cute", "whiskers"],
-    defaultRotation: -9,
-  },
-  {
-    id: "svg-pink-cat2",
-    name: "pink-cat-stamp",
-    title: "Bubblegum Stamp",
-    category: "characters",
-    format: "component",
-    componentName: "pink-cat-stamp",
-    svgSrc: "/stickers/pink-cat2.svg",
-    description: "Warm bubblegum pink feline stamp with vintage postal edges.",
-    tags: ["cat", "stamp", "postal", "pink", "bubblegum"],
-    defaultRotation: 5,
-  },
-  {
-    id: "svg-yellow-cat",
-    name: "yellow-cat",
-    title: "Yellow Cat",
-    category: "characters",
-    format: "component",
-    componentName: "yellow-cat",
-    svgSrc: "/stickers/yellow-cat.svg",
-    description: "Sunlit yellow doodle cat with playful tilted ears.",
-    tags: ["cat", "yellow", "doodle", "sunny", "kitten"],
-    defaultRotation: -8,
-  },
-  {
-    id: "svg-black-cat",
-    name: "black-cat",
-    title: "Black Cat",
-    category: "characters",
-    format: "component",
-    componentName: "black-cat",
-    svgSrc: "/stickers/black-cat.svg",
-    description: "Sunlit black doodle cat with playful tilted ears.",
-    tags: ["cat", "black", "doodle", "sunny", "kitten"],
-    defaultRotation: -8,
-  },
-  {
-    id: "svg-dog",
-    name: "dog",
-    title: "Playful Dog",
-    category: "characters",
-    format: "component",
-    componentName: "dog",
-    svgSrc: "/stickers/dogsticker.svg",
-    description: "Energetic pup with perked ears and friendly doodle smile.",
-    tags: ["dog", "pup", "pet", "animal", "friendly"],
-    defaultRotation: 8,
-  },
-  {
-    id: "svg-peace-hand",
-    name: "peace-hand",
-    title: "Peace Hand",
-    category: "symbols",
-    format: "component",
-    componentName: "peace-hand",
-    svgSrc: "/stickers/Peace-hand.svg",
-    description: "Pastel neon peace sign hand with a bold graphic contour line.",
-    tags: ["peace", "hand", "v-sign", "victory", "neon"],
-    defaultRotation: 14,
   },
   {
     id: "svg-sparkles",
@@ -360,18 +327,6 @@ const CATALOG: CatalogItem[] = [
     defaultRotation: 7,
   },
   {
-    id: "svg-japan",
-    name: "japan-badge",
-    title: "Tokyo Graphic",
-    category: "symbols",
-    format: "component",
-    componentName: "japan-badge",
-    svgSrc: "/stickers/japan.svg",
-    description: "Tokyo-inspired graphic emblem stamp with stylized kanji character.",
-    tags: ["japan", "tokyo", "stamp", "badge", "kanji"],
-    defaultRotation: -5,
-  },
-  {
     id: "svg-vlc-cone",
     name: "cone",
     title: "Traffic Cone",
@@ -382,18 +337,6 @@ const CATALOG: CatalogItem[] = [
     description: "Playful striped orange construction cone sticker for under-construction or alerts.",
     tags: ["cone", "traffic", "orange", "construction", "alert"],
     defaultRotation: 6,
-  },
-  {
-    id: "svg-icy-fleur",
-    name: "icy-fleur",
-    title: "Icy Fleur-de-lis",
-    category: "symbols",
-    format: "component",
-    componentName: "icy-fleur",
-    svgSrc: "/stickers/Icy chrome fleur-de-lis sticker.svg",
-    description: "Liquid chrome heraldic fleur-de-lis with cold mirror reflections.",
-    tags: ["fleur", "chrome", "heraldic", "metal", "silver"],
-    defaultRotation: -4,
   },
   {
     id: "svg-app-icon",
@@ -683,54 +626,56 @@ export default function StickersCatalogPage() {
           className=" font-sans text-4xl font-normal leading-[1.08] tracking-tight text-zinc-900 sm:text-6xl"
           style={{ animation: "rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 80ms both" }}
         >
-          Stick it on.
+          Stick it up.
           <br />
           <span className="text-zinc-500">Pick any sticker, drop it in.</span>
         </h1>
 
         
-        {/* Quick Install Bar (Minimal) */}
+        {/* Quick Install Bar */}
         <div
           className="mt-8 flex items-center justify-center gap-2"
           style={{ animation: "rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 240ms both" }}
         >
+          {/* Install command pill */}
           <button
             onClick={copyInstall}
             type="button"
-            className="group inline-flex items-center gap-3 rounded-full border border-zinc-200/90 bg-white px-3.5 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all hover:border-zinc-300 hover:bg-zinc-50/60 active:scale-[0.98]"
+            aria-label={installCopied ? "Copied to clipboard" : "Copy npm i stick-it-up"}
+            className="group inline-flex items-center gap-3 rounded-full border border-zinc-200/90 bg-white px-3.5 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] outline-none transition-all duration-200 hover:border-zinc-300 hover:bg-zinc-50/60 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-zinc-900/20 focus-visible:ring-offset-2"
           >
             <span className="font-mono text-xs text-zinc-500 group-hover:text-zinc-700">
               <span className="mr-1.5 select-none text-zinc-400">$</span>npm i stick-it-up
             </span>
-            <span className="flex items-center text-[11px] font-medium text-zinc-500 transition-colors group-hover:text-zinc-900">
+            <span className="flex items-center">
               {installCopied ? (
-                <span className="flex items-center gap-1 text-emerald-600">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-3 w-3">
-                    <path d="m5 13 4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  copied
-                </span>
+                <LuCopyCheck className="h-3.5 w-3.5 text-emerald-600 transition-transform duration-200" />
               ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5 text-zinc-400 group-hover:text-zinc-600">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                </svg>
+                <LuCopy className="h-3.5 w-3.5 text-zinc-400 transition-colors group-hover:text-zinc-600" />
               )}
             </span>
           </button>
 
+          {/* GitHub button (icon-only circular) */}
           <a
             href="https://github.com/Sam721166/stick-it-up"
             target="_blank"
             rel="noreferrer"
-            aria-label="GitHub Repository"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-200/90 bg-white text-zinc-600 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all hover:border-zinc-300 hover:bg-zinc-50/60 hover:text-zinc-950 active:scale-95"
+            className="inline-flex h-[34px] w-[34px] items-center justify-center rounded-full border border-zinc-200/90 bg-white text-zinc-600 shadow-[0_1px_2px_rgba(0,0,0,0.04)] outline-none transition-all duration-200 hover:border-zinc-300 hover:bg-zinc-50/60 hover:text-zinc-900 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-zinc-900/20 focus-visible:ring-offset-2"
+            title="View on GitHub"
+            aria-label="View on GitHub"
           >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
-              <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+            <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden="true">
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+              />
             </svg>
           </a>
         </div>
+
+        
       </section>
 
       {/* ------------------------------------------------------------------
@@ -845,14 +790,9 @@ export default function StickersCatalogPage() {
                     }`}
                   >
                     {isCopied ? (
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-3.5 w-3.5">
-                        <path d="m5 13 4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      <LuCopyCheck className="h-3.5 w-3.5 text-emerald-600" />
                     ) : (
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                      </svg>
+                      <LuCopy className="h-3.5 w-3.5 text-zinc-400 group-hover:text-zinc-600" />
                     )}
                   </button>
 
@@ -1364,14 +1304,14 @@ export default function Hero() {
                 <button
                   type="button"
                   onClick={copySnippet}
-                  className={`cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium transition-all active:scale-95 ${
+                  className={`inline-flex h-[26px] items-center justify-center cursor-pointer rounded-md border px-2.5 text-[11px] font-medium leading-none transition-all active:scale-95 ${
                     copied
-                      ? "bg-emerald-100 text-emerald-700"
-                      : "bg-white text-zinc-700 shadow-[0_0_0_1px_rgba(0,0,0,0.08)] hover:bg-zinc-100"
+                      ? "border-emerald-200 bg-emerald-100 text-emerald-700"
+                      : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-100"
                   }`}
                 >
                   {copied ? (
-                    <span className="inline-flex items-center gap-1 ">
+                    <span className="inline-flex items-center gap-1 leading-none">
                       <svg
                         viewBox="0 0 24 24"
                         fill="none"

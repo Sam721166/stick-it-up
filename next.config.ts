@@ -16,6 +16,28 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  async headers() {
+    return [
+      {
+        source: "/stickers/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/:all*(svg|png|jpg|ico|webp)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
