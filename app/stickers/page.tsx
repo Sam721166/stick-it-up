@@ -743,7 +743,7 @@ export default function StickersCatalogPage() {
             {(
               [
                 { id: "all", label: "All Stickers", count: categoryCounts.all },
-                { id: "components", label: "React Components", count: categoryCounts.components },
+                { id: "components", label: "Chrome & Badges", count: categoryCounts.components },
                 { id: "symbols", label: "Symbols & Badges", count: categoryCounts.symbols },
                 { id: "characters", label: "Characters", count: categoryCounts.characters },
               ] as const
@@ -986,7 +986,7 @@ export default function StickersCatalogPage() {
                         onClick={copyGuideCode}
                         className={`cursor-pointer text-[11px] font-medium transition-colors ${
                             guideCopied === "code"
-                            ? "text-emerald-600 font-semibold"
+                            ? "text-zinc-500 "
                             : "text-zinc-400 hover:text-zinc-600"
                         }`}
                         >
@@ -1020,8 +1020,10 @@ export default function Hero() {
                             {(
                             [
                                 { id: "flame", label: "flame" },
+                                { id: "black-cat", label: "black-cat" },
                                 { id: "star-burst", label: "star" },
                                 { id: "metal", label: "metal" },
+                                { id: "dog", label: "dog" },
                                 { id: "devil-cone", label: "devil" },
                             ] as const
                             ).map((s) => (
@@ -1120,15 +1122,11 @@ export default function Hero() {
                 dependencies needed.
                 </p>
 
-                <div className="overflow-hidden rounded-xl border border-zinc-800 bg-[#0c0d0e]">
-                <div className="flex items-center justify-between border-b border-zinc-800/80 bg-[#141517] px-4 py-2">
+                <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+                <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-50 px-4 py-2">
                     <div className="flex items-center gap-2">
-                    <div className="flex gap-1.5">
-                        <span className="h-2 w-2 rounded-full bg-red-500/80" />
-                        <span className="h-2 w-2 rounded-full bg-amber-500/80" />
-                        <span className="h-2 w-2 rounded-full bg-emerald-500/80" />
-                    </div>
-                    <span className="ml-1.5 font-mono text-[11px] text-zinc-400">index.html</span>
+                    
+                    <span className="ml-1.5 font-mono text-[11px] text-zinc-500">index.html</span>
                     </div>
                     <button
                     type="button"
@@ -1142,7 +1140,7 @@ export default function Hero() {
                     {guideCopied === "code" ? "Copied ✓" : "Copy"}
                     </button>
                 </div>
-                <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-zinc-300">
+                <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-zinc-900">
                     <code>{`<img
   src="/stickers/Flame.svg"
   alt="Flame sticker"
