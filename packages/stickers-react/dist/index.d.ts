@@ -19,7 +19,7 @@ interface StickerProps extends SVGProps<SVGSVGElement> {
      */
     style?: CSSProperties;
 }
-type StickerName = "flame" | "metal" | "blob-burst" | "star-burst" | "devil-cone" | "flame-star" | "folded-paper" | "red-berry" | "blueberry" | "berries" | "badge-smiley" | "cosmic-pill" | "red-cat" | "pink-cat" | "pink-cat-stamp" | "yellow-cat" | "black-cat" | "cat" | "cat-serious" | "dog" | "face" | "flower" | "peace-hand" | "sparkles" | "sparkle-trio" | "cosmic-eye" | "curious-globe" | "spiral" | "eye-splat" | "japan-badge" | "cone" | "icy-fleur" | "app-badge";
+type StickerName = "flame" | "metal" | "blob-burst" | "star-burst" | "devil-cone" | "flame-star" | "folded-paper" | "red-berry" | "blueberry" | "berries" | "badge-smiley" | "cosmic-pill" | "red-cat" | "pink-cat" | "pink-cat-stamp" | "yellow-cat" | "black-cat" | "cat" | "cat-serious" | "dog" | "face" | "flower" | "peace-hand" | "sparkles" | "sparkle-trio" | "cosmic-eye" | "curious-globe" | "spiral" | "eye-splat" | "japan-badge" | "cone" | "icy-fleur" | "app-badge" | "bunny" | "cat-sit" | "fish" | "luffy-hat" | "coffee" | "japan-flag";
 
 declare const STICKER_MAP: Record<StickerName, React.FC<StickerProps>>;
 interface DynamicStickerProps extends StickerProps {
@@ -98,5 +98,17 @@ declare const IcyFleurSticker: React.FC<StickerProps>;
 
 declare const AppBadgeSticker: React.FC<StickerProps>;
 
-export { AppBadgeSticker, RedBerrySticker as BadgeSmileySticker, BerriesSticker, BlackCatSticker, BlobBurstSticker, BlueberrySticker, CatSeriousSticker, CatSticker, ConeSticker, CosmicEyeSticker, BlueberrySticker as CosmicPillSticker, CuriousGlobeSticker, DevilConeSticker, DogSticker, EyeSplatSticker, FaceSticker, FlameStarSticker, FlameSticker, FlowerSticker, FoldedPaperSticker, IcyFleurSticker, JapanBadgeSticker, MetalSticker, PeaceHandSticker, PinkCatSticker as PinkCatStampSticker, PinkCatSticker, RedBerrySticker, RedCatSticker, STICKER_MAP, SparkleTrioSticker, SparklesSticker, SpiralSticker, StarBurstSticker, Sticker, YellowCatSticker, Sticker as default };
+declare const BunnySticker: React.FC<StickerProps>;
+
+declare const CatSitSticker: React.FC<StickerProps>;
+
+declare const FishSticker: React.FC<StickerProps>;
+
+declare const LuffyHatSticker: React.FC<StickerProps>;
+
+declare const CoffeeSticker: React.FC<StickerProps>;
+
+declare const JapanFlagSticker: React.FC<StickerProps>;
+
+export { AppBadgeSticker, RedBerrySticker as BadgeSmileySticker, BerriesSticker, BlackCatSticker, BlobBurstSticker, BlueberrySticker, BunnySticker, CatSeriousSticker, CatSitSticker, CatSticker, CoffeeSticker, ConeSticker, CosmicEyeSticker, BlueberrySticker as CosmicPillSticker, CuriousGlobeSticker, DevilConeSticker, DogSticker, EyeSplatSticker, FaceSticker, FishSticker, FlameStarSticker, FlameSticker, FlowerSticker, FoldedPaperSticker, IcyFleurSticker, JapanBadgeSticker, JapanFlagSticker, LuffyHatSticker, MetalSticker, PeaceHandSticker, PinkCatSticker as PinkCatStampSticker, PinkCatSticker, RedBerrySticker, RedCatSticker, STICKER_MAP, SparkleTrioSticker, SparklesSticker, SpiralSticker, StarBurstSticker, Sticker, YellowCatSticker, Sticker as default };
 export type { DynamicStickerProps, StickerName, StickerProps };

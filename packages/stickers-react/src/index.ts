@@ -39,6 +39,12 @@ export { JapanBadgeSticker } from "./stickers/JapanBadgeSticker";
 export { ConeSticker } from "./stickers/ConeSticker";
 export { IcyFleurSticker } from "./stickers/IcyFleurSticker";
 export { AppBadgeSticker } from "./stickers/AppBadgeSticker";
+export { BunnySticker } from "./stickers/BunnySticker";
+export { CatSitSticker } from "./stickers/CatSitSticker";
+export { FishSticker } from "./stickers/FishSticker";
+export { LuffyHatSticker } from "./stickers/LuffyHatSticker";
+export { CoffeeSticker } from "./stickers/CoffeeSticker";
+export { JapanFlagSticker } from "./stickers/JapanFlagSticker";
 
 import { Sticker } from "./components/Sticker";
 export default Sticker;

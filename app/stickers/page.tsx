@@ -31,8 +31,6 @@ interface CatalogItem {
 
 const CATALOG: CatalogItem[] = [
   /* Built-in React Components (stick-it-up) */
-  
-
   {
     id: "svg-face",
     name: "face",
@@ -349,6 +347,78 @@ const CATALOG: CatalogItem[] = [
     description: "Tactile app icon badge with rounded square frame and pastel tone.",
     tags: ["app", "badge", "icon", "squircle", "pastel"],
     defaultRotation: 4,
+  },
+  {
+    id: "svg-bunny",
+    name: "bunny",
+    title: "Cute Bunny",
+    category: "characters",
+    format: "component",
+    componentName: "bunny",
+    svgSrc: "/stickers/bunny.svg",
+    description: "Adorable minimalist white rabbit with tall perked ears and hand-drawn eyes.",
+    tags: ["bunny", "rabbit", "cute", "animal", "pet", "character", "white"],
+    defaultRotation: -4,
+  },
+  {
+    id: "svg-cat-sit",
+    name: "cat-sit",
+    title: "Sitting Cat",
+    category: "characters",
+    format: "component",
+    componentName: "cat-sit",
+    svgSrc: "/stickers/cat-sit.svg",
+    description: "Cozy black cat sitting upright with focused expressive gaze and silhouette posture.",
+    tags: ["cat", "sitting", "black-cat", "kitten", "pet", "animal", "character"],
+    defaultRotation: 3,
+  },
+  {
+    id: "svg-fish",
+    name: "fish",
+    title: "Cartoon Fish",
+    category: "characters",
+    format: "component",
+    componentName: "fish",
+    svgSrc: "/stickers/fish.svg",
+    description: "Playful minimalist goldfish doodle with wide curious eye and wavy fins.",
+    tags: ["fish", "goldfish", "ocean", "sea", "animal", "swimming", "character"],
+    defaultRotation: -6,
+  },
+  {
+    id: "svg-luffy-hat",
+    name: "luffy-hat",
+    title: "Straw Hat",
+    category: "symbols",
+    format: "component",
+    componentName: "luffy-hat",
+    svgSrc: "/stickers/luffy-hat.svg",
+    description: "Iconic anime straw hat with vibrant crimson band, stitched brim, and crosshatch shading.",
+    tags: ["luffy", "straw-hat", "anime", "one-piece", "hat", "symbol", "pirate"],
+    defaultRotation: 8,
+  },
+  {
+    id: "svg-coffee",
+    name: "coffee",
+    title: "Coffee Mug",
+    category: "symbols",
+    format: "component",
+    componentName: "coffee",
+    svgSrc: "/stickers/coffee.svg",
+    description: "Retro diner coffee mug with steaming aroma swirls and comic pop-art palette.",
+    tags: ["coffee", "cup", "mug", "drink", "morning", "retro", "cafe"],
+    defaultRotation: -5,
+  },
+  {
+    id: "svg-japan-flag",
+    name: "japan-flag",
+    title: "Japan Flag",
+    category: "symbols",
+    format: "component",
+    componentName: "japan-flag",
+    svgSrc: "/stickers/japan-flag.svg",
+    description: "Waving Japanese flag banner with bold comic borders and iconic crimson sun circle.",
+    tags: ["japan", "flag", "tokyo", "sun", "banner", "country", "symbol"],
+    defaultRotation: 5,
   },
 ];
 
@@ -1088,7 +1158,6 @@ export default function Hero() {
                                 { id: "star-burst", label: "star" },
                                 { id: "metal", label: "metal" },
                                 { id: "dog", label: "dog" },
-                                { id: "devil-cone", label: "devil" },
                             ] as const
                             ).map((s) => (
                             <button

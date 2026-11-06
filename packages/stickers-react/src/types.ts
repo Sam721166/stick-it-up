@@ -53,4 +53,10 @@ export type StickerName =
   | "japan-badge"
   | "cone"
   | "icy-fleur"
-  | "app-badge";
+  | "app-badge"
+  | "bunny"
+  | "cat-sit"
+  | "fish"
+  | "luffy-hat"
+  | "coffee"
+  | "japan-flag";

@@ -37,6 +37,12 @@ import { JapanBadgeSticker } from "../stickers/JapanBadgeSticker";
 import { ConeSticker } from "../stickers/ConeSticker";
 import { IcyFleurSticker } from "../stickers/IcyFleurSticker";
 import { AppBadgeSticker } from "../stickers/AppBadgeSticker";
+import { BunnySticker } from "../stickers/BunnySticker";
+import { CatSitSticker } from "../stickers/CatSitSticker";
+import { FishSticker } from "../stickers/FishSticker";
+import { LuffyHatSticker } from "../stickers/LuffyHatSticker";
+import { CoffeeSticker } from "../stickers/CoffeeSticker";
+import { JapanFlagSticker } from "../stickers/JapanFlagSticker";
 
 export const STICKER_MAP: Record<StickerName, React.FC<StickerProps>> = {
   flame: FlameSticker,
@@ -74,6 +80,12 @@ export const STICKER_MAP: Record<StickerName, React.FC<StickerProps>> = {
   cone: ConeSticker,
   "icy-fleur": IcyFleurSticker,
   "app-badge": AppBadgeSticker,
+  bunny: BunnySticker,
+  "cat-sit": CatSitSticker,
+  fish: FishSticker,
+  "luffy-hat": LuffyHatSticker,
+  coffee: CoffeeSticker,
+  "japan-flag": JapanFlagSticker,
 };
 
 export interface DynamicStickerProps extends StickerProps {
