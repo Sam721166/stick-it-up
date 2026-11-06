@@ -7,6 +7,8 @@ export default defineConfig({
   clean: true,
   minify: true,
   sourcemap: true,
+  splitting: true,
+  treeshake: true,
   banner: {
     js: '"use client";',
   },

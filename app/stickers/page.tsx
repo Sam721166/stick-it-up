@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef, useDeferredValue } from "react";
 import Link from "next/link";
 import { LuCopyCheck, LuCopy } from "react-icons/lu";
 import { Sticker, type StickerName } from "stick-it-up";
@@ -353,8 +353,17 @@ const CATALOG: CatalogItem[] = [
 ];
 
 /* ------------------------------------------------------------------
-   Sticker Visual Renderer
+   Sticker Visual Renderer & Helpers
 ------------------------------------------------------------------- */
+
+function getComponentExportName(name: string): string {
+  return (
+    name
+      .split("-")
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join("") + "Sticker"
+  );
+}
 
 function StickerVisual({
   item,
@@ -385,14 +394,22 @@ function StickerVisual({
 export default function StickersCatalogPage() {
   const [selectedCategory, setSelectedCategory] = useState<StickerCategory>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const deferredSearch = useDeferredValue(searchQuery);
+
   const [activeItem, setActiveItem] = useState<CatalogItem | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [installCopied, setInstallCopied] = useState(false);
+
+  // Progressive rendering & batching for 500-1,000+ items
+  const BATCH_SIZE = 32;
+  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   // Inspector modal states
   const [inspectorSize, setInspectorSize] = useState(130);
   const [inspectorPeel, setInspectorPeel] = useState(true);
   const [inspectorBg, setInspectorBg] = useState<"white" | "zinc" | "warm" | "blue">("white");
+  const [snippetTab, setSnippetTab] = useState<"named" | "dynamic">("named");
 
   // Quickstart guide interactive state
   const [guideTab, setGuideTab] = useState<"react" | "svg">("react");
@@ -462,9 +479,9 @@ export default function StickersCatalogPage() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  // Filtered stickers
+  // Filtered stickers with deferred search to keep input 60fps
   const filteredStickers = useMemo(() => {
-    const q = searchQuery.toLowerCase().trim();
+    const q = deferredSearch.toLowerCase().trim();
     return CATALOG.filter((item) => {
       const matchesCategory =
         selectedCategory === "all" || item.category === selectedCategory;
@@ -479,7 +496,35 @@ export default function StickersCatalogPage() {
         item.tags.some((tag) => tag.toLowerCase().includes(q))
       );
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, deferredSearch]);
+
+  // Reset batch count on filter/search change
+  useEffect(() => {
+    setVisibleCount(BATCH_SIZE);
+  }, [selectedCategory, deferredSearch]);
+
+  // Infinite scroll observer to progressively load batches
+  useEffect(() => {
+    const target = loadMoreRef.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredStickers.length));
+        }
+      },
+      { rootMargin: "600px 0px" }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [filteredStickers.length]);
+
+  // Sliced items for render
+  const visibleStickers = useMemo(() => {
+    return filteredStickers.slice(0, visibleCount);
+  }, [filteredStickers, visibleCount]);
 
   async function copyInstall() {
     try {
@@ -493,7 +538,8 @@ export default function StickersCatalogPage() {
   async function copyCode(item: CatalogItem, e?: React.MouseEvent) {
     if (e) e.stopPropagation();
     const stickerName = item.componentName || item.name;
-    const code = `<Sticker name="${stickerName}" size={96} peel />`;
+    const compName = getComponentExportName(stickerName);
+    const code = `import { ${compName} } from "stick-it-up";\n\n<${compName} size={96} peel />`;
 
     try {
       await navigator.clipboard.writeText(code);
@@ -769,53 +815,72 @@ export default function StickersCatalogPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 sm:gap-4">
-            {filteredStickers.map((item) => {
-              const isCopied = copiedId === item.id;
-              return (
-                <div
-                  key={item.id}
-                  onClick={() => setActiveItem(item)}
-                  className="group relative flex min-h-[168px] flex-col items-center justify-between rounded-2xl border border-zinc-200/80 bg-white p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-[0_6px_20px_rgba(0,0,0,0.04)] cursor-pointer"
-                >
-                  {/* Subtle top-right copy button on hover */}
-                  <button
-                    type="button"
-                    onClick={(e) => copyCode(item, e)}
-                    title="Copy JSX code"
-                    className={`absolute right-2.5 top-2.5 rounded-lg p-1.5 transition-all ${
-                      isCopied
-                        ? "opacity-100 bg-emerald-50 text-emerald-600"
-                        : "opacity-0 group-hover:opacity-100 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
-                    }`}
+          <>
+            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 sm:gap-4">
+              {visibleStickers.map((item) => {
+                const isCopied = copiedId === item.id;
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => setActiveItem(item)}
+                    style={{
+                      contentVisibility: "auto",
+                      containIntrinsicSize: "168px",
+                    }}
+                    className="group relative flex min-h-[168px] flex-col items-center justify-between rounded-2xl border border-zinc-200/80 bg-white p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-[0_6px_20px_rgba(0,0,0,0.04)] cursor-pointer"
                   >
-                    {isCopied ? (
-                      <LuCopyCheck className="h-3.5 w-3.5 text-emerald-600" />
-                    ) : (
-                      <LuCopy className="h-3.5 w-3.5 text-zinc-400 group-hover:text-zinc-600" />
-                    )}
-                  </button>
-
-                  {/* Sticker visual */}
-                  <div className="flex flex-1 items-center justify-center py-2">
-                    <div
-                      className="transition-transform duration-200 group-hover:scale-110"
-                      style={{
-                        transform: `rotate(${item.defaultRotation || 0}deg)`,
-                      }}
+                    {/* Subtle top-right copy button on hover */}
+                    <button
+                      type="button"
+                      onClick={(e) => copyCode(item, e)}
+                      title="Copy lightweight JSX code"
+                      className={`absolute right-2.5 top-2.5 rounded-lg p-1.5 transition-all ${
+                        isCopied
+                          ? "opacity-100 bg-emerald-50 text-emerald-600"
+                          : "opacity-0 group-hover:opacity-100 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
+                      }`}
                     >
-                      <StickerVisual item={item} size={74} peel={false} />
-                    </div>
-                  </div>
+                      {isCopied ? (
+                        <LuCopyCheck className="h-3.5 w-3.5 text-emerald-600" />
+                      ) : (
+                        <LuCopy className="h-3.5 w-3.5 text-zinc-400 group-hover:text-zinc-600" />
+                      )}
+                    </button>
 
-                  {/* Name matches code prop */}
-                  <span className="w-full truncate text-center font-sans text-xs font-medium text-zinc-600  transition-colors duration-150 group-hover:text-zinc-950">
-                    {item.name}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+                    {/* Sticker visual */}
+                    <div className="flex flex-1 items-center justify-center py-2">
+                      <div
+                        className="transition-transform duration-200 group-hover:scale-110"
+                        style={{
+                          transform: `rotate(${item.defaultRotation || 0}deg)`,
+                        }}
+                      >
+                        <StickerVisual item={item} size={74} peel={false} />
+                      </div>
+                    </div>
+
+                    {/* Name matches code prop */}
+                    <span className="w-full truncate text-center font-sans text-xs font-medium text-zinc-600  transition-colors duration-150 group-hover:text-zinc-950">
+                      {item.name}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Infinite scroll sentinel & count indicator for large catalogs */}
+            {visibleCount < filteredStickers.length && (
+              <div
+                ref={loadMoreRef}
+                className="mt-8 flex items-center justify-center py-4 text-xs text-zinc-400"
+              >
+                <span className="inline-flex items-center gap-2 rounded-full border border-zinc-200/80 bg-zinc-50 px-3.5 py-1.5 font-medium text-zinc-600 shadow-sm">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+                  Showing {visibleStickers.length} of {filteredStickers.length} stickers — scroll for more
+                </span>
+              </div>
+            )}
+          </>
         )}
       </main>
 
@@ -1106,11 +1171,17 @@ export default function Hero() {
 {activeItem &&
   (() => {
     const stickerName = activeItem.componentName || activeItem.name;
+    const componentPascalName = getComponentExportName(stickerName);
 
-    // The snippet shown below is exactly what gets copied.
-    const code = `import { Sticker } from "stick-it-up";\n\n<Sticker\n  name="${stickerName}"\n  size={${inspectorSize}}${
+    const namedCode = `import { ${componentPascalName} } from "stick-it-up";\n\n<${componentPascalName}\n  size={${inspectorSize}}${
       inspectorPeel ? "\n  peel" : ""
     }\n/>`;
+
+    const dynamicCode = `import { Sticker } from "stick-it-up";\n\n<Sticker\n  name="${stickerName}"\n  size={${inspectorSize}}${
+      inspectorPeel ? "\n  peel" : ""
+    }\n/>`;
+
+    const code = snippetTab === "named" ? namedCode : dynamicCode;
 
     const copied = copiedId === activeItem.id;
 
@@ -1297,10 +1368,32 @@ export default function Hero() {
             </div>
 
             <div className="mt-2.5 overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50">
-              <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-2">
-                <span className="font-mono text-[11px] text-zinc-400">
-                  Component.tsx
-                </span>
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 bg-white px-3 py-2">
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setSnippetTab("named")}
+                    className={`cursor-pointer rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all ${
+                      snippetTab === "named"
+                        ? "bg-zinc-900 text-white shadow-sm"
+                        : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
+                    }`}
+                  >
+                    Tree-shakeable
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSnippetTab("dynamic")}
+                    className={`cursor-pointer rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all ${
+                      snippetTab === "dynamic"
+                        ? "bg-zinc-900 text-white shadow-sm"
+                        : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
+                    }`}
+                  >
+                    Dynamic
+                  </button>
+                 
+                </div>
                 <button
                   type="button"
                   onClick={copySnippet}
