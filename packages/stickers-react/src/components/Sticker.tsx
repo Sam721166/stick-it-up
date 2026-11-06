@@ -49,8 +49,8 @@ export const STICKER_MAP: Record<StickerName, React.FC<StickerProps>> = {
   "red-berry": RedBerrySticker,
   blueberry: BlueberrySticker,
   berries: BerriesSticker,
-  "badge-smiley": RedBerrySticker,
-  "cosmic-pill": BlueberrySticker,
+  "badge-smiley": BadgeSmileySticker,
+  "cosmic-pill": CosmicPillSticker,
 
   // Characters & Symbols
   "red-cat": RedCatSticker,

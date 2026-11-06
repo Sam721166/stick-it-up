@@ -20,7 +20,7 @@ yarn add stick-it-up
 
 ## 🚀 Quick Start
 
-### 1. Named Imports (Tree-shakeable)
+### 1. Direct Imports (Named & Lightweight)
 
 ```tsx
 import {

@@ -5,6 +5,7 @@ import Folder from "../components/landing/folder"
 import Bento from "../components/landing/bento"
 import GetStarted from "../components/landing/get-started"
 import Footer from "../components/landing/footer"
+import { VisitorCounter, GitHubStarButton } from "../components/landing/nav-actions"
 
 /* ---------- data ---------- */
 
@@ -18,12 +19,11 @@ const POP_SRCS = [
   "/stickers/cat.svg",
   "/stickers/Sparkles.svg",
   "/stickers/Flame.svg",
-  "/Stickers/vlc2.svg",
-  "/Stickers/SparkleTrio.svg",
-  "/Stickers/Spiral.svg",
-  "/Stickers/Cosmiceye.svg",
-  "/Stickers/dog.svg",
-  
+  "/stickers/vlc2.svg",
+  "/stickers/SparkleTrio.svg",
+  "/stickers/Spiral.svg",
+  "/stickers/Cosmiceye.svg",
+  "/stickers/dogsticker.svg",
 ];
 
 type Token = string | { src: string };
@@ -163,22 +163,49 @@ function HeroSticker({ src, delay }: { src: string; delay: number }) {
   );
 }
 
-/* ---------- user counter with isolated rAF ---------- */
+/* ---------- total npm downloads counter with isolated rAF ---------- */
 
-function UserCounter() {
-  const [count, setCount] = useState(0);
+function TotalDownloadsCounter() {
+  const [count, setCount] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let raf = 0;
-    const t0 = performance.now() + 800;
-    const dur = 1400;
-    const tick = (now: number) => {
-      const p = Math.min(Math.max((now - t0) / dur, 0), 1);
-      setCount(Math.round(1000 * (1 - Math.pow(1 - p, 3))));
-      if (p < 1) raf = requestAnimationFrame(tick);
+    let unmounted = false;
+
+    fetch("/api/npm-downloads?package=stick-it-up")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (unmounted) return;
+        const target = typeof data?.downloads === "number" ? data.downloads : 453;
+        setLoading(false);
+
+        // Smooth roll-up animation starting dynamically from 0
+        const startCount = 0;
+        const startTime = performance.now();
+        const duration = 1200;
+
+        const tick = (now: number) => {
+          if (unmounted) return;
+          const progress = Math.min((now - startTime) / duration, 1);
+          const ease = 1 - Math.pow(1 - progress, 3);
+          const val = Math.round(startCount + (target - startCount) * ease);
+          setCount(val);
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+
+        requestAnimationFrame(tick);
+      })
+      .catch((err) => {
+        console.warn("Could not fetch npm downloads, using local fallback", err);
+        if (!unmounted) {
+          setLoading(false);
+          setCount(453);
+        }
+      });
+
+    return () => {
+      unmounted = true;
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
   }, []);
 
   return (
@@ -186,17 +213,29 @@ function UserCounter() {
       className="mt-14 flex flex-col items-center"
       style={{ animation: "rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 1150ms both" }}
     >
-      <img
-        data-sticker
-        src="/stickers/Component-66.svg"
-        alt=""
-        draggable={false}
-        className="h-20 w-20 cursor-pointer select-none transition-transform duration-300 hover:scale-110 hover:-rotate-3 active:scale-95"
-        style={{ transitionTimingFunction: SPRING }}
-      />
-      <p className="-mt-4 font-sans text-base text-neutral-400">
-        Used by <span className="tabular-nums">{count.toLocaleString()}</span>+ developers
-      </p>
+      <a
+        href="https://www.npmjs.com/package/stick-it-up"
+        target="_blank"
+        rel="noreferrer"
+        className="group flex flex-col items-center transition-opacity hover:opacity-90"
+        title="View stick-it-up on npm"
+      >
+        <img
+          data-sticker
+          src="/stickers/Component-66.svg"
+          alt="stick-it-up"
+          draggable={false}
+          className="h-20 w-20 cursor-pointer select-none transition-transform duration-300 hover:scale-110 hover:-rotate-3 active:scale-95"
+          style={{ transitionTimingFunction: SPRING }}
+        />
+        <p className="-mt-4 flex items-center gap-1 font-sans text-sm sm:text-base text-neutral-500">
+          <span className="text-xs text-neutral-400">Used by</span>
+          <span className=" text-sm font-sans font-medium text-neutral-800 tabular-nums">
+            {loading && count === 0 ? "..." : count.toLocaleString()}
+          </span>
+          <span className="text-xs text-neutral-400"> developers</span>
+        </p>
+      </a>
     </div>
   );
 }
@@ -206,7 +245,7 @@ function UserCounter() {
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const [pops, setPops] = useState<Pop[]>([]);
-  const mainRef = useRef<HTMLElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
   const stickersLayerRef = useRef<HTMLDivElement>(null);
   const rafParallax = useRef<number | null>(null);
   const popId = useRef(0);
@@ -259,7 +298,7 @@ export default function Home() {
   function onClick(e: React.MouseEvent<HTMLElement>) {
     const target = e.target as HTMLElement;
     if (target.closest("a, button, [data-sticker]")) return;
-    const rect = mainRef.current?.getBoundingClientRect();
+    const rect = heroRef.current?.getBoundingClientRect();
     if (!rect) return;
 
     const id = popId.current++;
@@ -275,10 +314,7 @@ export default function Home() {
   }
 
   return (
-    <main
-      ref={mainRef}
-      className="relative min-h-screen w-full overflow-hidden bg-white"
-    >
+    <main className="relative min-h-screen w-full overflow-hidden bg-white">
       <style>{`
         @keyframes float {
           0%, 100% { transform: translateY(0); }
@@ -316,7 +352,7 @@ export default function Home() {
       >
         <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between rounded-2xl">
           {/* brand */}
-          <a href="/" className="group flex items-center gap-2.5">
+          <Link href="/" className="group flex items-center gap-2.5">
             <img
               src="/stickers/logo.svg"
               alt="Stick it up logo"
@@ -326,7 +362,7 @@ export default function Home() {
             <span className="text-lg font-semibold tracking-tight text-zinc-900">
               Stick it up
             </span>
-          </a>
+          </Link>
 
           {/* links */}
           <ul className="hidden items-center gap-1 md:flex">
@@ -347,106 +383,94 @@ export default function Home() {
             ))}
           </ul>
 
-          {/* cta */}
-          <a
-            href="/stickers#docs"
-            className="group inline-flex items-center gap-2 rounded-xl
-              border border-zinc-800 bg-gradient-to-b from-zinc-800 to-zinc-900
-              px-4 py-2 text-sm font-medium text-white
-              shadow-[inset_0_1px_0_#ffffff18,0_1px_2px_#00000015]
-              transition-all duration-150
-              hover:from-zinc-700 hover:to-zinc-800
-              active:translate-y-px active:shadow-inner"
-          >
-            <span>Log in</span>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-            >
-              <path d="M7 17 17 7M7 7h10v10" />
-            </svg>
-          </a>
+          {/* visitor counter & github star */}
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
+            <VisitorCounter />
+            <GitHubStarButton />
+          </div>
         </nav>
       </header>
 
-      {/* stickers layer (draggable, parallax, floating) */}
-      <div ref={stickersLayerRef} className="pointer-events-none absolute inset-0 z-20 h-200">
-        <DraggableSticker
-          src="/stickers/blueberry.svg"
-          size={128}
-          rotate={-25}
-          depth={16}
-          delay={0}
-          className="left-[9%] top-[14%]"
-        />
-        <DraggableSticker
-          src="/stickers/face.svg"
-          size={104}
-          rotate={-45}
-          depth={26}
-          delay={1}
-          className="left-[6%] top-[42%] hidden sm:block"
-        />
-        <DraggableSticker
-          src="/stickers/star.svg"
-          size={108}
-          rotate={-10}
-          depth={20}
-          delay={2}
-          className="left-[18%] top-[70%] hidden sm:block"
-        />
-        <DraggableSticker
-          src="/stickers/flower.svg"
-          size={72}
-          rotate={25}
-          depth={14}
-          delay={1}
-          className="right-[7%] top-[16%]"
-        />
-        <DraggableSticker
-          src="/stickers/cat.svg"
-          size={100}
-          rotate={25}
-          depth={28}
-          delay={2}
-          className="right-[6%] top-[44%] hidden sm:block"
-        />
-        <DraggableSticker
-          src="/stickers/Sparkles.svg"
-          size={92}
-          rotate={10}
-          depth={18}
-          delay={0}
-          className="right-[16%] top-[70%] hidden sm:block"
-        />
-      </div>
-
-      {/* click-to-stick pops */}
-      {pops.map((p) => (
-        <img
-          key={p.id}
-          src={p.src}
-          alt=""
-          draggable={false}
-          className="pointer-events-none absolute z-10 w-14 select-none"
-          style={{
-            left: p.x - 28,
-            top: p.y - 28,
-            rotate: `${p.rot}deg`,
-            animation: `pop 500ms ${SPRING} both, fadeOut 400ms ease-in 2100ms forwards`,
-          }}
-        />
-      ))}
-
-      {/* hero */}
-      <section
+      {/* hero full-screen-width interactive section */}
+      <div
+        ref={heroRef}
         onClick={onClick}
         onPointerMove={onPointerMove}
-        className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 pb-24 pt-16 text-center md:pt-24"
+        className="relative w-full overflow-hidden"
       >
+        {/* stickers layer (draggable, parallax, floating) */}
+        <div ref={stickersLayerRef} className="pointer-events-none absolute inset-0 z-20 h-200">
+          <DraggableSticker
+            src="/stickers/blueberry.svg"
+            size={120}
+            rotate={-25}
+            depth={16}
+            delay={0}
+            className="left-[3%] sm:left-[9%] top-[10%] sm:top-[14%]"
+          />
+          <DraggableSticker
+            src="/stickers/face.svg"
+            size={104}
+            rotate={-45}
+            depth={26}
+            delay={1}
+            className="left-[6%] top-[42%] hidden sm:block"
+          />
+          <DraggableSticker
+            src="/stickers/star.svg"
+            size={108}
+            rotate={-10}
+            depth={20}
+            delay={2}
+            className="left-[18%] top-[70%] hidden sm:block"
+          />
+          <DraggableSticker
+            src="/stickers/flower.svg"
+            size={72}
+            rotate={25}
+            depth={14}
+            delay={1}
+            className="right-[3%] sm:right-[7%] top-[12%] sm:top-[16%]"
+          />
+          <DraggableSticker
+            src="/stickers/cat.svg"
+            size={100}
+            rotate={25}
+            depth={28}
+            delay={2}
+            className="right-[6%] top-[44%] hidden sm:block"
+          />
+          <DraggableSticker
+            src="/stickers/Sparkles.svg"
+            size={92}
+            rotate={10}
+            depth={18}
+            delay={0}
+            className="right-[16%] top-[70%] hidden sm:block"
+          />
+        </div>
+
+        {/* click-to-stick pops across full screen width */}
+        {pops.map((p) => (
+          <img
+            key={p.id}
+            src={p.src}
+            alt=""
+            draggable={false}
+            className="pointer-events-none absolute z-10 w-14 select-none"
+            style={{
+              left: p.x - 28,
+              top: p.y - 28,
+              rotate: `${p.rot}deg`,
+              animation: `pop 500ms ${SPRING} both, fadeOut 400ms ease-in 2100ms forwards`,
+            }}
+          />
+        ))}
+
+        {/* hero */}
+        <section
+          className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 pb-24 pt-16 text-center md:pt-24"
+        >
         <h1 className="font-sans text-4xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">
           {HERO.map((token, i) => {
             const delay = 80 + i * 55;
@@ -587,10 +611,11 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* user counter */}
-        <UserCounter />
+        {/* total npm downloads counter */}
+        <TotalDownloadsCounter />
 
       </section>
+      </div>
 
       <div className="w-full">
           <Folder />

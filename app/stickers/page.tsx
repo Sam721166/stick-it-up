@@ -5,9 +5,9 @@ import Link from "next/link";
 import { LuCopyCheck, LuCopy } from "react-icons/lu";
 import { Sticker, type StickerName } from "stick-it-up";
 import Footer from "../../components/landing/footer";
+import { VisitorCounter, GitHubStarButton } from "../../components/landing/nav-actions";
 
-const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
-const EASE_OUT = "cubic-bezier(0.2, 0.8, 0.2, 1)";
+
 
 /* ------------------------------------------------------------------
    Sticker Catalog Data
@@ -128,15 +128,15 @@ const CATALOG: CatalogItem[] = [
     defaultRotation: 6,
   },
   {
-    id: "svg-pink-cat2",
-    name: "pink-cat-stamp",
-    title: "Bubblegum Stamp",
+    id: "svg-pink-cat",
+    name: "pink-cat",
+    title: "Pink Cat",
     category: "characters",
     format: "component",
-    componentName: "pink-cat-stamp",
-    svgSrc: "/stickers/pink-cat2.svg",
-    description: "Warm bubblegum pink feline stamp with vintage postal edges.",
-    tags: ["cat", "stamp", "postal", "pink", "bubblegum"],
+    componentName: "pink-cat",
+    svgSrc: "/stickers/pink-cat.svg",
+    description: "Warm bubblegum pink feline sticker with vintage edges and sweet blush cheeks.",
+    tags: ["cat", "pink", "kitty", "character", "bubblegum"],
     defaultRotation: 5,
   },
   {
@@ -415,6 +415,7 @@ export default function StickersCatalogPage() {
   const [guideTab, setGuideTab] = useState<"react" | "svg">("react");
   const [guidePm, setGuidePm] = useState<"npm" | "pnpm" | "bun" | "yarn">("npm");
   const [guideSticker, setGuideSticker] = useState<StickerName>("flame");
+  const [guideMode, setGuideMode] = useState<"direct" | "dynamic">("direct");
   const [guidePeel, setGuidePeel] = useState(true);
   const [guideSize, setGuideSize] = useState(96);
   const [guideCopied, setGuideCopied] = useState<"install" | "code" | null>(null);
@@ -442,11 +443,20 @@ export default function StickersCatalogPage() {
   }
 
   async function copyGuideCode() {
+    const exportName = getComponentExportName(guideSticker);
+    const directCode = `import { ${exportName} } from "stick-it-up";\n\nexport default function Hero() {\n  return (\n    <${exportName} \n      size={${guideSize}}${
+      guidePeel ? " \n      peel" : ""
+    } \n    />\n  );\n}`;
+
+    const dynamicCode = `import { Sticker } from "stick-it-up";\n\nexport default function Hero() {\n  return (\n    <Sticker \n      name="${guideSticker}" \n      size={${guideSize}}${
+      guidePeel ? " \n      peel" : ""
+    } \n    />\n  );\n}`;
+
     const code =
       guideTab === "react"
-        ? `import { Sticker } from "stick-it-up";\n\nexport default function Hero() {\n  return (\n    <Sticker \n      name="${guideSticker}" \n      size={${guideSize}}${
-            guidePeel ? " \n      peel" : ""
-          } \n    />\n  );\n}`
+        ? guideMode === "direct"
+          ? directCode
+          : dynamicCode
         : `<img src="/stickers/star.svg" alt="Star sticker" width={${guideSize}} height={${guideSize}} />`;
 
     try {
@@ -500,7 +510,10 @@ export default function StickersCatalogPage() {
 
   // Reset batch count on filter/search change
   useEffect(() => {
-    setVisibleCount(BATCH_SIZE);
+    const id = requestAnimationFrame(() => {
+      setVisibleCount(BATCH_SIZE);
+    });
+    return () => cancelAnimationFrame(id);
   }, [selectedCategory, deferredSearch]);
 
   // Infinite scroll observer to progressively load batches
@@ -636,28 +649,11 @@ export default function StickersCatalogPage() {
             </li>
           </ul>
 
-          {/* CTA / copy command */}
-             <a
-            href="/stickers#docs"
-            className="group inline-flex items-center gap-2 rounded-xl
-              border border-zinc-800 bg-gradient-to-b from-zinc-800 to-zinc-900
-              px-4 py-2 text-sm font-medium text-white
-              shadow-[inset_0_1px_0_#ffffff18,0_1px_2px_#00000015]
-              transition-all duration-150
-              hover:from-zinc-700 hover:to-zinc-800
-              active:translate-y-px active:shadow-inner"
-          >
-            <span>Log in</span>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-            >
-              <path d="M7 17 17 7M7 7h10v10" />
-            </svg>
-          </a>
+          {/* visitor counter & github star */}
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
+            <VisitorCounter />
+            <GitHubStarButton />
+          </div>
         </nav>
       </header>
 
@@ -688,14 +684,38 @@ export default function StickersCatalogPage() {
             onClick={copyInstall}
             type="button"
             aria-label={installCopied ? "Copied to clipboard" : "Copy npm i stick-it-up"}
-            className="group inline-flex items-center gap-3 rounded-full border border-zinc-200/90 bg-white px-3.5 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] outline-none transition-all duration-200 hover:border-zinc-300 hover:bg-zinc-50/60 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-zinc-900/20 focus-visible:ring-offset-2"
+            className={`group inline-flex items-center gap-3 rounded-full border px-3.5 py-2 shadow-[0_1px_2px_rgba(0,0,0,0.04)] outline-none transition-all duration-200 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-zinc-900/20 focus-visible:ring-offset-2 ${
+              installCopied
+                ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:border-emerald-300 hover:bg-emerald-100/60"
+                : "border-zinc-200/90 bg-white hover:border-zinc-300 hover:bg-zinc-50/60"
+            }`}
           >
-            <span className="font-mono text-xs text-zinc-500 group-hover:text-zinc-700">
-              <span className="mr-1.5 select-none text-zinc-400">$</span>npm i stick-it-up
+            {/* Text swap: both states share one grid cell so the button width remains precise and never jumps */}
+            <span className="relative grid place-items-center font-mono text-xs text-center" aria-live="polite">
+              <span
+                className={`col-start-1 row-start-1 flex items-center justify-center text-center transition-all duration-200 ease-out ${
+                  installCopied
+                    ? "-translate-y-1 opacity-0 blur-[1px] pointer-events-none"
+                    : "translate-y-0 opacity-100 blur-0 text-zinc-500 group-hover:text-zinc-700"
+                }`}
+              >
+                <span className="mr-1.5 select-none text-zinc-400">$</span>npm i stick-it-up
+              </span>
+
+              <span
+                className={`col-start-1 row-start-1 flex items-center justify-center text-center font-medium text-emerald-700 transition-all duration-200 ease-out ${
+                  installCopied
+                    ? "translate-y-0 opacity-100 blur-0"
+                    : "translate-y-1 opacity-0 blur-[1px] pointer-events-none"
+                }`}
+              >
+                Copied!
+              </span>
             </span>
+
             <span className="flex items-center">
               {installCopied ? (
-                <LuCopyCheck className="h-3.5 w-3.5 text-emerald-600 transition-transform duration-200" />
+                <LuCopyCheck className="h-3.5 w-3.5 text-emerald-600 transition-transform duration-200 scale-110" />
               ) : (
                 <LuCopy className="h-3.5 w-3.5 text-zinc-400 transition-colors group-hover:text-zinc-600" />
               )}
@@ -977,29 +997,68 @@ export default function StickersCatalogPage() {
 
                 {/* 2. Use */}
                 <div>
-                <h3 className="text-sm font-medium text-zinc-900">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5">
+                  <h3 className="text-sm font-medium text-zinc-900">
                     <span className="mr-2 font-mono text-zinc-400">02</span>Use
-                </h3>
+                  </h3>
+                  <p className="text-xs text-zinc-500">
+                    Choose <span className="font-medium text-zinc-800">Direct Use</span> (lightweight named import) or <span className="font-medium text-zinc-800">Dynamic</span> (generic &lt;Sticker /&gt;).
+                  </p>
+                </div>
 
                 <div className="mt-4 grid gap-4 md:grid-cols-5">
                     {/* Code */}
                     <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white md:col-span-3">
-                    <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-50 px-4 py-2">
-                        <span className="font-mono text-[11px] text-zinc-500">Hero.tsx</span>
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 bg-zinc-50 px-3 py-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-[11px] text-zinc-500">Hero.tsx</span>
+                          <div className="flex items-center rounded-lg bg-zinc-200/70 p-0.5 text-[11px]">
+                            <button
+                              type="button"
+                              onClick={() => setGuideMode("direct")}
+                              className={`cursor-pointer rounded-md px-2 py-0.5 font-medium transition-all ${
+                                guideMode === "direct"
+                                  ? "bg-white text-zinc-900 shadow-xs"
+                                  : "text-zinc-500 hover:text-zinc-800"
+                              }`}
+                            >
+                              Direct Use
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setGuideMode("dynamic")}
+                              className={`cursor-pointer rounded-md px-2 py-0.5 font-medium transition-all ${
+                                guideMode === "dynamic"
+                                  ? "bg-white text-zinc-900 shadow-xs"
+                                  : "text-zinc-500 hover:text-zinc-800"
+                              }`}
+                            >
+                              Dynamic
+                            </button>
+                          </div>
+                        </div>
                         <button
                         type="button"
                         onClick={copyGuideCode}
-                        className={`cursor-pointer text-[11px] font-medium transition-colors ${
+                        className={`cursor-pointer rounded-md border border-zinc-200 bg-white px-2 py-0.5 text-[11px] font-medium transition-colors ${
                             guideCopied === "code"
-                            ? "text-zinc-500 "
-                            : "text-zinc-400 hover:text-zinc-600"
+                            ? "border-emerald-300 bg-emerald-50 text-emerald-600"
+                            : "text-zinc-600 hover:bg-zinc-100"
                         }`}
                         >
                         {guideCopied === "code" ? "Copied" : "Copy"}
                         </button>
                     </div>
                     <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-zinc-950">
-                        <code>{`import { Sticker } from "stick-it-up";
+                        <code>{guideMode === "direct" ? `import { ${getComponentExportName(guideSticker)} } from "stick-it-up";
+
+export default function Hero() {
+  return (
+    <${getComponentExportName(guideSticker)}
+      size={${guideSize}}${guidePeel ? "\n      peel" : ""}
+    />
+  );
+}` : `import { Sticker } from "stick-it-up";
 
 export default function Hero() {
   return (
@@ -1102,7 +1161,7 @@ export default function Hero() {
 
                 <dl className="mt-4 divide-y divide-zinc-200 border-y border-zinc-200">
                     {[
-                    { name: "name", type: "string", desc: 'Sticker ID, e.g. "star-burst". Required.' },
+                    { name: "name", type: "string", desc: 'Sticker ID (for generic <Sticker />), e.g. "flame". Not needed when using direct component imports.' },
                     { name: "size", type: "number | string", desc: "Width and height in pixels. Default 96." },
                     { name: "peel", type: "boolean", desc: "3D tilt and shadow on hover." },
                     { name: "className", type: "string", desc: "Extra classes for rotation, margin, etc." },
@@ -1379,7 +1438,7 @@ export default function Hero() {
                         : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
                     }`}
                   >
-                    Tree-shakeable
+                    Direct Import
                   </button>
                   <button
                     type="button"

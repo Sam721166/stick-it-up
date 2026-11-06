@@ -25,7 +25,7 @@ function useInView({
     const el = ref.current;
     if (!el) return;
     if (typeof IntersectionObserver === "undefined") {
-      setInView(true);
+      queueMicrotask(() => setInView(true));
       return;
     }
     const io = new IntersectionObserver(
@@ -103,19 +103,28 @@ const COLUMNS: FooterColumn[] = [
   {
     title: "Product",
     links: [
-      { label: "Sticker Pack", href: "/stickers", sticker: "/stickers/star.svg", rot: 12 },
-      { label: "Documentation", href: "/stickers#docs", sticker: "/stickers/Sparkles.svg", rot: -8 },
-      { label: "Components", href: "#", sticker: "/stickers/blueberry.svg", rot: 6 },
-      { label: "Changelog", href: "#", sticker: "/stickers/Flame.svg", rot: -10 },
+      { label: "Stickers", href: "/stickers", sticker: "/stickers/star.svg", rot: 12 },
+      { label: "Docs", href: "/stickers#docs", sticker: "/stickers/Sparkles.svg", rot: -8 },
+      { label: "Interactive Demo", href: "/stickers", sticker: "/stickers/blueberry.svg", rot: 6 },
+      { label: "Releases", href: "https://github.com/Sam721166/stick-it-up/releases", sticker: "/stickers/Flame.svg", rot: -10 },
     ],
   },
   {
-    title: "Resources",
+    title: "Contribute",
+    links: [
+      { label: "Submit a Sticker", href: "https://github.com/Sam721166/stick-it-up/pulls", sticker: "/stickers/SparkleTrio.svg", rot: -10 },
+      { label: "Contribution Guide", href: "https://github.com/Sam721166/stick-it-up/blob/main/CONTRIBUTING.md", sticker: "/stickers/dogsticker.svg", rot: 8 },
+      { label: "Request a Sticker", href: "https://github.com/Sam721166/stick-it-up/issues/new?labels=sticker-request&title=[Sticker+Request]:+", sticker: "/stickers/Curious%20blue%20globe.svg", rot: 6 },
+      { label: "Sticker Files", href: "https://github.com/Sam721166/stick-it-up/tree/main/public/stickers", sticker: "/stickers/Spiral.svg", rot: -8 },
+    ],
+  },
+  {
+    title: "Community",
     links: [
       { label: "GitHub", href: "https://github.com/Sam721166/stick-it-up", sticker: "/stickers/cat.svg", rot: 8 },
       { label: "npm Package", href: "https://www.npmjs.com/package/stick-it-up", sticker: "/stickers/flower.svg", rot: -12 },
-      { label: "Showcase", href: "#", sticker: "/stickers/face.svg", rot: 10 },
-      { label: "Playground", href: "#", sticker: "/stickers/SparkleTrio.svg", rot: -6 },
+      { label: "X / Twitter", href: "https://x.com/samirande_", sticker: "/stickers/Cosmiceye.svg", rot: 10 },
+      { label: "Issues & Feedback", href: "https://github.com/Sam721166/stick-it-up/issues", sticker: "/stickers/face.svg", rot: -6 },
     ],
   },
 ];
@@ -245,7 +254,7 @@ export default function Footer() {
       />
 
       {/* top: tagline + links */}
-      <div className="relative z-10 mx-auto grid max-w-5xl gap-12 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
+      <div className="relative z-10 mx-auto grid max-w-5xl gap-12 lg:grid-cols-[1fr_1.5fr] lg:gap-14">
         <MotionBlur inView={inView} delay={0} className="text-center lg:text-left">
           <p className="font-sans text-3xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-4xl">
             Stick it on.
@@ -255,7 +264,7 @@ export default function Footer() {
           </p>
         </MotionBlur>
 
-        <div className="grid grid-cols-2 gap-x-8 gap-y-10 text-center sm:text-left">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 text-center sm:grid-cols-3 sm:text-left">
           {COLUMNS.map((col, ci) => (
             <MotionBlur key={col.title} inView={inView} delay={140 + ci * 80}>
               <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-400">
@@ -266,6 +275,8 @@ export default function Footer() {
                   <li key={link.label}>
                     <a
                       href={link.href}
+                      target={link.href.startsWith("http") ? "_blank" : undefined}
+                      rel={link.href.startsWith("http") ? "noreferrer" : undefined}
                       className="group relative inline-flex items-center py-0.5 text-sm font-medium text-zinc-500 transition-colors duration-200 hover:text-zinc-900"
                     >
                       <span>{link.label}</span>

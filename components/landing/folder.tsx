@@ -28,7 +28,7 @@ function useInView({
     const el = ref.current;
     if (!el) return;
     if (typeof IntersectionObserver === "undefined") {
-      setInView(true);
+      queueMicrotask(() => setInView(true));
       return;
     }
     const io = new IntersectionObserver(
@@ -356,14 +356,15 @@ function Folder({ title, stamp, stampRot, cards, avatars }: FolderProps) {
   const open = hover || pinned;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex w-full flex-col items-center">
       <button
         type="button"
         aria-label={`${title}`}
         aria-pressed={pinned}
+        onClick={() => setPinned((p) => !p)}
         onPointerEnter={() => setHover(true)}
         onPointerLeave={() => setHover(false)}
-        className="block w-full min-w-[518px] cursor-pointer outline-none"
+        className="block w-full cursor-pointer outline-none"
         style={{ containerType: "inline-size" }}
       >
         <div className="relative w-full" style={{ fontSize: UNIT, aspectRatio: "1.2 / 1" }}>
@@ -604,9 +605,9 @@ export default function FolderShowcase() {
     <section
       ref={sectionRef}
       id="stickers"
-      className="relative z-10 mx-4 mb-10 rounded-[40px] px-6 py-24"
+      className="relative z-10 mx-4 mb-10 rounded-[40px] px-4 py-20 sm:px-8"
     >
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-6xl w-full">
         <div className="mx-auto mb-16 flex max-w-2xl flex-col items-center text-center">
           <MotionBlur inView={inView} delay={0}>
             <h2 className="mt-5 font-sans text-4xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-5xl">
@@ -621,8 +622,8 @@ export default function FolderShowcase() {
           </MotionBlur>
         </div>
 
-        <div className="grid items-start justify-items-center gap-16 md:grid-cols-2 md:gap-10">
-          <MotionBlur inView={inView} delay={200} className="w-full flex justify-center">
+        <div className="grid w-full grid-cols-1 items-start gap-14 md:grid-cols-2 md:gap-8 lg:gap-20">
+          <MotionBlur inView={inView} delay={200} className="w-full">
             <Folder
               title="Landing pages"
               avatars={WEB_AVATARS}
@@ -630,7 +631,7 @@ export default function FolderShowcase() {
               cards={webCards}
               stamp={
                 <img
-                  src="/stickers/pink-cat2.svg"
+                  src="/stickers/pink-cat.svg"
                   alt=""
                   draggable={false}
                   className="h-[80%] w-[80%] mt-11 -ml-2 object-contain"
@@ -639,7 +640,7 @@ export default function FolderShowcase() {
             />
           </MotionBlur>
 
-          <MotionBlur inView={inView} delay={340} className="w-full flex justify-center">
+          <MotionBlur inView={inView} delay={340} className="w-full">
             <Folder
               title="Mobile apps"
               avatars={APP_AVATARS}

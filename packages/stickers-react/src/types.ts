@@ -41,7 +41,6 @@ export type StickerName =
   | "cat"
   | "cat-serious"
   | "dog"
-  | "blueberry"
   | "face"
   | "flower"
   | "peace-hand"
