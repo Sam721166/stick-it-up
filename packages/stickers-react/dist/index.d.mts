@@ -19,7 +19,7 @@ interface StickerProps extends SVGProps<SVGSVGElement> {
      */
     style?: CSSProperties;
 }
-type StickerName = "flame" | "metal" | "blob-burst" | "star-burst" | "devil-cone" | "flame-star" | "folded-paper" | "red-berry" | "blueberry" | "berries" | "badge-smiley" | "cosmic-pill" | "red-cat" | "pink-cat" | "pink-cat-stamp" | "yellow-cat" | "black-cat" | "cat" | "cat-serious" | "dog" | "face" | "flower" | "peace-hand" | "sparkles" | "sparkle-trio" | "cosmic-eye" | "curious-globe" | "spiral" | "eye-splat" | "japan-badge" | "cone" | "icy-fleur" | "app-badge" | "bunny" | "cat-sit" | "fish" | "luffy-hat" | "coffee" | "japan-flag";
+type StickerName = "flame" | "metal" | "blob-burst" | "star-burst" | "devil-cone" | "flame-star" | "folded-paper" | "red-berry" | "blueberry" | "berries" | "badge-smiley" | "cosmic-pill" | "red-cat" | "pink-cat" | "pink-cat-stamp" | "yellow-cat" | "black-cat" | "cat" | "cat-serious" | "dog" | "face" | "black-face" | "flower" | "peace-hand" | "sparkles" | "sparkle-trio" | "cosmic-eye" | "curious-globe" | "spiral" | "eye-splat" | "japan-badge" | "cone" | "icy-fleur" | "app-badge" | "bunny" | "cat-sit" | "fish" | "luffy-hat" | "coffee" | "japan-flag" | "cat-cute" | "cherry" | "goo" | "heart" | "nazar" | "bad-cat" | "nori-coffee" | "nori-cool" | "nori-headphones" | "nori-heart" | "nori-laptop" | "nori-rocket" | "pip-coffee" | "pip-detective" | "pip-headphones" | "pip-rocket" | "pip-thinking" | "pip-wizard" | "kuro-coffee" | "kuro-cool" | "kuro-headphones" | "kuro-heart" | "kuro-laptop" | "kuro-rocket" | "mochi-coffee" | "mochi-cool" | "mochi-headphones" | "mochi-heart" | "mochi-laptop" | "mochi-rocket";
 
 declare const STICKER_MAP: Record<StickerName, React.FC<StickerProps>>;
 interface DynamicStickerProps extends StickerProps {
@@ -74,6 +74,8 @@ declare const DogSticker: React.FC<StickerProps>;
 
 declare const FaceSticker: React.FC<StickerProps>;
 
+declare const BlackFaceSticker: React.FC<StickerProps>;
+
 declare const FlowerSticker: React.FC<StickerProps>;
 
 declare const PeaceHandSticker: React.FC<StickerProps>;
@@ -110,5 +112,65 @@ declare const CoffeeSticker: React.FC<StickerProps>;
 
 declare const JapanFlagSticker: React.FC<StickerProps>;
 
-export { AppBadgeSticker, RedBerrySticker as BadgeSmileySticker, BerriesSticker, BlackCatSticker, BlobBurstSticker, BlueberrySticker, BunnySticker, CatSeriousSticker, CatSitSticker, CatSticker, CoffeeSticker, ConeSticker, CosmicEyeSticker, BlueberrySticker as CosmicPillSticker, CuriousGlobeSticker, DevilConeSticker, DogSticker, EyeSplatSticker, FaceSticker, FishSticker, FlameStarSticker, FlameSticker, FlowerSticker, FoldedPaperSticker, IcyFleurSticker, JapanBadgeSticker, JapanFlagSticker, LuffyHatSticker, MetalSticker, PeaceHandSticker, PinkCatSticker as PinkCatStampSticker, PinkCatSticker, RedBerrySticker, RedCatSticker, STICKER_MAP, SparkleTrioSticker, SparklesSticker, SpiralSticker, StarBurstSticker, Sticker, YellowCatSticker, Sticker as default };
+declare const CatCuteSticker: React.FC<StickerProps>;
+
+declare const CherrySticker: React.FC<StickerProps>;
+
+declare const GooSticker: React.FC<StickerProps>;
+
+declare const HeartSticker: React.FC<StickerProps>;
+
+declare const NazarSticker: React.FC<StickerProps>;
+
+declare const BadCatSticker: React.FC<StickerProps>;
+
+declare const NoriCoffeeSticker: React.FC<StickerProps>;
+
+declare const NoriCoolSticker: React.FC<StickerProps>;
+
+declare const NoriHeadphonesSticker: React.FC<StickerProps>;
+
+declare const NoriHeartSticker: React.FC<StickerProps>;
+
+declare const NoriLaptopSticker: React.FC<StickerProps>;
+
+declare const NoriRocketSticker: React.FC<StickerProps>;
+
+declare const PipCoffeeSticker: React.FC<StickerProps>;
+
+declare const PipDetectiveSticker: React.FC<StickerProps>;
+
+declare const PipHeadphonesSticker: React.FC<StickerProps>;
+
+declare const PipRocketSticker: React.FC<StickerProps>;
+
+declare const PipThinkingSticker: React.FC<StickerProps>;
+
+declare const PipWizardSticker: React.FC<StickerProps>;
+
+declare const KuroCoffeeSticker: React.FC<StickerProps>;
+
+declare const KuroCoolSticker: React.FC<StickerProps>;
+
+declare const KuroHeadphonesSticker: React.FC<StickerProps>;
+
+declare const KuroHeartSticker: React.FC<StickerProps>;
+
+declare const KuroLaptopSticker: React.FC<StickerProps>;
+
+declare const KuroRocketSticker: React.FC<StickerProps>;
+
+declare const MochiCoffeeSticker: React.FC<StickerProps>;
+
+declare const MochiCoolSticker: React.FC<StickerProps>;
+
+declare const MochiHeadphonesSticker: React.FC<StickerProps>;
+
+declare const MochiHeartSticker: React.FC<StickerProps>;
+
+declare const MochiLaptopSticker: React.FC<StickerProps>;
+
+declare const MochiRocketSticker: React.FC<StickerProps>;
+
+export { AppBadgeSticker, BadCatSticker, RedBerrySticker as BadgeSmileySticker, BerriesSticker, BlackCatSticker, BlackFaceSticker, BlobBurstSticker, BlueberrySticker, BunnySticker, CatCuteSticker, CatSeriousSticker, CatSitSticker, CatSticker, CherrySticker, CoffeeSticker, ConeSticker, CosmicEyeSticker, BlueberrySticker as CosmicPillSticker, CuriousGlobeSticker, DevilConeSticker, DogSticker, EyeSplatSticker, FaceSticker, FishSticker, FlameStarSticker, FlameSticker, FlowerSticker, FoldedPaperSticker, GooSticker, HeartSticker, IcyFleurSticker, JapanBadgeSticker, JapanFlagSticker, KuroCoffeeSticker, KuroCoolSticker, KuroHeadphonesSticker, KuroHeartSticker, KuroLaptopSticker, KuroRocketSticker, LuffyHatSticker, MetalSticker, MochiCoffeeSticker, MochiCoolSticker, MochiHeadphonesSticker, MochiHeartSticker, MochiLaptopSticker, MochiRocketSticker, NazarSticker, NoriCoffeeSticker, NoriCoolSticker, NoriHeadphonesSticker, NoriHeartSticker, NoriLaptopSticker, NoriRocketSticker, PeaceHandSticker, PinkCatSticker as PinkCatStampSticker, PinkCatSticker, PipCoffeeSticker, PipDetectiveSticker, PipHeadphonesSticker, PipRocketSticker, PipThinkingSticker, PipWizardSticker, RedBerrySticker, RedCatSticker, STICKER_MAP, SparkleTrioSticker, SparklesSticker, SpiralSticker, StarBurstSticker, Sticker, YellowCatSticker, Sticker as default };
 export type { DynamicStickerProps, StickerName, StickerProps };

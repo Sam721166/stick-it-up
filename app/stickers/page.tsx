@@ -14,19 +14,20 @@ import { VisitorCounter, GitHubStarButton } from "../../components/landing/nav-a
 ------------------------------------------------------------------- */
 
 type StickerFormat = "component" | "svg";
-type StickerCategory = "all" | "components" | "symbols" | "characters";
+type StickerCategory = "all" | "mascots" | "characters" | "components" | "symbols";
 
 interface CatalogItem {
   id: string;
   name: string;
   title: string;
-  category: "components" | "symbols" | "characters";
+  category: "components" | "symbols" | "characters" | "mascots";
   format: StickerFormat;
   description: string;
   tags: string[];
   componentName?: StickerName;
   svgSrc?: string;
   defaultRotation?: number;
+  previewSize?: number;
 }
 
 const CATALOG: CatalogItem[] = [
@@ -100,6 +101,20 @@ const CATALOG: CatalogItem[] = [
     description: "Duo of fresh ripe blueberries and sweet red berries together.",
     tags: ["berries", "blueberry", "red-berry", "fruit", "pair"],
     defaultRotation: -6,
+    previewSize: 122,
+  },
+  {
+    id: "svg-black-face",
+    name: "black-face",
+    title: "Black Face",
+    category: "characters",
+    format: "component",
+    componentName: "black-face",
+    svgSrc: "/stickers/black-face.svg",
+    description: "Mischievous midnight starburst silhouette with side-glancing anime eyes.",
+    tags: ["black-face", "face", "black", "spiky", "starburst", "monster", "eyes", "character", "dark"],
+    defaultRotation: -4,
+    previewSize: 96,
   },
   {
     id: "svg-black-cat",
@@ -148,6 +163,30 @@ const CATALOG: CatalogItem[] = [
     description: "Sunlit yellow doodle cat with playful tilted ears.",
     tags: ["cat", "yellow", "doodle", "sunny", "kitten"],
     defaultRotation: -8,
+  },
+  {
+    id: "svg-luffy-hat",
+    name: "luffy-hat",
+    title: "Straw Hat",
+    category: "symbols",
+    format: "component",
+    componentName: "luffy-hat",
+    svgSrc: "/stickers/luffy-hat.svg",
+    description: "Iconic anime straw hat with vibrant crimson band, stitched brim, and crosshatch shading.",
+    tags: ["luffy", "straw-hat", "anime", "one-piece", "hat", "symbol", "pirate"],
+    defaultRotation: 8,
+  },
+  {
+    id: "svg-japan-flag",
+    name: "japan-flag",
+    title: "Japan Flag",
+    category: "symbols",
+    format: "component",
+    componentName: "japan-flag",
+    svgSrc: "/stickers/japan-flag.svg",
+    description: "Waving Japanese flag banner with bold comic borders and iconic crimson sun circle.",
+    tags: ["japan", "flag", "tokyo", "sun", "banner", "country", "symbol"],
+    defaultRotation: 5,
   },
   {
     id: "comp-devil-cone",
@@ -383,18 +422,7 @@ const CATALOG: CatalogItem[] = [
     description: "Playful minimalist goldfish doodle with wide curious eye and wavy fins.",
     tags: ["fish", "goldfish", "ocean", "sea", "animal", "swimming", "character"],
     defaultRotation: -6,
-  },
-  {
-    id: "svg-luffy-hat",
-    name: "luffy-hat",
-    title: "Straw Hat",
-    category: "symbols",
-    format: "component",
-    componentName: "luffy-hat",
-    svgSrc: "/stickers/luffy-hat.svg",
-    description: "Iconic anime straw hat with vibrant crimson band, stitched brim, and crosshatch shading.",
-    tags: ["luffy", "straw-hat", "anime", "one-piece", "hat", "symbol", "pirate"],
-    defaultRotation: 8,
+    previewSize: 104,
   },
   {
     id: "svg-coffee",
@@ -409,16 +437,364 @@ const CATALOG: CatalogItem[] = [
     defaultRotation: -5,
   },
   {
-    id: "svg-japan-flag",
-    name: "japan-flag",
-    title: "Japan Flag",
+    id: "svg-cat-cute",
+    name: "cat-cute",
+    title: "Anime Cat",
+    category: "characters",
+    format: "component",
+    componentName: "cat-cute",
+    svgSrc: "/stickers/cat-cute.svg",
+    description: "Adorable midnight cat sticker with sparkling anime amber eyes, blushing ears, and playful whiskers.",
+    tags: ["cat", "cute", "anime", "amber-eyes", "kitten", "pet", "animal", "character"],
+    defaultRotation: -4,
+  },
+  {
+    id: "svg-bad-cat",
+    name: "bad-cat",
+    title: "Bad Cat",
+    category: "characters",
+    format: "component",
+    componentName: "bad-cat",
+    svgSrc: "/stickers/bad-cat.svg",
+    description: "Mischievous midnight cat with yellow slitted eyes, sharp vampire fangs, and playful golden whiskers.",
+    tags: ["cat", "bad-cat", "evil", "fangs", "mischief", "character", "yellow-eyes"],
+    defaultRotation: -6,
+  },
+  {
+    id: "svg-cherry",
+    name: "cherry",
+    title: "Twin Cherries",
     category: "symbols",
     format: "component",
-    componentName: "japan-flag",
-    svgSrc: "/stickers/japan-flag.svg",
-    description: "Waving Japanese flag banner with bold comic borders and iconic crimson sun circle.",
-    tags: ["japan", "flag", "tokyo", "sun", "banner", "country", "symbol"],
+    componentName: "cherry",
+    svgSrc: "/stickers/cherry.svg",
+    description: "Glossy deep-red twin cherries hanging from fresh green stems with a vibrant leaf.",
+    tags: ["cherry", "cherries", "fruit", "berries", "red", "summer", "sweet", "symbol"],
+    defaultRotation: 6,
+  },
+  {
+    id: "svg-goo",
+    name: "goo",
+    title: "Happy Goo",
+    category: "characters",
+    format: "component",
+    componentName: "goo",
+    svgSrc: "/stickers/goo.svg",
+    description: "Bubbly golden slime character with wide beaming cartoon grin and glossy dripping droplets.",
+    tags: ["goo", "slime", "ghost", "yellow", "happy", "cute", "monster", "character"],
+    defaultRotation: -5,
+  },
+  {
+    id: "svg-heart",
+    name: "heart",
+    title: "Glitter Heart",
+    category: "symbols",
+    format: "component",
+    componentName: "heart",
+    svgSrc: "/stickers/heart.svg",
+    description: "Vibrant hot pink pop-art heart emblem with radiant gloss reflections and sparkling diamond stars.",
+    tags: ["heart", "love", "pink", "glitter", "sparkle", "pop", "valentine", "symbol"],
     defaultRotation: 5,
+  },
+  {
+    id: "svg-nazar",
+    name: "nazar",
+    title: "Nazar Amulet",
+    category: "symbols",
+    format: "component",
+    componentName: "nazar",
+    svgSrc: "/stickers/nazar.svg",
+    description: "Traditional Mediterranean evil eye talisman with deep cobalt glass, beaded perimeter, and protective aura.",
+    tags: ["nazar", "evil-eye", "amulet", "talisman", "blue", "protection", "symbol"],
+    defaultRotation: -3,
+  },
+  {
+    id: "svg-nori-coffee",
+    name: "nori-coffee",
+    title: "Nori Coffee",
+    category: "mascots",
+    format: "component",
+    componentName: "nori-coffee",
+    svgSrc: "/stickers/nori-coffee.svg",
+    description: "Cozy pixel kitten Nori enjoying a fresh morning cup of hot coffee.",
+    tags: ["nori", "cat", "pixel", "coffee", "cozy", "drink", "morning", "character"],
+    defaultRotation: -4,
+  },
+  {
+    id: "svg-nori-cool",
+    name: "nori-cool",
+    title: "Nori Cool",
+    category: "mascots",
+    format: "component",
+    componentName: "nori-cool",
+    svgSrc: "/stickers/nori-cool.svg",
+    description: "Sleek pixel cat Nori rocking dark retro sunglasses and an effortless smile.",
+    tags: ["nori", "cat", "pixel", "cool", "sunglasses", "shades", "retro", "character"],
+    defaultRotation: 5,
+  },
+  {
+    id: "svg-nori-headphones",
+    name: "nori-headphones",
+    title: "Nori Headphones",
+    category: "mascots",
+    format: "component",
+    componentName: "nori-headphones",
+    svgSrc: "/stickers/nori-headphones.svg",
+    description: "Chilled pixel kitten Nori vibing to lofi beats in over-ear headphones.",
+    tags: ["nori", "cat", "pixel", "headphones", "music", "lofi", "beats", "character"],
+    defaultRotation: -6,
+  },
+  {
+    id: "svg-nori-heart",
+    name: "nori-heart",
+    title: "Nori Heart",
+    category: "mascots",
+    format: "component",
+    componentName: "nori-heart",
+    svgSrc: "/stickers/nori-heart.svg",
+    description: "Sweet pixel cat Nori clutching a bright rosy heart with blushing cheeks.",
+    tags: ["nori", "cat", "pixel", "heart", "love", "cute", "blush", "character"],
+    defaultRotation: 4,
+  },
+  {
+    id: "svg-nori-laptop",
+    name: "nori-laptop",
+    title: "Nori Laptop",
+    category: "mascots",
+    format: "component",
+    componentName: "nori-laptop",
+    svgSrc: "/stickers/nori-laptop.svg",
+    description: "Hardworking developer cat Nori locked in focus behind a glowing laptop.",
+    tags: ["nori", "cat", "pixel", "laptop", "coding", "work", "tech", "character"],
+    defaultRotation: -3,
+  },
+  {
+    id: "svg-nori-rocket",
+    name: "nori-rocket",
+    title: "Nori Rocket",
+    category: "mascots",
+    format: "component",
+    componentName: "nori-rocket",
+    svgSrc: "/stickers/nori-rocket.svg",
+    description: "Intrepid astronaut cat Nori soaring to the moon on a cosmic pixel rocket.",
+    tags: ["nori", "cat", "pixel", "rocket", "space", "launch", "cosmic", "character"],
+    defaultRotation: 7,
+  },
+  {
+    id: "svg-pip-coffee",
+    name: "pip-coffee",
+    title: "Pip Coffee",
+    category: "mascots",
+    format: "component",
+    componentName: "pip-coffee",
+    svgSrc: "/stickers/pip-coffee.svg",
+    description: "Teal pixel companion Pip fueling up with a fresh warm mug of brew.",
+    tags: ["pip", "pixel", "coffee", "companion", "drink", "cute", "character"],
+    defaultRotation: -5,
+  },
+  {
+    id: "svg-pip-detective",
+    name: "pip-detective",
+    title: "Pip Detective",
+    category: "mascots",
+    format: "component",
+    componentName: "pip-detective",
+    svgSrc: "/stickers/pip-detective.svg",
+    description: "Inquisitive sleuth Pip sporting a houndstooth detective cap on the hunt for clues.",
+    tags: ["pip", "pixel", "detective", "sherlock", "mystery", "hat", "character"],
+    defaultRotation: 4,
+  },
+  {
+    id: "svg-pip-headphones",
+    name: "pip-headphones",
+    title: "Pip Headphones",
+    category: "mascots",
+    format: "component",
+    componentName: "pip-headphones",
+    svgSrc: "/stickers/pip-headphones.svg",
+    description: "Musical pixel sprite Pip listening to tunes on oversized studio headphones.",
+    tags: ["pip", "pixel", "headphones", "music", "audio", "sound", "character"],
+    defaultRotation: -4,
+  },
+  {
+    id: "svg-pip-rocket",
+    name: "pip-rocket",
+    title: "Pip Rocket",
+    category: "mascots",
+    format: "component",
+    componentName: "pip-rocket",
+    svgSrc: "/stickers/pip-rocket.svg",
+    description: "Bold pixel adventurer Pip blasting into the stratosphere on a booster rocket.",
+    tags: ["pip", "pixel", "rocket", "blastoff", "space", "fly", "character"],
+    defaultRotation: 8,
+  },
+  {
+    id: "svg-pip-thinking",
+    name: "pip-thinking",
+    title: "Pip Thinking",
+    category: "mascots",
+    format: "component",
+    componentName: "pip-thinking",
+    svgSrc: "/stickers/pip-thinking.svg",
+    description: "Pensive pixel friend Pip contemplating the universe and pondering big questions.",
+    tags: ["pip", "pixel", "thinking", "ponder", "question", "curious", "character"],
+    defaultRotation: -6,
+  },
+  {
+    id: "svg-pip-wizard",
+    name: "pip-wizard",
+    title: "Pip Wizard",
+    category: "mascots",
+    format: "component",
+    componentName: "pip-wizard",
+    svgSrc: "/stickers/pip-wizard.svg",
+    description: "Arcane spellcaster Pip wearing a pointy starry wizard hat wielding magical sparks.",
+    tags: ["pip", "pixel", "wizard", "magic", "spell", "fantasy", "witch", "character"],
+    defaultRotation: 6,
+  },
+  {
+    id: "svg-kuro-coffee",
+    name: "kuro-coffee",
+    title: "Kuro Coffee",
+    category: "mascots",
+    format: "component",
+    componentName: "kuro-coffee",
+    svgSrc: "/stickers/kuro-coffee.svg",
+    description: "Sleek midnight pixel cat Kuro enjoying a piping-hot cup of coffee.",
+    tags: ["kuro", "cat", "pixel", "black-cat", "coffee", "drink", "cozy", "character"],
+    defaultRotation: -5,
+  },
+  {
+    id: "svg-kuro-cool",
+    name: "kuro-cool",
+    title: "Kuro Cool",
+    category: "mascots",
+    format: "component",
+    componentName: "kuro-cool",
+    svgSrc: "/stickers/kuro-cool.svg",
+    description: "Effortlessly cool black pixel cat Kuro rocking dark shades.",
+    tags: ["kuro", "cat", "pixel", "black-cat", "cool", "sunglasses", "retro", "character"],
+    defaultRotation: 5,
+  },
+  {
+    id: "svg-kuro-headphones",
+    name: "kuro-headphones",
+    title: "Kuro Headphones",
+    category: "mascots",
+    format: "component",
+    componentName: "kuro-headphones",
+    svgSrc: "/stickers/kuro-headphones.svg",
+    description: "Shadowy pixel kitten Kuro zoning out with over-ear audio headphones.",
+    tags: ["kuro", "cat", "pixel", "black-cat", "headphones", "music", "audio", "character"],
+    defaultRotation: -4,
+  },
+  {
+    id: "svg-kuro-heart",
+    name: "kuro-heart",
+    title: "Kuro Heart",
+    category: "mascots",
+    format: "component",
+    componentName: "kuro-heart",
+    svgSrc: "/stickers/kuro-heart.svg",
+    description: "Affectionate dark pixel cat Kuro hugging a glowing rosy heart.",
+    tags: ["kuro", "cat", "pixel", "black-cat", "heart", "love", "cute", "character"],
+    defaultRotation: 4,
+  },
+  {
+    id: "svg-kuro-laptop",
+    name: "kuro-laptop",
+    title: "Kuro Laptop",
+    category: "mascots",
+    format: "component",
+    componentName: "kuro-laptop",
+    svgSrc: "/stickers/kuro-laptop.svg",
+    description: "Hardworking tech kitten Kuro hacking away at a luminous laptop.",
+    tags: ["kuro", "cat", "pixel", "black-cat", "laptop", "coding", "tech", "character"],
+    defaultRotation: -3,
+  },
+  {
+    id: "svg-kuro-rocket",
+    name: "kuro-rocket",
+    title: "Kuro Rocket",
+    category: "mascots",
+    format: "component",
+    componentName: "kuro-rocket",
+    svgSrc: "/stickers/kuro-rocket.svg",
+    description: "Daring midnight cat Kuro blasting off into the galaxy on a pixel rocket.",
+    tags: ["kuro", "cat", "pixel", "black-cat", "rocket", "space", "launch", "character"],
+    defaultRotation: 7,
+  },
+  {
+    id: "svg-mochi-coffee",
+    name: "mochi-coffee",
+    title: "Mochi Coffee",
+    category: "mascots",
+    format: "component",
+    componentName: "mochi-coffee",
+    svgSrc: "/stickers/mochi-coffee.svg",
+    description: "Soft cream pixel kitten Mochi cradling a warm morning mug of coffee.",
+    tags: ["mochi", "cat", "pixel", "cream", "coffee", "cozy", "drink", "character"],
+    defaultRotation: -4,
+  },
+  {
+    id: "svg-mochi-cool",
+    name: "mochi-cool",
+    title: "Mochi Cool",
+    category: "mascots",
+    format: "component",
+    componentName: "mochi-cool",
+    svgSrc: "/stickers/mochi-cool.svg",
+    description: "Charming cream pixel cat Mochi styling in retro dark sunglasses.",
+    tags: ["mochi", "cat", "pixel", "cream", "cool", "sunglasses", "cute", "character"],
+    defaultRotation: 4,
+  },
+  {
+    id: "svg-mochi-headphones",
+    name: "mochi-headphones",
+    title: "Mochi Headphones",
+    category: "mascots",
+    format: "component",
+    componentName: "mochi-headphones",
+    svgSrc: "/stickers/mochi-headphones.svg",
+    description: "Sweet pixel kitty Mochi lost in rhythm wearing comfy headphones.",
+    tags: ["mochi", "cat", "pixel", "cream", "headphones", "music", "sound", "character"],
+    defaultRotation: -5,
+  },
+  {
+    id: "svg-mochi-heart",
+    name: "mochi-heart",
+    title: "Mochi Heart",
+    category: "mascots",
+    format: "component",
+    componentName: "mochi-heart",
+    svgSrc: "/stickers/mochi-heart.svg",
+    description: "Delightful pixel cat Mochi squeezing a tender glowing pink heart.",
+    tags: ["mochi", "cat", "pixel", "cream", "heart", "love", "sweet", "character"],
+    defaultRotation: 5,
+  },
+  {
+    id: "svg-mochi-laptop",
+    name: "mochi-laptop",
+    title: "Mochi Laptop",
+    category: "mascots",
+    format: "component",
+    componentName: "mochi-laptop",
+    svgSrc: "/stickers/mochi-laptop.svg",
+    description: "Cute digital worker Mochi browsing and building things on a laptop.",
+    tags: ["mochi", "cat", "pixel", "cream", "laptop", "computer", "tech", "character"],
+    defaultRotation: -3,
+  },
+  {
+    id: "svg-mochi-rocket",
+    name: "mochi-rocket",
+    title: "Mochi Rocket",
+    category: "mascots",
+    format: "component",
+    componentName: "mochi-rocket",
+    svgSrc: "/stickers/mochi-rocket.svg",
+    description: "Adventurous cream kitten Mochi flying beyond the stars on a cosmic rocket.",
+    tags: ["mochi", "cat", "pixel", "cream", "rocket", "space", "fly", "character"],
+    defaultRotation: 6,
   },
 ];
 
@@ -635,9 +1011,10 @@ export default function StickersCatalogPage() {
   const categoryCounts = useMemo(() => {
     return {
       all: CATALOG.length,
+      mascots: CATALOG.filter((c) => c.category === "mascots").length,
+      characters: CATALOG.filter((c) => c.category === "characters").length,
       components: CATALOG.filter((c) => c.category === "components").length,
       symbols: CATALOG.filter((c) => c.category === "symbols").length,
-      characters: CATALOG.filter((c) => c.category === "characters").length,
     };
   }, []);
 
@@ -810,8 +1187,6 @@ export default function StickersCatalogPage() {
             </svg>
           </a>
         </div>
-
-        
       </section>
 
       {/* ------------------------------------------------------------------
@@ -824,9 +1199,10 @@ export default function StickersCatalogPage() {
             {(
               [
                 { id: "all", label: "All Stickers", count: categoryCounts.all },
+                { id: "mascots", label: "Mascots", count: categoryCounts.mascots },
+                { id: "characters", label: "Characters", count: categoryCounts.characters },
                 { id: "components", label: "Chrome & Badges", count: categoryCounts.components },
                 { id: "symbols", label: "Symbols & Badges", count: categoryCounts.symbols },
-                { id: "characters", label: "Characters", count: categoryCounts.characters },
               ] as const
             ).map((tab) => {
               const active = selectedCategory === tab.id;
@@ -945,7 +1321,7 @@ export default function StickersCatalogPage() {
                           transform: `rotate(${item.defaultRotation || 0}deg)`,
                         }}
                       >
-                        <StickerVisual item={item} size={74} peel={false} />
+                        <StickerVisual item={item} size={item.previewSize || 74} peel={false} />
                       </div>
                     </div>
 
@@ -1396,19 +1772,14 @@ export default function Hero() {
             <div
               className={`relative flex h-48 items-center justify-center overflow-hidden rounded-2xl border border-zinc-200 transition-colors duration-300 ${stage.stage}`}
             >
-              <div
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  backgroundImage: `radial-gradient(${
-                    dark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.07)"
-                  } 1px, transparent 1px)`,
-                  backgroundSize: "14px 14px",
-                }}
-              />
               <div id="inspector-sticker-stage" className="relative">
                 <StickerVisual
                   item={activeItem}
-                  size={inspectorSize}
+                  size={
+                    activeItem.previewSize
+                      ? Math.round(inspectorSize * (activeItem.previewSize / 74))
+                      : inspectorSize
+                  }
                   peel={inspectorPeel}
                 />
               </div>

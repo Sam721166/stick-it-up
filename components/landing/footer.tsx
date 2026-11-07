@@ -87,9 +87,12 @@ function MotionBlur({
 /* ------------------------------------------------------------------
    data
 ------------------------------------------------------------------- */
+type LegalModalTab = "privacy" | "disclaimer" | "takedown" | "license";
+
 interface FooterLink {
   label: string;
-  href: string;
+  href?: string;
+  action?: LegalModalTab;
   sticker: string;
   rot?: number;
 }
@@ -105,7 +108,7 @@ const COLUMNS: FooterColumn[] = [
     links: [
       { label: "Stickers", href: "/stickers", sticker: "/stickers/star.svg", rot: 12 },
       { label: "Docs", href: "/stickers#docs", sticker: "/stickers/Sparkles.svg", rot: -8 },
-      { label: "Interactive Demo", href: "/stickers", sticker: "/stickers/blueberry.svg", rot: 6 },
+      { label: "npm package", href: "https://www.npmjs.com/package/stick-it-up", sticker: "/stickers/blueberry.svg", rot: 6 },
       { label: "Releases", href: "https://github.com/Sam721166/stick-it-up/releases", sticker: "/stickers/Flame.svg", rot: -10 },
     ],
   },
@@ -125,6 +128,15 @@ const COLUMNS: FooterColumn[] = [
       { label: "npm Package", href: "https://www.npmjs.com/package/stick-it-up", sticker: "/stickers/flower.svg", rot: -12 },
       { label: "X / Twitter", href: "https://x.com/samirande_", sticker: "/stickers/Cosmiceye.svg", rot: 10 },
       { label: "Issues & Feedback", href: "https://github.com/Sam721166/stick-it-up/issues", sticker: "/stickers/face.svg", rot: -6 },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Privacy Policy", action: "privacy", sticker: "/stickers/heart.svg", rot: 8 },
+      { label: "Art Disclaimer", action: "disclaimer", sticker: "/stickers/Peace-hand.svg", rot: -10 },
+      { label: "Takedown Request", action: "takedown", sticker: "/stickers/face.svg", rot: 6 },
+      { label: "License (MIT)", action: "license", sticker: "/stickers/star.svg", rot: -8 },
     ],
   },
 ];
@@ -236,103 +248,341 @@ function DraggableSticker({
 ------------------------------------------------------------------- */
 export default function Footer() {
   const [ref, inView] = useInView();
+  const [modalTab, setModalTab] = useState<LegalModalTab | null>(null);
+
+  // Close modal on Escape key and prevent background scroll
+  useEffect(() => {
+    if (!modalTab) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setModalTab(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [modalTab]);
 
   return (
-    <footer
-      ref={ref}
-      className="relative z-10 -mx-5 overflow-hidden  px-6 pt-14 sm:px-12 sm:pt-16 "
-      style={{
-        background:
-          "linear-gradient(180deg, #ffffff 0%, #e6f2ff 26%, #8cc7fb 62%, #52aef9 100%)",
-        
-      }}
-    >
-      {/* paper grain */}
-      <div
-        className="pointer-events-none absolute inset-0  mask-t-from-10% to-100%"
-        style={{ backgroundImage: GRAIN, backgroundSize: "3px 3px", opacity: 0.06 }}
-      />
-
-      {/* top: tagline + links */}
-      <div className="relative z-10 mx-auto grid max-w-5xl gap-12 lg:grid-cols-[1fr_1.5fr] lg:gap-14">
-        <MotionBlur inView={inView} delay={0} className="text-center lg:text-left">
-          <p className="font-sans text-3xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-4xl">
-            Stick it on.
-            <br />
-            Ship it fun
-            <InlineSticker src="/stickers/Peace-hand.svg" />
-          </p>
-        </MotionBlur>
-
-        <div className="grid grid-cols-2 gap-x-6 gap-y-10 text-center sm:grid-cols-3 sm:text-left">
-          {COLUMNS.map((col, ci) => (
-            <MotionBlur key={col.title} inView={inView} delay={140 + ci * 80}>
-              <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-400">
-                {col.title}
-              </h3>
-              <ul className="mt-4 space-y-2.5">
-                {col.links.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      target={link.href.startsWith("http") ? "_blank" : undefined}
-                      rel={link.href.startsWith("http") ? "noreferrer" : undefined}
-                      className="group relative inline-flex items-center py-0.5 text-sm font-medium text-zinc-500 transition-colors duration-200 hover:text-zinc-900"
-                    >
-                      <span>{link.label}</span>
-                      <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute left-full top-1/2 ml-2 -translate-y-1/2 opacity-0 scale-0 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:scale-100"
-                        style={{
-                          transitionTimingFunction: SPRING,
-                        }}
-                      >
-                        <img
-                          src={link.sticker}
-                          alt=""
-                          className="h-[24px] w-[24px] max-w-none select-none object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]"
-                          style={{
-                            transform: `rotate(${link.rot ?? 0}deg)`,
-                          }}
-                        />
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </MotionBlur>
-          ))}
-        </div>
-      </div>
-
-      {/* full-bleed wordmark + live stickers */}
-      <MotionBlur
-        inView={inView}
-        delay={380}
-        className="relative z-10 -mx-6 mt-14 sm:-mx-12 sm:mt-20"
+    <>
+      <footer
+        ref={ref}
+        className="relative z-10 -mx-5 overflow-hidden px-6 pt-14 sm:px-12 sm:pt-16"
+        style={{
+          background:
+            "linear-gradient(180deg, #ffffff 0%, #e6f2ff 26%, #8cc7fb 62%, #52aef9 100%)",
+        }}
       >
-        <div className="relative select-none" style={{ containerType: "inline-size" }}>
-          <div
-            aria-hidden
-            className="overflow-hidden whitespace-nowrap text-center font-bold leading-[0.8] tracking-[-0.055em] text-white"
-            style={{
-              fontSize: "21cqw",
-              height: "14.5cqw",
-              marginBottom: "-2cqw",
-              textShadow: "0 0.02em 0 rgba(20,90,190,0.25)",
-            }}
-          >
-            Stick it up
-          </div>
-          <span className="sr-only">Stick it up</span>
+        {/* paper grain */}
+        <div
+          className="pointer-events-none absolute inset-0 mask-t-from-10% to-100%"
+          style={{ backgroundImage: GRAIN, backgroundSize: "3px 3px", opacity: 0.06 }}
+        />
 
-          <DraggableSticker inView={inView} delay={640} src="/stickers/star.svg" size={84} left="4%" top="-6%" rot={-12} />
-          <DraggableSticker inView={inView} delay={720} src="/stickers/blueberry.svg" size={92} left="28%" top="52%" rot={8} />
-          <DraggableSticker inView={inView} delay={800} src="/stickers/Flame.svg" size={65} left="46%" top="-10%" rot={-6} />
-          <DraggableSticker inView={inView} delay={880} src="/stickers/flower.svg" size={70} left="66%" top="32%" rot={14} />
-          <DraggableSticker inView={inView} delay={960} src="/stickers/cat.svg" size={86} left="84%" top="-4%" rot={-10} />
+        {/* top: tagline + links */}
+        <div className="relative z-10 mx-auto grid max-w-5xl gap-12 lg:grid-cols-[1fr_1.85fr] lg:gap-14">
+          <MotionBlur inView={inView} delay={0} className="text-center lg:text-left">
+            <p className="font-sans text-3xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-4xl">
+              Stick it on.
+              <br />
+              Ship it fun
+              <InlineSticker src="/stickers/Peace-hand.svg" />
+            </p>
+          </MotionBlur>
+
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 text-center sm:grid-cols-4 sm:text-left">
+            {COLUMNS.map((col, ci) => (
+              <MotionBlur key={col.title} inView={inView} delay={140 + ci * 80}>
+                <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-400">
+                  {col.title}
+                </h3>
+                <ul className="mt-4 space-y-2.5">
+                  {col.links.map((link) => (
+                    <li key={link.label}>
+                      {link.action ? (
+                        <button
+                          type="button"
+                          onClick={() => setModalTab(link.action!)}
+                          className="group relative inline-flex cursor-pointer items-center py-0.5 text-sm font-medium text-zinc-500 transition-colors duration-200 hover:text-zinc-900 text-left"
+                        >
+                          <span>{link.label}</span>
+                          <span
+                            aria-hidden="true"
+                            className="pointer-events-none absolute left-full top-1/2 ml-2 -translate-y-1/2 opacity-0 scale-0 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:scale-100"
+                            style={{
+                              transitionTimingFunction: SPRING,
+                            }}
+                          >
+                            <img
+                              src={link.sticker}
+                              alt=""
+                              className="h-[24px] w-[24px] max-w-none select-none object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]"
+                              style={{
+                                transform: `rotate(${link.rot ?? 0}deg)`,
+                              }}
+                            />
+                          </span>
+                        </button>
+                      ) : (
+                        <a
+                          href={link.href}
+                          target={link.href?.startsWith("http") ? "_blank" : undefined}
+                          rel={link.href?.startsWith("http") ? "noreferrer" : undefined}
+                          className="group relative inline-flex items-center py-0.5 text-sm font-medium text-zinc-500 transition-colors duration-200 hover:text-zinc-900"
+                        >
+                          <span>{link.label}</span>
+                          <span
+                            aria-hidden="true"
+                            className="pointer-events-none absolute left-full top-1/2 ml-2 -translate-y-1/2 opacity-0 scale-0 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:scale-100"
+                            style={{
+                              transitionTimingFunction: SPRING,
+                            }}
+                          >
+                            <img
+                              src={link.sticker}
+                              alt=""
+                              className="h-[24px] w-[24px] max-w-none select-none object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]"
+                              style={{
+                                transform: `rotate(${link.rot ?? 0}deg)`,
+                              }}
+                            />
+                          </span>
+                        </a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </MotionBlur>
+            ))}
+          </div>
         </div>
-      </MotionBlur>
-    </footer>
+
+        {/* full-bleed wordmark + live stickers */}
+        <MotionBlur
+          inView={inView}
+          delay={380}
+          className="relative z-10 -mx-6 mt-14 sm:-mx-12 sm:mt-20"
+        >
+          <div className="relative select-none" style={{ containerType: "inline-size" }}>
+            <div
+              aria-hidden
+              className="overflow-hidden whitespace-nowrap text-center font-bold leading-[0.8] tracking-[-0.055em] text-white"
+              style={{
+                fontSize: "21cqw",
+                height: "14.5cqw",
+                marginBottom: "-2cqw",
+                textShadow: "0 0.02em 0 rgba(20,90,190,0.25)",
+              }}
+            >
+              Stick it up
+            </div>
+            <span className="sr-only">Stick it up</span>
+
+            <DraggableSticker inView={inView} delay={640} src="/stickers/star.svg" size={84} left="4%" top="-6%" rot={-12} />
+            <DraggableSticker inView={inView} delay={720} src="/stickers/blueberry.svg" size={92} left="28%" top="52%" rot={8} />
+            <DraggableSticker inView={inView} delay={800} src="/stickers/Flame.svg" size={65} left="46%" top="-10%" rot={-6} />
+            <DraggableSticker inView={inView} delay={880} src="/stickers/flower.svg" size={70} left="66%" top="32%" rot={14} />
+            <DraggableSticker inView={inView} delay={960} src="/stickers/cat.svg" size={86} left="84%" top="-4%" rot={-10} />
+          </div>
+        </MotionBlur>
+      </footer>
+
+      {/* ------------------------------------------------------------------
+         Minimal Pop-up Modal Window for Legal & Notices
+      ------------------------------------------------------------------- */}
+      {modalTab && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setModalTab(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs transition-opacity duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative flex max-h-[85vh] w-full max-w-xl flex-col rounded-3xl border border-zinc-200/80 bg-white shadow-2xl transition-transform duration-200"
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-4">
+              <div className="flex flex-wrap items-center gap-1.5">
+                {[
+                  { id: "privacy", label: "Privacy Policy" },
+                  { id: "disclaimer", label: "Art Disclaimer" },
+                  { id: "takedown", label: "Takedown Request" },
+                  { id: "license", label: "MIT License" },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setModalTab(tab.id as LegalModalTab)}
+                    className={`cursor-pointer rounded-xl px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
+                      modalTab === tab.id
+                        ? "bg-zinc-900 text-white shadow-xs"
+                        : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setModalTab(null)}
+                className="ml-3 inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700"
+                title="Close (Esc)"
+                aria-label="Close"
+              >
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Scrollable Content */}
+            <div className="max-h-[calc(85vh-72px)] overflow-y-auto px-6 py-6 text-sm text-zinc-600">
+              {modalTab === "privacy" && (
+                <div className="space-y-5">
+                  <div>
+                    <h3 className="text-base font-semibold tracking-tight text-zinc-900">
+                      Privacy Policy
+                    </h3>
+                    <p className="mt-1 text-xs text-zinc-400">
+                      Zero tracking, zero ads, zero data selling.
+                    </p>
+                  </div>
+                  <p className="text-xs leading-relaxed text-zinc-600">
+                    Stick It Up is built with a minimal, privacy-first mindset. We do not track you across the web, use advertising cookies, or collect personal identifiers.
+                  </p>
+                  <div className="divide-y divide-zinc-100 border-y border-zinc-100 text-xs text-zinc-600">
+                    <div className="py-2.5">
+                      <span className="font-medium text-zinc-900">Zero Personal Data:</span> We do not collect names, emails, passwords, phone numbers, or payment info. No account registration is required to use the package or site.
+                    </div>
+                    <div className="py-2.5">
+                      <span className="font-medium text-zinc-900">Anonymous Visitor Counter:</span> When a visitor loads the site, an anonymous aggregate numeric counter increments. We do not record IP addresses, device fingerprints, or locations.
+                    </div>
+                    <div className="py-2.5">
+                      <span className="font-medium text-zinc-900">Local Storage Only:</span> Browser storage is strictly used on your own device for client-side UI states (such as remembering copied snippets or active preview preferences).
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {modalTab === "disclaimer" && (
+                <div className="space-y-5">
+                  <div>
+                    <h3 className="text-base font-semibold tracking-tight text-zinc-900">
+                      Art &amp; Copyright Notice
+                    </h3>
+                    <p className="mt-1 text-xs text-zinc-400">
+                      Curated for open-source &amp; educational fun.
+                    </p>
+                  </div>
+                  <div className="space-y-2.5 text-xs leading-relaxed text-zinc-600">
+                    <p>
+                      Stickers in this library are vector decals curated and adapted from creative hubs across the internet (such as Pinterest, community showcases, and open packs) for educational, personal, and open-source UI experimentation.
+                    </p>
+                    <p>
+                      <strong>We do not claim copyright or ownership</strong> over original character illustrations or art styles. All original copyrights remain strictly with their respective creators and rights holders.
+                    </p>
+                  </div>
+                  <div className="border-t border-zinc-100 pt-3.5 text-xs text-zinc-600">
+                    <p>
+                      If you are an artist or rights holder and see your artwork here, please reach out before filing strikes. We will gladly add full attribution with links to your shop/portfolio, or remove it within a few days with zero friction.
+                    </p>
+                    <div className="mt-3">
+                      <button
+                        type="button"
+                        onClick={() => setModalTab("takedown")}
+                        className="cursor-pointer text-xs font-medium text-zinc-900 underline underline-offset-4 hover:text-zinc-600"
+                      >
+                        View takedown request options &rarr;
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {modalTab === "takedown" && (
+                <div className="space-y-5">
+                  <div>
+                    <h3 className="text-base font-semibold tracking-tight text-zinc-900">
+                      Takedown &amp; Attribution Request
+                    </h3>
+                    <p className="mt-1 text-xs text-zinc-400">
+                      Prompt removal or backlink attribution for rights holders.
+                    </p>
+                  </div>
+                  <p className="text-xs leading-relaxed text-zinc-600">
+                    If you own the rights to any artwork featured in this project, we want to respect your wishes. Send a message and we will handle it within a few days:
+                  </p>
+                  <div className="divide-y divide-zinc-100 border-y border-zinc-100 text-xs text-zinc-600">
+                    <div className="py-2.5">
+                      <span className="font-medium text-zinc-900">Want attribution?</span> We will gladly add your name, portfolio link, store, or social handles directly to the sticker&apos;s catalog entry.
+                    </div>
+                    <div className="py-2.5">
+                      <span className="font-medium text-zinc-900">Want it removed?</span> No paperwork or legal notices needed. Send a message and we will remove the file within a few days.
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                    <a
+                      href="https://github.com/Sam721166/stick-it-up/issues/new?labels=takedown&title=[Artwork+Takedown+Request]:+"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 py-2 text-xs font-medium text-white shadow-xs transition-colors hover:bg-zinc-800"
+                    >
+                      Open GitHub Request &rarr;
+                    </a>
+                    <a
+                      href="https://x.com/samirande_"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-xs font-medium text-zinc-800 shadow-xs transition-colors hover:bg-zinc-50"
+                    >
+                      DM on X / Twitter (@samirande_) &rarr;
+                    </a>
+                  </div>
+                </div>
+              )}
+
+              {modalTab === "license" && (
+                <div className="space-y-5">
+                  <div>
+                    <h3 className="text-base font-semibold tracking-tight text-zinc-900">
+                      MIT License
+                    </h3>
+                    <p className="mt-1 text-xs text-zinc-400">
+                      Permissive open-source license.
+                    </p>
+                  </div>
+                  <p className="text-xs leading-relaxed text-zinc-600">
+                    The code, React component wrappers, peel shaders, physics hooks, and documentation of <strong>stick-it-up</strong> are open source under the MIT License.
+                  </p>
+                  <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-4 font-mono text-[11px] leading-relaxed text-zinc-600 select-all whitespace-pre-wrap">
+                    {`Copyright (c) 2026 Samirande
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.`}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
