@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Folder from "../components/landing/folder"
 import Bento from "../components/landing/bento"
+import Sponsor from "../components/landing/sponsor"
 import GetStarted from "../components/landing/get-started"
 import Footer from "../components/landing/footer"
 import { VisitorCounter, GitHubStarButton } from "../components/landing/nav-actions"
@@ -257,6 +258,59 @@ export default function Home() {
     return () => clearTimeout(timeout);
   }, [copied]);
 
+  /* smart scroll navbar: intentional, jitter-free scroll direction tracking */
+  const [navVisible, setNavVisible] = useState(true);
+  const [isAtTop, setIsAtTop] = useState(true);
+  const [headerMounted, setHeaderMounted] = useState(false);
+  const lastScrollY = useRef(0);
+  const scrollAcc = useRef(0);
+
+  useEffect(() => {
+    const t = setTimeout(() => setHeaderMounted(true), 750);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+
+    function handleScroll() {
+      const y = window.scrollY;
+      const delta = y - lastScrollY.current;
+
+      // At resting top of the page
+      if (y <= 20) {
+        setIsAtTop(true);
+        setNavVisible(true);
+        scrollAcc.current = 0;
+        lastScrollY.current = y;
+        return;
+      }
+
+      setIsAtTop(false);
+
+      // Accumulate scroll in current direction; reset on direction swap
+      if ((delta > 0 && scrollAcc.current < 0) || (delta < 0 && scrollAcc.current > 0)) {
+        scrollAcc.current = delta;
+      } else {
+        scrollAcc.current += delta;
+      }
+
+      // Scrolling UP with clear user intent (at least 8px continuous upward motion)
+      if (scrollAcc.current <= -8) {
+        setNavVisible(true);
+      }
+      // Scrolling DOWN past hero with clear intent (at least 14px continuous downward motion)
+      else if (scrollAcc.current >= 14 && y > 70) {
+        setNavVisible(false);
+      }
+
+      lastScrollY.current = y;
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   /* pause idle float once the hero stickers leave the viewport */
   useEffect(() => {
     const el = stickersLayerRef.current;
@@ -314,7 +368,7 @@ export default function Home() {
   }
 
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-white">
+    <main className="relative min-h-screen w-full overflow-x-clip bg-white">
       <style>{`
         @keyframes float {
           0%, 100% { transform: translateY(0); }
@@ -345,9 +399,17 @@ export default function Home() {
 
       {/* navbar */}
       <header
-        className="sticky top-0 z-50 w-full px-4 py-2"
+        className={`fixed top-0 left-0 right-0 z-50 w-full px-4 py-2 transition-[background-color,border-color,box-shadow] duration-200 ${
+          isAtTop
+            ? "bg-transparent border-b border-transparent shadow-none"
+            : "backdrop-blur-md bg-white/85 border-b border-zinc-200/70 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.02)]"
+        }`}
         style={{
-          animation: "headerRise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both",
+          transform: navVisible ? "translate3d(0, 0, 0)" : "translate3d(0, -100%, 0)",
+          transition: "transform 260ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease",
+          willChange: "transform",
+          pointerEvents: navVisible ? "auto" : "none",
+          animation: !headerMounted ? "headerRise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both" : undefined,
         }}
       >
         <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between rounded-2xl">
@@ -632,6 +694,8 @@ export default function Home() {
       </div>
 
       <Bento />
+
+      <Sponsor />
 
       <GetStarted />
 

@@ -857,6 +857,59 @@ export default function StickersCatalogPage() {
   const [inspectorBg, setInspectorBg] = useState<"white" | "zinc" | "warm" | "blue">("white");
   const [snippetTab, setSnippetTab] = useState<"named" | "dynamic">("named");
 
+  // Smart scroll navbar: intentional, jitter-free scroll direction tracking
+  const [navVisible, setNavVisible] = useState(true);
+  const [isAtTop, setIsAtTop] = useState(true);
+  const [headerMounted, setHeaderMounted] = useState(false);
+  const lastScrollY = useRef(0);
+  const scrollAcc = useRef(0);
+
+  useEffect(() => {
+    const t = setTimeout(() => setHeaderMounted(true), 750);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+
+    function handleScroll() {
+      const y = window.scrollY;
+      const delta = y - lastScrollY.current;
+
+      // At resting top of the page
+      if (y <= 20) {
+        setIsAtTop(true);
+        setNavVisible(true);
+        scrollAcc.current = 0;
+        lastScrollY.current = y;
+        return;
+      }
+
+      setIsAtTop(false);
+
+      // Accumulate scroll in current direction; reset on direction swap
+      if ((delta > 0 && scrollAcc.current < 0) || (delta < 0 && scrollAcc.current > 0)) {
+        scrollAcc.current = delta;
+      } else {
+        scrollAcc.current += delta;
+      }
+
+      // Scrolling UP with clear user intent (at least 8px continuous upward motion)
+      if (scrollAcc.current <= -8) {
+        setNavVisible(true);
+      }
+      // Scrolling DOWN past hero with clear intent (at least 14px continuous downward motion)
+      else if (scrollAcc.current >= 14 && y > 70) {
+        setNavVisible(false);
+      }
+
+      lastScrollY.current = y;
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // Quickstart guide interactive state
   const [guideTab, setGuideTab] = useState<"react" | "svg">("react");
   const [guidePm, setGuidePm] = useState<"npm" | "pnpm" | "bun" | "yarn">("npm");
@@ -1046,7 +1099,7 @@ export default function StickersCatalogPage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden w-full bg-white text-zinc-900 antialiased selection:bg-amber-100 selection:text-amber-900">
+    <div className="relative min-h-screen overflow-x-clip w-full bg-white text-zinc-900 antialiased selection:bg-amber-100 selection:text-amber-900">
       <style>{`
         @keyframes headerRise {
           from { opacity: 0; transform: translateY(-10px); filter: blur(6px); }
@@ -1066,8 +1119,18 @@ export default function StickersCatalogPage() {
           STICKY NAVBAR (consistent with landing page)
       ------------------------------------------------------------------- */}
       <header
-        className="sticky top-0 z-50 w-full px-4 py-2 backdrop-blur-md bg-white/80 border-b border-zinc-100"
-        style={{ animation: "headerRise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both" }}
+        className={`fixed top-0 left-0 right-0 z-50 w-full px-4 py-2 transition-[background-color,border-color,box-shadow] duration-200 ${
+          isAtTop
+            ? "backdrop-blur-md bg-white/80 border-b border-zinc-100"
+            : "backdrop-blur-md bg-white/90 border-b border-zinc-200/80 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.02)]"
+        }`}
+        style={{
+          transform: navVisible ? "translate3d(0, 0, 0)" : "translate3d(0, -100%, 0)",
+          transition: "transform 260ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease",
+          willChange: "transform",
+          pointerEvents: navVisible ? "auto" : "none",
+          animation: !headerMounted ? "headerRise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both" : undefined,
+        }}
       >
         <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between">
           {/* brand */}
@@ -1139,7 +1202,7 @@ export default function StickersCatalogPage() {
       {/* ------------------------------------------------------------------
           HERO / INTRO SECTION
       ------------------------------------------------------------------- */}
-      <section className="relative mx-auto max-w-6xl px-6 pt-16 pb-12 sm:pt-20 sm:pb-16 text-center">
+      <section className="relative mx-auto max-w-6xl px-6 pt-24 pb-12 sm:pt-28 sm:pb-16 text-center">
         
 
         {/* Title */}
@@ -1224,7 +1287,7 @@ export default function StickersCatalogPage() {
       {/* ------------------------------------------------------------------
           CONTROLS: SEARCH & CATEGORY FILTER TABS
       ------------------------------------------------------------------- */}
-      <section className="sticky top-[65px] z-30 mx-auto max-w-6xl px-6 pb-6">
+      <section className=" top-[68px] z-30 mx-auto max-w-6xl px-6 pb-6">
         <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200/90 bg-white/95 p-2 shadow-sm backdrop-blur-md sm:flex-row sm:items-center sm:justify-between">
           {/* Filter tabs */}
           <div className="flex flex-wrap items-center gap-1">

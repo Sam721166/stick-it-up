@@ -1,19 +1,25 @@
 # stick-it-up
 
-> Premium vector, holographic & chrome aesthetic sticker components for React.
+> Premium vector, metallic chrome, and pixel art aesthetic sticker components for React & Next.js.
 
-A curated collection of vector graphic stickers featuring metallic chrome finishes, organic blobs, distressed textures, retro stars, and badges. Built with scoped SVG filters, responsive sizing, and physical vinyl peel effects.
+A curated collection of 65+ vector graphic stickers featuring specular metallic chrome reflections, retro halftone stars, pixel art mascots (Nori, Pip, Kuro, Mochi), cute character doodles, and tactile badges. Built with scoped SVG filters, responsive sizing, and realistic 3D vinyl peel hover physics.
 
 ---
 
 ## 📦 Installation
 
 ```bash
-npm install stick-it-up
-# or
-pnpm add stick-it-up
-# or
-yarn add stick-it-up
+# npm (recommended: @latest)
+npm install stick-it-up@latest
+
+# pnpm
+pnpm add stick-it-up@latest
+
+# bun
+bun add stick-it-up@latest
+
+# yarn
+yarn add stick-it-up@latest
 ```
 
 ---
@@ -22,28 +28,31 @@ yarn add stick-it-up
 
 ### 1. Direct Imports (Named & Lightweight)
 
+Every sticker is tree-shakeable and imports directly without pulling in unnecessary bundle weight:
+
 ```tsx
 import {
+  FlameSticker,
   MetalSticker,
+  NoriCoffeeSticker,
+  PipRocketSticker,
   BlobBurstSticker,
   StarBurstSticker,
-  DevilConeSticker,
-  FlameStarSticker,
-  FoldedPaperSticker,
-  BadgeSmileySticker,
-  CosmicPillSticker,
 } from "stick-it-up";
 
 export function App() {
   return (
     <div style={{ display: "flex", gap: "24px", alignItems: "center" }}>
-      {/* Basic usage with size */}
-      <MetalSticker size={120} />
+      {/* Basic usage with size in pixels */}
+      <FlameSticker size={100} />
 
       {/* Interactive vinyl peel hover effect */}
-      <BlobBurstSticker size={100} peel />
+      <MetalSticker size={120} peel />
 
-      {/* Custom dimensions and classes */}
+      {/* Pixel mascot with peel */}
+      <NoriCoffeeSticker size={96} peel />
+
+      {/* Custom width and height overrides */}
       <StarBurstSticker width={140} height={120} className="my-sticker" />
     </div>
   );
@@ -53,19 +62,18 @@ export function App() {
 ### 2. Dynamic Component (`<Sticker name="..." />`)
 
 ```tsx
-import { Sticker } from "stick-it-up";
+import { Sticker, type StickerName } from "stick-it-up";
 
 export function StickerGallery() {
-  const stickers = [
+  const stickers: StickerName[] = [
     "metal",
-    "blob-burst",
+    "flame",
     "star-burst",
-    "devil-cone",
-    "flame-star",
-    "folded-paper",
-    "badge-smiley",
-    "cosmic-pill",
-  ] as const;
+    "nori-coffee",
+    "pip-rocket",
+    "kuro-cool",
+    "mochi-laptop",
+  ];
 
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
@@ -79,41 +87,65 @@ export function StickerGallery() {
 
 ---
 
-## 🎨 Available Stickers
+## 🎨 Available Stickers (65 Total)
 
-| Name | Component | Category | Description |
-| :--- | :--- | :--- | :--- |
-| `flame` | `<FlameSticker />` | Pop & Energy | Punchy dual-tone fire sticker with 3D vinyl hover peel |
-| `metal` | `<MetalSticker />` | Chrome & Metal | Specular chrome reflections with deep blue/white gradients & 3D inner shadows |
-| `blob-burst` | `<BlobBurstSticker />` | Retro & Pop | Organic electric blue and black fluid burst with layered sticker shadow |
-| `star-burst` | `<StarBurstSticker />` | Retro & Pop | Distressed noise texture 4-pointed retro star with white die-cut border |
-| `devil-cone` | `<DevilConeSticker />` | Badge & Graphic | Geometric red & gold linear gradient cone badge with character eyes |
-| `flame-star` | `<FlameStarSticker />` | Retro & Pop | Expressive cartoon flame star sticker with retro screen-print stipple |
-| `folded-paper` | `<FoldedPaperSticker />` | Badge & Graphic | Folded red paper ribbon with realistic creased highlights and edges |
-| `badge-smiley` | `<BadgeSmileySticker />` | Badge & Graphic | Coral pink oval badge sticker featuring a smiling star character |
-| `cosmic-pill` | `<CosmicPillSticker />` | Badge & Graphic | Purple cosmic pill with glowing neon inner star outline |
-| `red-cat` | `<RedCatSticker />` | Characters | Vibrant scarlet silhouette mochi cat with a wide alert stare |
-| `pink-cat` | `<PinkCatSticker />` | Characters | Soft pastel pink kitten head with delicate whiskers |
-| `pink-cat-stamp` | `<PinkCatStampSticker />` | Characters | Warm bubblegum pink feline stamp with vintage postal edges |
-| `yellow-cat` | `<YellowCatSticker />` | Characters | Sunlit yellow doodle cat with playful tilted ears |
-| `black-cat` | `<BlackCatSticker />` | Characters | Jet black doodle cat with clean contour lines |
-| `cat` | `<CatSticker />` | Characters | Curious cat head with expressive round pupils |
-| `cat-serious` | `<CatSeriousSticker />` | Characters | Sharp observant cat sticker |
-| `dog` | `<DogSticker />` | Characters | Energetic pup with perked ears and friendly doodle smile |
-| `blueberry` | `<BlueberrySticker />` | Symbols | Hand-drawn pastel blueberry with a soft organic highlight |
-| `face` | `<FaceSticker />` | Characters | Cheerful classic yellow smiley face with warm blushing eyes |
-| `flower` | `<FlowerSticker />` | Symbols | Pastel green daisy with a looping stem and retro botanical feel |
-| `peace-hand` | `<PeaceHandSticker />` | Symbols | Pastel neon peace sign hand with a bold graphic contour |
-| `sparkles` | `<SparklesSticker />` | Symbols | Crisp four-point sparkle cluster in warm metallic gold |
-| `sparkle-trio` | `<SparkleTrioSticker />` | Symbols | Cascading trio of magic twinkle stars |
-| `cosmic-eye` | `<CosmicEyeSticker />` | Symbols | Explosive starburst eye badge with vivid cobalt and crimson rays |
-| `curious-globe` | `<CuriousGlobeSticker />` | Characters | Blue wireframe world sphere with peeking cartoon eyes |
-| `spiral` | `<SpiralSticker />` | Symbols | Vortex coil sticker with tactile hand-inked line weights |
-| `eye-splat` | `<EyeSplatSticker />` | Symbols | Graffiti-inspired drip splat with an observant eye core |
-| `japan-badge` | `<JapanBadgeSticker />` | Symbols | Tokyo-inspired graphic emblem stamp with stylized kanji character |
-| `cone` | `<ConeSticker />` | Symbols | Playful striped orange construction cone sticker |
-| `icy-fleur` | `<IcyFleurSticker />` | Chrome & Metal | Liquid chrome heraldic fleur-de-lis with cold mirror reflections |
-| `app-badge` | `<AppBadgeSticker />` | Symbols | Tactile app icon badge with rounded square frame and pastel tone |
+### 👾 Pixel Mascots (24 stickers)
+- **Nori**: `<NoriCoffeeSticker />`, `<NoriCoolSticker />`, `<NoriHeadphonesSticker />`, `<NoriHeartSticker />`, `<NoriLaptopSticker />`, `<NoriRocketSticker />`
+- **Pip**: `<PipCoffeeSticker />`, `<PipDetectiveSticker />`, `<PipHeadphonesSticker />`, `<PipRocketSticker />`, `<PipThinkingSticker />`, `<PipWizardSticker />`
+- **Kuro**: `<KuroCoffeeSticker />`, `<KuroCoolSticker />`, `<KuroHeadphonesSticker />`, `<KuroHeartSticker />`, `<KuroLaptopSticker />`, `<KuroRocketSticker />`
+- **Mochi**: `<MochiCoffeeSticker />`, `<MochiCoolSticker />`, `<MochiHeadphonesSticker />`, `<MochiHeartSticker />`, `<MochiLaptopSticker />`, `<MochiRocketSticker />`
+
+### 🎭 Characters (17 stickers)
+- `bad-cat` (`<BadCatSticker />`)
+- `black-cat` (`<BlackCatSticker />`)
+- `black-face` (`<BlackFaceSticker />`)
+- `bunny` (`<BunnySticker />`)
+- `cat` (`<CatSticker />`)
+- `cat-cute` (`<CatCuteSticker />`)
+- `cat-serious` (`<CatSeriousSticker />`)
+- `cat-sit` (`<CatSitSticker />`)
+- `curious-globe` (`<CuriousGlobeSticker />`)
+- `dog` (`<DogSticker />`)
+- `face` (`<FaceSticker />`)
+- `fish` (`<FishSticker />`)
+- `luffy-hat` (`<LuffyHatSticker />`)
+- `pink-cat` (`<PinkCatSticker />`)
+- `pink-cat-stamp` (`<PinkCatStampSticker />`)
+- `red-cat` (`<RedCatSticker />`)
+- `yellow-cat` (`<YellowCatSticker />`)
+
+### ⚡ Chrome & Aesthetic Shapes (9 stickers)
+- `flame` (`<FlameSticker />`)
+- `metal` (`<MetalSticker />`)
+- `flame-star` (`<FlameStarSticker />`)
+- `blob-burst` (`<BlobBurstSticker />`)
+- `star-burst` (`<StarBurstSticker />`)
+- `devil-cone` (`<DevilConeSticker />`)
+- `folded-paper` (`<FoldedPaperSticker />`)
+- `icy-fleur` (`<IcyFleurSticker />`)
+- `goo` (`<GooSticker />`)
+
+### 💎 Symbols & Emblems (15 stickers)
+- `app-badge` (`<AppBadgeSticker />`)
+- `badge-smiley` (`<BadgeSmileySticker />`)
+- `berries` (`<BerriesSticker />`)
+- `blueberry` (`<BlueberrySticker />`)
+- `cherry` (`<CherrySticker />`)
+- `coffee` (`<CoffeeSticker />`)
+- `cone` (`<ConeSticker />`)
+- `cosmic-eye` (`<CosmicEyeSticker />`)
+- `cosmic-pill` (`<CosmicPillSticker />`)
+- `eye-splat` (`<EyeSplatSticker />`)
+- `flower` (`<FlowerSticker />`)
+- `heart` (`<HeartSticker />`)
+- `japan-badge` (`<JapanBadgeSticker />`)
+- `japan-flag` (`<JapanFlagSticker />`)
+- `nazar` (`<NazarSticker />`)
+- `peace-hand` (`<PeaceHandSticker />`)
+- `red-berry` (`<RedBerrySticker />`)
+- `sparkles` (`<SparklesSticker />`)
+- `sparkle-trio` (`<SparkleTrioSticker />`)
+- `spiral` (`<SpiralSticker />`)
 
 ---
 
@@ -129,11 +161,11 @@ interface StickerProps extends React.SVGProps<SVGSVGElement> {
   width?: number | string;
   /** Explicit height overriding `size` */
   height?: number | string;
-  /** Adds a dynamic vinyl peel animation and shadow on hover */
+  /** Adds a 3D vinyl peel animation and shadow on hover */
   peel?: boolean;
   /** Additional CSS class names */
   className?: string;
-  /** Inline styles */
+  /** Inline style overrides */
   style?: React.CSSProperties;
 }
 ```
@@ -142,13 +174,21 @@ interface StickerProps extends React.SVGProps<SVGSVGElement> {
 
 ## 🛠️ Features
 
-- ⚡ **Zero external runtime CSS dependencies** (Pure SVG and inline styles)
-- 🔒 **Unique SVG filter IDs** using `useId()` so multiple stickers can render simultaneously without gradient/filter ID collisions
-- 🌲 **Tree-shakeable ESM & CommonJS** dual output with complete TypeScript types (`.d.ts`)
+- ⚡ **Zero external runtime CSS dependencies** (Pure SVG, inline CSS transforms & transitions)
+- 🔒 **Unique scoped SVG filter IDs** via `useId()` preventing gradient/filter collisions across instances
+- 🌲 **Tree-shakeable ESM & CommonJS** dual output with comprehensive TypeScript types (`.d.ts`)
 - 🪶 **Ultra lightweight** bundle footprint
 
 ---
 
-## 📄 License
+## 📄 License & Fair-Use
 
-MIT © [Samiran De](https://github.com/Sam721166)
+This package is licensed under the **Stick It Up Fair-Use & Community License** (v1.0, 2026).
+
+- **Free & Permitted**: Personal projects, educational use, learning, exploration, and open-source applications.
+- **Restrictions**: No commercial paywalls, no selling sticker asset packs, and no competing trivial clones/re-hosting.
+- Original character designs and illustrations remain the intellectual property of their original creators.
+
+See [LICENSE](LICENSE) for the complete legal text.
+
+Copyright (c) 2026 [Samiran De](https://github.com/Sam721166).

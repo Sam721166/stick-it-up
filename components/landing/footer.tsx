@@ -126,7 +126,8 @@ const COLUMNS: FooterColumn[] = [
     title: "Community",
     links: [
       { label: "GitHub", href: "https://github.com/Sam721166/stick-it-up", sticker: "/stickers/cat.svg", rot: 8 },
-      { label: "npm Package", href: "https://www.npmjs.com/package/stick-it-up", sticker: "/stickers/flower.svg", rot: -12 },
+      { label: "Sponsor (GitHub)", href: "https://github.com/sponsors/Sam721166", sticker: "/stickers/nori-heart.svg", rot: -8 },
+      { label: "Buy Me a Coffee", href: "https://buymeacoffee.com/samirande_", sticker: "/stickers/pip-coffee.svg", rot: 10 },
       { label: "X / Twitter", href: "https://x.com/samirande_", sticker: "/stickers/Cosmiceye.svg", rot: 10 },
       { label: "Issues & Feedback", href: "https://github.com/Sam721166/stick-it-up/issues", sticker: "/stickers/face.svg", rot: -6 },
     ],
