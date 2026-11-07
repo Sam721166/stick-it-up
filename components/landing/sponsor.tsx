@@ -11,6 +11,7 @@ const EASE_OUT = "cubic-bezier(0.2, 0.8, 0.2, 1)";
 
 const GITHUB_URL = "https://github.com/sponsors/Sam721166";
 const COFFEE_URL = "https://buymeacoffee.com/samirande_";
+const TWITTER_URL = "https://x.com/samirande_";
 
 const EMPTY_SLOT_COUNT = 5;
 
@@ -449,6 +450,71 @@ function CoffeeTile({
 }
 
 /* ------------------------------------------------------------------
+   under box 3: twitter / X (light sky/blue background + X logo + DM badge)
+------------------------------------------------------------------- */
+function TwitterTile({
+  index,
+  inView,
+}: {
+  index: number;
+  inView: boolean;
+}) {
+  const [hover, setHover] = useState(false);
+
+  return (
+    <li
+      className="relative list-none"
+      style={{
+        opacity: 0,
+        animation: inView ? `sponsorPop 600ms ${SPRING} ${420 + index * 60}ms both` : "none",
+      }}
+    >
+      <a
+        href={TWITTER_URL}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Talk in DM on X"
+        onPointerEnter={() => setHover(true)}
+        onPointerLeave={() => setHover(false)}
+        className="group relative block h-[76px] w-[76px] cursor-pointer outline-none sm:h-24 sm:w-24 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 rounded-[24px]"
+      >
+        {/* Inner visual box: ONLY this translates on group-hover to prevent edge flickering */}
+        <div
+          className="relative flex h-full w-full items-center justify-center rounded-[24px] group-hover:-translate-y-1.5 active:scale-95"
+          style={{
+            background: "#e4e4e7", // light blackish / graphite to match the other 2
+            border: "1px solid #d4d4d8",
+            boxShadow: "inset 0 1px 0 #fff, 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px -2px rgba(0,0,0,0.05)",
+            transition: `transform 350ms ${SPRING}, box-shadow 250ms ease, border-color 150ms`,
+          }}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="h-7 w-7 sm:h-8 sm:w-8 text-black transition-[transform,opacity] duration-300 group-hover:scale-110"
+            style={{
+              rotate: hover ? "-6deg" : "0deg",
+              transitionTimingFunction: SPRING,
+            }}
+          >
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+
+          {/* Mini DM Badge */}
+          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-black text-white shadow-xs transition-transform duration-300 group-hover:scale-125">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5">
+              <path d="M4.5 3.75A2.25 2.25 0 002.25 6v9a2.25 2.25 0 002.25 2.25h1.5v3.25a.75.75 0 001.28.53l3.78-3.78h7.44A2.25 2.25 0 0020.75 15V6a2.25 2.25 0 00-2.25-2.25H4.5z" />
+            </svg>
+          </span>
+        </div>
+
+        <Tip label="Talk in DM" sublabel="@samirande_ on X" />
+      </a>
+    </li>
+  );
+}
+
+/* ------------------------------------------------------------------
    section
 ------------------------------------------------------------------- */
 export default function Sponsor() {
@@ -476,7 +542,7 @@ export default function Sponsor() {
       <div className="relative mx-auto max-w-3xl sm:max-w-4xl px-2 sm:px-4">
         {/* Heading: Geist font, normal font weight font-sans */}
         <MotionBlur inView={inView} delay={0}>
-          <h2 className="flex items-center gap-3 font-sans text-3xl sm:text-4xl md:text-6xl font-normal tracking-tight text-zinc-900">
+          <h2 className="flex items-center gap-3 font-sans text-4xl sm:text-4xl md:text-6xl font-normal tracking-tight text-zinc-900">
             Sponsors.
             <img
               src="/stickers/bad-cat.svg"
@@ -521,10 +587,11 @@ export default function Sponsor() {
             ))}
           </ul>
 
-          {/* Row 2 ("under 2 box"): GitHub (light grey) and Buy Me a Coffee (light yellow) */}
+          {/* Row 2 ("under boxes"): GitHub (light grey), Buy Me a Coffee (light yellow), and X / Twitter (light sky) */}
           <ul className="mt-4 sm:mt-5 flex items-center gap-4 sm:gap-5 p-0 m-0">
             <GitHubTile index={EMPTY_SLOT_COUNT + 1} inView={inView} />
             <CoffeeTile index={EMPTY_SLOT_COUNT + 2} inView={inView} />
+            <TwitterTile index={EMPTY_SLOT_COUNT + 3} inView={inView} />
           </ul>
         </div>
 
