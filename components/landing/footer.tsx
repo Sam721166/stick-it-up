@@ -136,7 +136,7 @@ const COLUMNS: FooterColumn[] = [
       { label: "Privacy Policy", action: "privacy", sticker: "/stickers/heart.svg", rot: 8 },
       { label: "Art Disclaimer", action: "disclaimer", sticker: "/stickers/Peace-hand.svg", rot: -10 },
       { label: "Takedown Request", action: "takedown", sticker: "/stickers/face.svg", rot: 6 },
-      { label: "License (MIT)", action: "license", sticker: "/stickers/star.svg", rot: -8 },
+      { label: "Community License", action: "license", sticker: "/stickers/star.svg", rot: -8 },
     ],
   },
 ];
@@ -410,7 +410,7 @@ export default function Footer() {
                   { id: "privacy", label: "Privacy Policy" },
                   { id: "disclaimer", label: "Art Disclaimer" },
                   { id: "takedown", label: "Takedown Request" },
-                  { id: "license", label: "MIT License" },
+                  { id: "license", label: "License" },
                 ].map((tab) => (
                   <button
                     key={tab.id}
@@ -551,27 +551,65 @@ export default function Footer() {
                 <div className="space-y-5">
                   <div>
                     <h3 className="text-base font-semibold tracking-tight text-zinc-900">
-                      MIT License
+                      Community &amp; Fair-Use License
                     </h3>
                     <p className="mt-1 text-xs text-zinc-400">
-                      Permissive open-source license.
+                      Free to use, learn, and contribute. No paywalls or repackaged clones.
                     </p>
                   </div>
                   <p className="text-xs leading-relaxed text-zinc-600">
-                    The code, React component wrappers, peel shaders, physics hooks, and documentation of <strong>stick-it-up</strong> are open source under the MIT License.
+                    Stick It Up is an open project built to make web UI more expressive and fun. You are free to use it, explore the code, and contribute, subject to simple community fair-use terms:
                   </p>
+                  <div className="divide-y divide-zinc-100 border-y border-zinc-100 text-xs text-zinc-600">
+                    <div className="py-2.5">
+                      <span className="font-medium text-zinc-900">Free to Use:</span> You are welcome to use these stickers and components freely in your personal projects, open-source apps, developer blogs, and documentation.
+                    </div>
+                    <div className="py-2.5">
+                      <span className="font-medium text-zinc-900">Learn &amp; Explore:</span> You can freely fork, clone, and inspect the repository to learn how the peel shaders, physics hooks, and React components are crafted.
+                    </div>
+                    <div className="py-2.5">
+                      <span className="font-medium text-zinc-900">Contribute:</span> You are encouraged to submit bug fixes, improvements, and new stickers directly to the official upstream repository.
+                    </div>
+                    <div className="py-2.5">
+                      <span className="font-medium text-zinc-900">No Paywalls or Reselling:</span> You may NOT sell, license, or lock this library, its sticker graphics, or derivative components behind a paid paywall or paid subscription.
+                    </div>
+                    <div className="py-2.5">
+                      <span className="font-medium text-zinc-900">No Repackaged Clones:</span> You may NOT make minor or trivial modifications and publicly re-host or deploy this project as your own competing sticker catalog or competing package.
+                    </div>
+                  </div>
                   <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-4 font-mono text-[11px] leading-relaxed text-zinc-600 select-all whitespace-pre-wrap">
-                    {`Copyright (c) 2026 Samirande
+                    {`Stick It Up Fair-Use & Community License
+Version 1.0 (2026)
+
+Copyright (c) 2026 Samiran De (https://github.com/Sam721166)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+of this software, components, sticker assets, and associated documentation
+(the "Software"), to inspect, use, copy, and modify the Software subject to
+the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. PERMITTED USES:
+   (a) Free Use: You may install and use the Software and sticker components
+       freely in personal websites, educational materials, open-source projects,
+       and non-commercial web applications.
+   (b) Study & Learning: You are welcome to clone or fork the repository to
+       explore, learn from the codebase, and experiment with motion and UI techniques.
+   (c) Contributions: You are encouraged to submit bug fixes, improvements,
+       and new features back to the official repository via Pull Requests.
+
+2. RESTRICTIONS (NO COMMERCIAL PAYWALLS, NO REPACKAGED REDEPLOYMENT):
+   (a) No Paywalls or Direct Sale: You may NOT sell, license, charge fees for,
+       or place the Software, its sticker graphics, or derivative components
+       behind any paid paywall, paid subscription, or commercial asset pack.
+   (b) No Trivial Re-hosting / Competing Clones: You may NOT make minor or trivial
+       modifications to this project and publicly deploy, host, or republish it
+       as your own competing sticker catalog, component registry, or package.
+   (c) Original Artist Rights: Character designs and artwork curated in this
+       library remain the intellectual property of their original creators.
+
+3. ATTRIBUTION:
+   All copies, substantial portions, or permitted distributions of the Software
+   must include this copyright notice and permission notice.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
