@@ -847,7 +847,7 @@ export default function StickersCatalogPage() {
   const [installCopied, setInstallCopied] = useState(false);
 
   // Progressive rendering & batching for 500-1,000+ items
-  const BATCH_SIZE = 32;
+  const BATCH_SIZE = 100;
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -872,11 +872,38 @@ export default function StickersCatalogPage() {
     return () => clearTimeout(t);
   }, [guideCopied]);
 
+  // Scroll to #docs when requested by URL hash or navigation
+  useEffect(() => {
+    function scrollToDocs(behavior: ScrollBehavior = "smooth") {
+      if (window.location.hash === "#docs") {
+        const el = document.getElementById("docs");
+        if (el) {
+          el.scrollIntoView({ behavior });
+        }
+      }
+    }
+
+    if (window.location.hash === "#docs") {
+      setVisibleCount(CATALOG.length);
+      const t1 = setTimeout(() => scrollToDocs("smooth"), 100);
+      const t2 = setTimeout(() => scrollToDocs("smooth"), 350);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    }
+
+    window.addEventListener("hashchange", () => scrollToDocs("smooth"));
+    return () => {
+      window.removeEventListener("hashchange", () => scrollToDocs("smooth"));
+    };
+  }, []);
+
   const pmCommands = {
-    npm: "npm i stick-it-up",
-    pnpm: "pnpm add stick-it-up",
-    bun: "bun add stick-it-up",
-    yarn: "yarn add stick-it-up",
+    npm: "npm i stick-it-up@latest",
+    pnpm: "pnpm add stick-it-up@latest",
+    bun: "bun add stick-it-up@latest",
+    yarn: "yarn add stick-it-up@latest",
   };
 
   async function copyGuideInstall() {
@@ -987,7 +1014,7 @@ export default function StickersCatalogPage() {
 
   async function copyInstall() {
     try {
-      await navigator.clipboard.writeText("npm i stick-it-up");
+      await navigator.clipboard.writeText("npm i stick-it-up@latest");
       setInstallCopied(true);
     } catch (err) {
       console.error(err);
@@ -1078,7 +1105,12 @@ export default function StickersCatalogPage() {
             </li>
             <li>
               <a
-                href="/stickers#docs"
+                href="#docs"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("docs")?.scrollIntoView({ behavior: "smooth" });
+                  window.history.pushState(null, "", "#docs");
+                }}
                 className="rounded-lg px-3.5 py-2 text-sm font-medium text-zinc-600 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900"
               >
                 Docs
@@ -1130,7 +1162,7 @@ export default function StickersCatalogPage() {
           <button
             onClick={copyInstall}
             type="button"
-            aria-label={installCopied ? "Copied to clipboard" : "Copy npm i stick-it-up"}
+            aria-label={installCopied ? "Copied to clipboard" : "Copy npm i stick-it-up@latest"}
             className={`group inline-flex items-center gap-3 rounded-full border px-3.5 py-2 shadow-[0_1px_2px_rgba(0,0,0,0.04)] outline-none transition-all duration-200 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-zinc-900/20 focus-visible:ring-offset-2 ${
               installCopied
                 ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:border-emerald-300 hover:bg-emerald-100/60"
@@ -1146,7 +1178,7 @@ export default function StickersCatalogPage() {
                     : "translate-y-0 opacity-100 blur-0 text-zinc-500 group-hover:text-zinc-700"
                 }`}
               >
-                <span className="mr-1.5 select-none text-zinc-400">$</span>npm i stick-it-up
+                <span className="mr-1.5 select-none text-zinc-400">$</span>npm i stick-it-up@latest
               </span>
 
               <span

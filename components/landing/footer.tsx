@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
 
 /* ------------------------------------------------------------------
    tokens (same language as the rest of the landing page)
@@ -325,11 +326,11 @@ export default function Footer() {
                             />
                           </span>
                         </button>
-                      ) : (
+                      ) : link.href?.startsWith("http") ? (
                         <a
                           href={link.href}
-                          target={link.href?.startsWith("http") ? "_blank" : undefined}
-                          rel={link.href?.startsWith("http") ? "noreferrer" : undefined}
+                          target="_blank"
+                          rel="noreferrer"
                           className="group relative inline-flex items-center py-0.5 text-sm font-medium text-zinc-500 transition-colors duration-200 hover:text-zinc-900"
                         >
                           <span>{link.label}</span>
@@ -350,6 +351,39 @@ export default function Footer() {
                             />
                           </span>
                         </a>
+                      ) : (
+                        <Link
+                          href={link.href || "#"}
+                          onClick={(e) => {
+                            if (link.href?.includes("#docs") && window.location.pathname === "/stickers") {
+                              const el = document.getElementById("docs");
+                              if (el) {
+                                e.preventDefault();
+                                el.scrollIntoView({ behavior: "smooth" });
+                                window.history.pushState(null, "", "#docs");
+                              }
+                            }
+                          }}
+                          className="group relative inline-flex items-center py-0.5 text-sm font-medium text-zinc-500 transition-colors duration-200 hover:text-zinc-900"
+                        >
+                          <span>{link.label}</span>
+                          <span
+                            aria-hidden="true"
+                            className="pointer-events-none absolute left-full top-1/2 ml-2 -translate-y-1/2 opacity-0 scale-0 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:scale-100"
+                            style={{
+                              transitionTimingFunction: SPRING,
+                            }}
+                          >
+                            <img
+                              src={link.sticker}
+                              alt=""
+                              className="h-[24px] w-[24px] max-w-none select-none object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]"
+                              style={{
+                                transform: `rotate(${link.rot ?? 0}deg)`,
+                              }}
+                            />
+                          </span>
+                        </Link>
                       )}
                     </li>
                   ))}

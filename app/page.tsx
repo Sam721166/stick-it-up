@@ -273,7 +273,7 @@ export default function Home() {
 
   async function copyCommand() {
     try {
-      await navigator.clipboard.writeText("npm i stick-it-up");
+      await navigator.clipboard.writeText("npm i stick-it-up@latest");
       setCopied(true);
     } catch (error) {
       console.error("Failed to copy command:", error);
@@ -372,13 +372,23 @@ export default function Home() {
               { label: "npm", href: "https://www.npmjs.com/package/stick-it-up" },
             ].map((link) => (
               <li key={link.label}>
-                <a
-                  href={link.href}
-                  className="rounded-lg px-3.5 py-2 text-sm font-medium text-zinc-600
-                    transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900"
-                >
-                  {link.label}
-                </a>
+                {link.href.startsWith("http") ? (
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-lg px-3.5 py-2 text-sm font-medium text-zinc-600 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    href={link.href}
+                    className="rounded-lg px-3.5 py-2 text-sm font-medium text-zinc-600 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900"
+                  >
+                    {link.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -498,7 +508,7 @@ export default function Home() {
           {/* Install button */}
           <button
             onClick={copyCommand}
-            aria-label={copied ? "Copied to clipboard" : "Copy npm i stick-it-up"}
+            aria-label={copied ? "Copied to clipboard" : "Copy npm i stick-it-up@latest"}
             className={`group relative inline-flex cursor-pointer items-center gap-3 rounded-xl
               border bg-gradient-to-b
               py-3 pl-4 pr-5 font-mono text-sm
@@ -520,7 +530,7 @@ export default function Home() {
                     : "translate-y-0 opacity-100 blur-0"
                 }`}
               >
-                npm i stick-it-up
+                npm i stick-it-up@latest
               </span>
 
               <span
