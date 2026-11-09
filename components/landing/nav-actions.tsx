@@ -117,21 +117,19 @@ export function NpmDownloadsBadge({ pkg = "stick-it-up" }: { pkg?: string }) {
 
 // github star button
 export function GitHubStarButton() {
-  const [stars, setStars] = useState<number>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const cached = sessionStorage.getItem("stickitupp_gh_stars");
-        if (cached !== null) {
-          const val = parseInt(cached, 10);
-          if (!isNaN(val)) return val;
-        }
-      } catch {}
-    }
-    return 1;
-  });
+  const [stars, setStars] = useState<number | null>(null);
 
   useEffect(() => {
     let unmounted = false;
+
+    // Read cached star count immediately after mount on client to avoid SSR hydration mismatch
+    try {
+      const cached = sessionStorage.getItem("stickitupp_gh_stars");
+      if (cached !== null) {
+        const val = parseInt(cached, 10);
+        if (!isNaN(val)) setStars(val);
+      }
+    } catch {}
 
     // Fetch from internal cached API route to avoid browser CORS/rate-limits
     fetch("/api/github-stars")
@@ -151,6 +149,9 @@ export function GitHubStarButton() {
           .then((data) => {
             if (!unmounted && data && typeof data.stargazers_count === "number") {
               setStars(data.stargazers_count);
+              try {
+                sessionStorage.setItem("stickitupp_gh_stars", String(data.stargazers_count));
+              } catch {}
             }
           })
           .catch(() => {});
@@ -199,8 +200,11 @@ export function GitHubStarButton() {
         </svg>
       </span>
 
-      <span className="ml-0.5 rounded-full bg-white/10 px-1.5 py-0.5 font-mono text-[10px] sm:text-[11px] text-zinc-300">
-        {stars}
+      <span
+        suppressHydrationWarning
+        className="ml-0.5 rounded-full bg-white/10 px-1.5 py-0.5 font-mono text-[10px] sm:text-[11px] text-zinc-300"
+      >
+        {stars !== null ? stars : "..."}
       </span>
     </a>
   );

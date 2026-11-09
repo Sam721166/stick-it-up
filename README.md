@@ -2,7 +2,7 @@
   <img src="public/stickers/logo.svg" alt="Stick It Up Logo" width="88" height="88" />
   <h1>Stick It Up</h1>
   <p><strong>Give your website the kind of personality it deserves.</strong></p>
-  <p>A curated collection of 65+ handcrafted vector, metallic chrome, and pixel art sticker components for React & Next.js with realistic 3D vinyl peel physics.</p>
+  <p>A collection of 65+ handcrafted vector, metallic chrome, and pixel art sticker components for React & Next.js with realistic 3D vinyl peel physics — designed and built by Samiran De.</p>
 
   <p>
     <a href="https://www.npmjs.com/package/stick-it-up">
@@ -12,7 +12,7 @@
       <img src="https://img.shields.io/npm/dm/stick-it-up?color=6366f1" alt="npm downloads" />
     </a>
     <a href="LICENSE">
-      <img src="https://img.shields.io/badge/License-Community%20%26%20Fair--Use-blue" alt="License" />
+      <img src="https://img.shields.io/badge/License-MIT-blue" alt="License" />
     </a>
     <a href="https://react.dev">
       <img src="https://img.shields.io/badge/React-18%20%2F%2019-61dafb?logo=react&logoColor=black" alt="React" />
@@ -281,21 +281,11 @@ Stick It Up is an independent, 100% free open-source project. If these stickers 
 
 ---
 
-## 📄 License & Fair-Use Terms
+## 📄 License & Design
 
-This project is licensed under the **Stick It Up Fair-Use & Community License** (v1.0, 2026).
+This project is licensed under the **MIT License**.
 
-### Summary of Terms:
-
-- ✅ **Free & Encouraged**:
-  - Install and use in personal projects, developer portfolios, and non-commercial web apps.
-  - Study, fork, and explore the codebase to learn motion and UI engineering techniques.
-  - Submit bug fixes, features, and new sticker designs back to the community via Pull Requests.
-
-- ❌ **Restrictions**:
-  - **No Commercial Paywalls**: You may **not** sell, license, or place this software, its sticker graphics, or derivative components behind a paid paywall, paid subscription, or commercial asset pack.
-  - **No Competing Clones / Re-hosting**: You may **not** make minor or trivial modifications to this project and publicly host or republish it as your own competing sticker catalog or package.
-  - **Artist Rights**: Character designs and artwork curated in this library remain the intellectual property of their original creators.
+All stickers, components, animations, and code are designed, illustrated, and created by **[Samiran De](https://github.com/Sam721166)**. While the aesthetic draws creative inspiration from Pinterest moodboards and retro decals, each sticker is handcrafted, vectorized, and engineered from scratch by Samiran De. Free for both personal and commercial use.
 
 For the full legal text, please read the [LICENSE](LICENSE) file.
 

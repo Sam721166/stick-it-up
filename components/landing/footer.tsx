@@ -88,7 +88,7 @@ function MotionBlur({
 /* ------------------------------------------------------------------
    data
 ------------------------------------------------------------------- */
-type LegalModalTab = "privacy" | "disclaimer" | "takedown" | "license";
+type LegalModalTab = "privacy" | "about" | "license";
 
 interface FooterLink {
   label: string;
@@ -136,9 +136,8 @@ const COLUMNS: FooterColumn[] = [
     title: "Legal",
     links: [
       { label: "Privacy Policy", action: "privacy", sticker: "/stickers/heart.svg", rot: 8 },
-      { label: "Art Disclaimer", action: "disclaimer", sticker: "/stickers/Peace-hand.svg", rot: -10 },
-      { label: "Takedown Request", action: "takedown", sticker: "/stickers/face.svg", rot: 6 },
-      { label: "Community License", action: "license", sticker: "/stickers/star.svg", rot: -8 },
+      { label: "About the Design", action: "about", sticker: "/stickers/Peace-hand.svg", rot: -10 },
+      { label: "MIT License", action: "license", sticker: "/stickers/star.svg", rot: -8 },
     ],
   },
 ];
@@ -443,9 +442,8 @@ export default function Footer() {
               <div className="flex flex-wrap items-center gap-1.5">
                 {[
                   { id: "privacy", label: "Privacy Policy" },
-                  { id: "disclaimer", label: "Art Disclaimer" },
-                  { id: "takedown", label: "Takedown Request" },
-                  { id: "license", label: "License" },
+                  { id: "about", label: "About the Design" },
+                  { id: "license", label: "MIT License" },
                 ].map((tab) => (
                   <button
                     key={tab.id}
@@ -505,78 +503,43 @@ export default function Footer() {
                 </div>
               )}
 
-              {modalTab === "disclaimer" && (
+              {modalTab === "about" && (
                 <div className="space-y-5">
                   <div>
                     <h3 className="text-base font-semibold tracking-tight text-zinc-900">
-                      Art &amp; Copyright Notice
+                      Original Design &amp; Craft
                     </h3>
                     <p className="mt-1 text-xs text-zinc-400">
-                      Curated for open-source &amp; educational fun.
+                      Designed, illustrated, and built by Samiran De.
                     </p>
                   </div>
                   <div className="space-y-2.5 text-xs leading-relaxed text-zinc-600">
                     <p>
-                      Stickers in this library are vector decals curated and adapted from creative hubs across the internet (such as Pinterest, community showcases, and open packs) for educational, personal, and open-source UI experimentation.
+                      Every sticker component in Stick It Up — from the metallic chrome finishes and halftone stars to the pixel art mascots (Nori, Pip, Kuro, Mochi) and playful vector decals — is designed, illustrated, and coded by Samiran De.
                     </p>
                     <p>
-                      <strong>We do not claim copyright or ownership</strong> over original character illustrations or art styles. All original copyrights remain strictly with their respective creators and rights holders.
+                      While the artwork and aesthetic draw inspiration from visual moodboards on Pinterest and retro sticker culture, every single piece is handcrafted, vectorized, and engineered from scratch by Samiran De.
                     </p>
-                  </div>
-                  <div className="border-t border-zinc-100 pt-3.5 text-xs text-zinc-600">
                     <p>
-                      If you are an artist or rights holder and see your artwork here, please reach out before filing strikes. We will gladly add full attribution with links to your shop/portfolio, or remove it within a few days with zero friction.
+                      The entire library, including code, shaders, interactive peel physics, and SVG assets, is released under the permissive MIT License for everyone to use freely in personal and commercial web projects.
                     </p>
-                    <div className="mt-3">
-                      <button
-                        type="button"
-                        onClick={() => setModalTab("takedown")}
-                        className="cursor-pointer text-xs font-medium text-zinc-900 underline underline-offset-4 hover:text-zinc-600"
-                      >
-                        View takedown request options &rarr;
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {modalTab === "takedown" && (
-                <div className="space-y-5">
-                  <div>
-                    <h3 className="text-base font-semibold tracking-tight text-zinc-900">
-                      Takedown &amp; Attribution Request
-                    </h3>
-                    <p className="mt-1 text-xs text-zinc-400">
-                      Prompt removal or backlink attribution for rights holders.
-                    </p>
-                  </div>
-                  <p className="text-xs leading-relaxed text-zinc-600">
-                    If you own the rights to any artwork featured in this project, we want to respect your wishes. Send a message and we will handle it within a few days:
-                  </p>
-                  <div className="divide-y divide-zinc-100 border-y border-zinc-100 text-xs text-zinc-600">
-                    <div className="py-2.5">
-                      <span className="font-medium text-zinc-900">Want attribution?</span> We will gladly add your name, portfolio link, store, or social handles directly to the sticker&apos;s catalog entry.
-                    </div>
-                    <div className="py-2.5">
-                      <span className="font-medium text-zinc-900">Want it removed?</span> No paperwork or legal notices needed. Send a message and we will remove the file within a few days.
-                    </div>
                   </div>
                   <div className="flex flex-wrap items-center gap-2.5 pt-1">
                     <a
-                      href="https://github.com/Sam721166/stick-it-up/issues/new?labels=takedown&title=[Artwork+Takedown+Request]:+"
+                      href="https://github.com/Sam721166/stick-it-up"
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 py-2 text-xs font-medium text-white shadow-xs transition-colors hover:bg-zinc-800"
                     >
-                      Open GitHub Request &rarr;
+                      View GitHub Repo &rarr;
                     </a>
                     <a
-                      href="https://x.com/samirande_"
+                      href="https://samworks.vercel.app/"
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-xs font-medium text-zinc-800 shadow-xs transition-colors hover:bg-zinc-50"
                     >
-                      DM on X / Twitter (@samirande_) &rarr;
+                      Creator Portfolio &rarr;
                     </a>
                   </div>
                 </div>
@@ -586,69 +549,37 @@ export default function Footer() {
                 <div className="space-y-5">
                   <div>
                     <h3 className="text-base font-semibold tracking-tight text-zinc-900">
-                      Community &amp; Fair-Use License
+                      MIT License
                     </h3>
                     <p className="mt-1 text-xs text-zinc-400">
-                      Free to use, learn, and contribute. No paywalls or repackaged clones.
+                      Free for both personal and commercial use.
                     </p>
                   </div>
                   <p className="text-xs leading-relaxed text-zinc-600">
-                    Stick It Up is an open project built to make web UI more expressive and fun. You are free to use it, explore the code, and contribute, subject to simple community fair-use terms:
+                    Stick It Up is open-source software created by Samiran De. Permission is granted, free of charge, to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software in any project.
                   </p>
-                  <div className="divide-y divide-zinc-100 border-y border-zinc-100 text-xs text-zinc-600">
-                    <div className="py-2.5">
-                      <span className="font-medium text-zinc-900">Free to Use:</span> You are welcome to use these stickers and components freely in your personal projects, open-source apps, developer blogs, and documentation.
-                    </div>
-                    <div className="py-2.5">
-                      <span className="font-medium text-zinc-900">Learn &amp; Explore:</span> You can freely fork, clone, and inspect the repository to learn how the peel shaders, physics hooks, and React components are crafted.
-                    </div>
-                    <div className="py-2.5">
-                      <span className="font-medium text-zinc-900">Contribute:</span> You are encouraged to submit bug fixes, improvements, and new stickers directly to the official upstream repository.
-                    </div>
-                    <div className="py-2.5">
-                      <span className="font-medium text-zinc-900">No Paywalls or Reselling:</span> You may NOT sell, license, or lock this library, its sticker graphics, or derivative components behind a paid paywall or paid subscription.
-                    </div>
-                    <div className="py-2.5">
-                      <span className="font-medium text-zinc-900">No Repackaged Clones:</span> You may NOT make minor or trivial modifications and publicly re-host or deploy this project as your own competing sticker catalog or competing package.
-                    </div>
-                  </div>
                   <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-4 font-mono text-[11px] leading-relaxed text-zinc-600 select-all whitespace-pre-wrap">
-                    {`Stick It Up Fair-Use & Community License
-Version 1.0 (2026)
+                    {`MIT License
 
 Copyright (c) 2026 Samiran De (https://github.com/Sam721166)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software, components, sticker assets, and associated documentation
-(the "Software"), to inspect, use, copy, and modify the Software subject to
-the following conditions:
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-1. PERMITTED USES:
-   (a) Free Use: You may install and use the Software and sticker components
-       freely in personal websites, educational materials, open-source projects,
-       and non-commercial web applications.
-   (b) Study & Learning: You are welcome to clone or fork the repository to
-       explore, learn from the codebase, and experiment with motion and UI techniques.
-   (c) Contributions: You are encouraged to submit bug fixes, improvements,
-       and new features back to the official repository via Pull Requests.
-
-2. RESTRICTIONS (NO COMMERCIAL PAYWALLS, NO REPACKAGED REDEPLOYMENT):
-   (a) No Paywalls or Direct Sale: You may NOT sell, license, charge fees for,
-       or place the Software, its sticker graphics, or derivative components
-       behind any paid paywall, paid subscription, or commercial asset pack.
-   (b) No Trivial Re-hosting / Competing Clones: You may NOT make minor or trivial
-       modifications to this project and publicly deploy, host, or republish it
-       as your own competing sticker catalog, component registry, or package.
-   (c) Original Artist Rights: Character designs and artwork curated in this
-       library remain the intellectual property of their original creators.
-
-3. ATTRIBUTION:
-   All copies, substantial portions, or permitted distributions of the Software
-   must include this copyright notice and permission notice.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.`}
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.`}
                   </div>
                 </div>
               )}

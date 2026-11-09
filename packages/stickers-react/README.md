@@ -2,7 +2,7 @@
 
 > Premium vector, metallic chrome, and pixel art aesthetic sticker components for React & Next.js.
 
-A curated collection of 65+ vector graphic stickers featuring specular metallic chrome reflections, retro halftone stars, pixel art mascots (Nori, Pip, Kuro, Mochi), cute character doodles, and tactile badges. Built with scoped SVG filters, responsive sizing, and realistic 3D vinyl peel hover physics.
+A collection of 65+ vector graphic stickers featuring specular metallic chrome reflections, retro halftone stars, pixel art mascots (Nori, Pip, Kuro, Mochi), cute character doodles, and tactile badges — designed and created by Samiran De. Built with scoped SVG filters, responsive sizing, and realistic 3D vinyl peel hover physics.
 
 ---
 
@@ -181,13 +181,11 @@ interface StickerProps extends React.SVGProps<SVGSVGElement> {
 
 ---
 
-## 📄 License & Fair-Use
+## 📄 License & Design
 
-This package is licensed under the **Stick It Up Fair-Use & Community License** (v1.0, 2026).
+This package is licensed under the **MIT License**.
 
-- **Free & Permitted**: Personal projects, educational use, learning, exploration, and open-source applications.
-- **Restrictions**: No commercial paywalls, no selling sticker asset packs, and no competing trivial clones/re-hosting.
-- Original character designs and illustrations remain the intellectual property of their original creators.
+All stickers, components, animations, and designs are created and crafted by **[Samiran De](https://github.com/Sam721166)** (drawing creative inspiration from visual moodboards on Pinterest, but handcrafted, vectorized, and coded from scratch by me). Free for both personal and commercial projects.
 
 See [LICENSE](LICENSE) for the complete legal text.
 

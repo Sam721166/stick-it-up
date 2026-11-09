@@ -1,35 +1,16 @@
-Stick It Up Fair-Use & Community License
-Version 1.0 (2026)
+MIT License
 
 Copyright (c) 2026 Samiran De (https://github.com/Sam721166)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software, components, sticker assets, and associated documentation
-(the "Software"), to inspect, use, copy, and modify the Software subject to
-the following conditions:
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-1. PERMITTED USES:
-   (a) Free Use: You may install and use the Software and sticker components
-       freely in personal websites, educational materials, open-source projects,
-       and non-commercial web applications.
-   (b) Study & Learning: You are welcome to clone or fork the repository to
-       explore, learn from the codebase, and experiment with motion and UI techniques.
-   (c) Contributions: You are encouraged to submit bug fixes, improvements,
-       and new features back to the official repository via Pull Requests.
-
-2. RESTRICTIONS (NO COMMERCIAL PAYWALLS, NO REPACKAGED REDEPLOYMENT):
-   (a) No Paywalls or Direct Sale: You may NOT sell, license, charge fees for,
-       or place the Software, its sticker graphics, or derivative components
-       behind any paid paywall, paid subscription, or commercial asset pack.
-   (b) No Trivial Re-hosting / Competing Clones: You may NOT make minor or trivial
-       modifications to this project and publicly deploy, host, or republish it
-       as your own competing sticker catalog, component registry, or package.
-   (c) Original Artist Rights: Character designs and artwork curated in this
-       library remain the intellectual property of their original creators.
-
-3. ATTRIBUTION:
-   All copies, substantial portions, or permitted distributions of the Software
-   must include this copyright notice and permission notice.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
