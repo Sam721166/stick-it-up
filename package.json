@@ -10,9 +10,9 @@
     "dev": "next dev",
     "build": "npm run build:package && next build",
     "build:package": "npm --workspace=stick-it-up run build",
-    "build:cf": "npm run build:package && opennextjs-cloudflare build",
-    "preview:cf": "npm run build:package && opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy:cf": "npm run build:package && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "build:cf": "opennextjs-cloudflare build",
+    "preview:cf": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy:cf": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "start": "next start",
     "lint": "eslint"
   },
