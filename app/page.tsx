@@ -446,6 +446,7 @@ export default function Home() {
                 ) : (
                   <Link
                     href={link.href}
+                    prefetch={false}
                     className="rounded-lg px-3.5 py-2 text-sm font-medium text-zinc-600 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900"
                   >
                     {link.label}

@@ -128,6 +128,8 @@ function Img({ src, style }: { src: string; style?: CSSProperties }) {
     <img
       src={src}
       alt=""
+      loading="lazy"
+      decoding="async"
       draggable={false}
       className="pointer-events-none absolute select-none"
       style={style}

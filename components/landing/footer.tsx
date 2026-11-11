@@ -238,7 +238,7 @@ function DraggableSticker({
             : `scale 450ms ${SPRING}, rotate 450ms ${SPRING}`,
         }}
       >
-        <img src={src} alt="" draggable={false} className="block h-auto w-full" />
+        <img src={src} alt="" loading="lazy" decoding="async" draggable={false} className="block h-auto w-full" />
       </div>
     </div>
   );

@@ -10,6 +10,18 @@ export function VisitorCounter({ site = "stick-it-up" }: { site?: string }) {
     let unmounted = false;
 
     async function recordAndFetch() {
+      // 1. Skip network request if already recorded in this tab session
+      try {
+        const sessionCount = sessionStorage.getItem(`siu_session_visited_${site}`);
+        if (sessionCount !== null) {
+          const val = parseInt(sessionCount, 10);
+          if (!isNaN(val) && val > 0) {
+            setCount(val);
+            return;
+          }
+        }
+      } catch {}
+
       try {
         // Record visit and get authoritative server count
         const res = await fetch("/api/visitors", {
@@ -25,6 +37,7 @@ export function VisitorCounter({ site = "stick-it-up" }: { site?: string }) {
         if (unmounted) return;
         try {
           localStorage.setItem(`siu_visitors_${site}`, String(target));
+          sessionStorage.setItem(`siu_session_visited_${site}`, String(target));
         } catch {}
 
         // Smooth roll-up animation starting dynamically from 0
@@ -80,11 +93,30 @@ export function NpmDownloadsBadge({ pkg = "stick-it-up" }: { pkg?: string }) {
   useEffect(() => {
     let unmounted = false;
 
+    // Check sessionStorage cache (1 hour TTL)
+    try {
+      const cached = sessionStorage.getItem(`siu_npm_dl_${pkg}`);
+      const cachedAt = sessionStorage.getItem(`siu_npm_dl_time_${pkg}`);
+      if (cached !== null) {
+        const val = parseInt(cached, 10);
+        if (!isNaN(val)) {
+          setDownloads(val);
+          if (cachedAt && Date.now() - parseInt(cachedAt, 10) < 60 * 60 * 1000) {
+            return;
+          }
+        }
+      }
+    } catch {}
+
     fetch(`/api/npm-downloads?package=${encodeURIComponent(pkg)}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (!unmounted && typeof data?.downloads === "number") {
           setDownloads(data.downloads);
+          try {
+            sessionStorage.setItem(`siu_npm_dl_${pkg}`, String(data.downloads));
+            sessionStorage.setItem(`siu_npm_dl_time_${pkg}`, String(Date.now()));
+          } catch {}
         }
       })
       .catch(() => {
@@ -123,13 +155,23 @@ export function GitHubStarButton() {
     let unmounted = false;
 
     // Read cached star count immediately after mount on client to avoid SSR hydration mismatch
+    let hasFreshCache = false;
     try {
       const cached = sessionStorage.getItem("stickitupp_gh_stars");
+      const cachedAt = sessionStorage.getItem("stickitupp_gh_stars_time");
       if (cached !== null) {
         const val = parseInt(cached, 10);
-        if (!isNaN(val)) setStars(val);
+        if (!isNaN(val)) {
+          setStars(val);
+          // If cached within the last 30 minutes, skip network fetch completely
+          if (cachedAt && Date.now() - parseInt(cachedAt, 10) < 30 * 60 * 1000) {
+            hasFreshCache = true;
+          }
+        }
       }
     } catch {}
+
+    if (hasFreshCache) return;
 
     // Fetch from internal cached API route to avoid browser CORS/rate-limits
     fetch("/api/github-stars")
@@ -139,6 +181,7 @@ export function GitHubStarButton() {
           setStars(data.stars);
           try {
             sessionStorage.setItem("stickitupp_gh_stars", String(data.stars));
+            sessionStorage.setItem("stickitupp_gh_stars_time", String(Date.now()));
           } catch {}
         }
       })
@@ -151,6 +194,7 @@ export function GitHubStarButton() {
               setStars(data.stargazers_count);
               try {
                 sessionStorage.setItem("stickitupp_gh_stars", String(data.stargazers_count));
+                sessionStorage.setItem("stickitupp_gh_stars_time", String(Date.now()));
               } catch {}
             }
           })
