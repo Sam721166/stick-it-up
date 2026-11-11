@@ -13,7 +13,27 @@ const GITHUB_URL = "https://github.com/sponsors/Sam721166";
 const COFFEE_URL = "https://buymeacoffee.com/samirande_";
 const TWITTER_URL = "https://x.com/samirande_";
 
-const EMPTY_SLOT_COUNT = 5;
+interface Sponsor {
+  name: string;
+  url: string;
+  logo: string;
+  sublabel?: string;
+  bg?: string;
+  border?: string;
+}
+
+const SPONSORS: Sponsor[] = [
+  {
+    name: "PureCanvas",
+    url: "https://www.purecanvas.app/",
+    logo: "https://www.purecanvas.app/favicon.svg",
+    sublabel: "purecanvas.app",
+    bg: "#ffffff",
+    border: "#e4e4e7",
+  },
+];
+
+const TOTAL_SPONSOR_SLOTS = 5;
 
 function useInView({
   threshold = 0.08,
@@ -247,6 +267,66 @@ function FaviconTile({
 
         <Tip label="Stick it up" sublabel="Official website" />
       </Link>
+    </li>
+  );
+}
+
+/* ------------------------------------------------------------------
+   sponsor box: active sponsor showcase
+------------------------------------------------------------------- */
+function SponsorTile({
+  sponsor,
+  index,
+  inView,
+}: {
+  sponsor: Sponsor;
+  index: number;
+  inView: boolean;
+}) {
+  const [hover, setHover] = useState(false);
+
+  return (
+    <li
+      className="relative list-none"
+      style={{
+        opacity: 0,
+        animation: inView ? `sponsorPop 600ms ${SPRING} ${420 + index * 60}ms both` : "none",
+      }}
+    >
+      <a
+        href={sponsor.url}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`${sponsor.name} — Sponsor`}
+        onPointerEnter={() => setHover(true)}
+        onPointerLeave={() => setHover(false)}
+        className="group relative block h-[76px] w-[76px] cursor-pointer outline-none sm:h-24 sm:w-24 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 rounded-[24px]"
+      >
+        {/* Inner visual box: ONLY this translates on group-hover to prevent edge flickering */}
+        <div
+          className="relative flex h-full w-full items-center justify-center rounded-[24px] group-hover:-translate-y-1.5 active:scale-95"
+          style={{
+            background: sponsor.bg ?? "#ffffff",
+            
+            boxShadow:
+              "inset 0 1px 0 #fff, 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.04)",
+            transition: `transform 350ms ${SPRING}, box-shadow 250ms ease, border-color 150ms`,
+          }}
+        >
+          <img
+            src={sponsor.logo}
+            alt={sponsor.name}
+            draggable={false}
+            className="h-full w-full object-contain select-none transition-[rotate,scale] duration-300 group-hover:scale-110"
+            style={{
+              rotate: hover ? "-6deg" : "0deg",
+              transitionTimingFunction: SPRING,
+            }}
+          />
+        </div>
+
+        <Tip label={sponsor.name} sublabel={sponsor.sublabel ?? "Sponsor"} />
+      </a>
     </li>
   );
 }
@@ -576,22 +656,38 @@ export default function Sponsor() {
 
         {/* Sponsor boxes */}
         <div className="mt-6 sm:mt-7">
-          {/* Row 1: 1st box is website logo, followed by empty grey boxes with plus */}
+          {/* Row 1: 1st box is website logo, followed by active sponsors and empty grey boxes with plus */}
           <ul className="flex flex-wrap items-center gap-4 sm:gap-5 p-0 m-0">
             {/* 1st box: website logo with matching light lime background */}
             <FaviconTile inView={inView} index={0} />
 
+            {/* Active sponsors */}
+            {SPONSORS.map((sponsor, i) => (
+              <SponsorTile
+                key={sponsor.name}
+                sponsor={sponsor}
+                index={1 + i}
+                inView={inView}
+              />
+            ))}
+
             {/* Empty grey boxes with plus */}
-            {Array.from({ length: EMPTY_SLOT_COUNT }).map((_, i) => (
-              <EmptySlotTile key={i} index={i + 1} inView={inView} />
+            {Array.from({
+              length: Math.max(0, TOTAL_SPONSOR_SLOTS - SPONSORS.length),
+            }).map((_, i) => (
+              <EmptySlotTile
+                key={i}
+                index={1 + SPONSORS.length + i}
+                inView={inView}
+              />
             ))}
           </ul>
 
           {/* Row 2 ("under boxes"): GitHub (light grey), Buy Me a Coffee (light yellow), and X / Twitter (light sky) */}
           <ul className="mt-4 sm:mt-5 flex items-center gap-4 sm:gap-5 p-0 m-0">
-            <GitHubTile index={EMPTY_SLOT_COUNT + 1} inView={inView} />
-            <CoffeeTile index={EMPTY_SLOT_COUNT + 2} inView={inView} />
-            <TwitterTile index={EMPTY_SLOT_COUNT + 3} inView={inView} />
+            <GitHubTile index={TOTAL_SPONSOR_SLOTS + 1} inView={inView} />
+            <CoffeeTile index={TOTAL_SPONSOR_SLOTS + 2} inView={inView} />
+            <TwitterTile index={TOTAL_SPONSOR_SLOTS + 3} inView={inView} />
           </ul>
         </div>
 
