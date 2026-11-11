@@ -279,6 +279,11 @@ Stick It Up is an independent, 100% free open-source project. If these stickers 
 - **[GitHub Sponsors](https://github.com/sponsors/Sam721166)**: Monthly or one-time sponsorship with profile badges.
 - **[Buy Me a Coffee](https://buymeacoffee.com/samirande_)**: Send a quick coffee ($5) via Apple Pay or card with zero setup.
 
+### 🌟 Official Sponsors
+
+- **[PureCanvas](https://www.purecanvas.app/)** — Free, open-source, local-first vector design web application that runs entirely inside the browser.
+- **[Clonvo](https://clonvo.com/)** — OpenAI-compatible API for 100+ AI models from OpenAI, Anthropic, Google etc plus web, company and people tools for agents. You point the OpenAI SDK to Clonvo API, switch models by changing the model id, and use the same key for those tools.
+
 ---
 
 ## 📄 License & Design

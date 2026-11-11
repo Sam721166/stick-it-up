@@ -27,9 +27,17 @@ const SPONSORS: Sponsor[] = [
     name: "PureCanvas",
     url: "https://www.purecanvas.app/",
     logo: "https://www.purecanvas.app/favicon.svg",
-    sublabel: "purecanvas.app",
+    sublabel: "Local-first vector design",
     bg: "#ffffff",
     border: "#e4e4e7",
+  },
+  {
+    name: "Clonvo",
+    url: "https://clonvo.com/",
+    logo: "/sponsors/clonvo-favicon.svg",
+    sublabel: "OpenAI-compatible unified API",
+    bg: "#12110f",
+    border: "#27272a",
   },
 ];
 
