@@ -39,6 +39,14 @@ const SPONSORS: Sponsor[] = [
     bg: "#12110f",
     border: "#27272a",
   },
+  {
+    name: "React Bits",
+    url: "https://reactbits.dev/",
+    logo: "/sponsors/react-bits-favicon.svg",
+    sublabel: "Animated React components",
+    bg: "#09090b",
+    border: "#27272a",
+  },
 ];
 
 const TOTAL_SPONSOR_SLOTS = 5;
