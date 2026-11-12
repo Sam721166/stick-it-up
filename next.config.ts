@@ -38,6 +38,41 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: "/",
+        headers: [
+          {
+            key: "CDN-Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=86400",
+          },
+          {
+            key: "Cloudflare-CDN-Cache-Control",
+            value: "public, max-age=3600",
+          },
+        ],
+      },
+      {
+        source: "/stickers",
+        headers: [
+          {
+            key: "CDN-Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=86400",
+          },
+          {
+            key: "Cloudflare-CDN-Cache-Control",
+            value: "public, max-age=3600",
+          },
+        ],
+      },
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
         source: "/stickers/:path*",
         headers: [
           {
