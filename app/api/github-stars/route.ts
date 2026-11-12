@@ -1,23 +1,49 @@
 import { NextResponse } from "next/server";
 
+let cachedStars = 81;
+let lastFetchTime = 0;
+const CACHE_TTL_MS = 15 * 60 * 1000;
+
 export async function GET() {
+  const now = Date.now();
+
+  if (cachedStars > 1 && now - lastFetchTime < CACHE_TTL_MS) {
+    return NextResponse.json(
+      { stars: cachedStars },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=1800, stale-while-revalidate=86400",
+        },
+      }
+    );
+  }
+
   try {
+    const headers: Record<string, string> = {
+      Accept: "application/vnd.github.v3+json",
+      "User-Agent": "stick-it-up-app",
+    };
+
+    const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
     const res = await fetch("https://api.github.com/repos/Sam721166/stick-it-up", {
-      headers: {
-        Accept: "application/vnd.github.v3+json",
-        "User-Agent": "stick-it-up-app",
-      },
-      next: { revalidate: 300 },
+      headers,
+      next: { revalidate: 1800 },
     });
 
     if (res.ok) {
       const data = await res.json();
-      if (typeof data.stargazers_count === "number") {
+      if (typeof data.stargazers_count === "number" && data.stargazers_count > 0) {
+        cachedStars = data.stargazers_count;
+        lastFetchTime = now;
         return NextResponse.json(
-          { stars: data.stargazers_count },
+          { stars: cachedStars },
           {
             headers: {
-              "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+              "Cache-Control": "public, s-maxage=1800, stale-while-revalidate=86400",
             },
           }
         );
@@ -27,12 +53,11 @@ export async function GET() {
     console.error("GitHub stars route error:", err);
   }
 
-  // Graceful fallback to verified count
   return NextResponse.json(
-    { stars: 1 },
+    { stars: Math.max(cachedStars, 81) },
     {
       headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=1800",
       },
     }
   );

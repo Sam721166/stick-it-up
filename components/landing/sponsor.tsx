@@ -48,6 +48,14 @@ const SPONSORS: Sponsor[] = [
     bg: "#09090b",
     border: "#27272a",
   },
+  {
+    name: "Brickyard",
+    url: "https://brickyard.ch/",
+    logo: "/sponsors/brickyard-favicon.svg",
+    sublabel: "Build Roblox games with AI",
+    bg: "#09090b",
+    border: "#27272a",
+  },
 ];
 
 const TOTAL_SPONSOR_SLOTS = 5;

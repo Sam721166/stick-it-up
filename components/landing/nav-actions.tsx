@@ -162,12 +162,14 @@ export function GitHubStarButton() {
       const cachedAt = sessionStorage.getItem("stickitupp_gh_stars_time");
       if (cached !== null) {
         const val = parseInt(cached, 10);
-        if (!isNaN(val)) {
+        if (!isNaN(val) && val > 1) {
           setStars(val);
-          // If cached within the last 30 minutes, skip network fetch completely
           if (cachedAt && Date.now() - parseInt(cachedAt, 10) < 30 * 60 * 1000) {
             hasFreshCache = true;
           }
+        } else {
+          sessionStorage.removeItem("stickitupp_gh_stars");
+          sessionStorage.removeItem("stickitupp_gh_stars_time");
         }
       }
     } catch {}
@@ -178,12 +180,14 @@ export function GitHubStarButton() {
     fetch("/api/github-stars")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (!unmounted && data && typeof data.stars === "number") {
+        if (!unmounted && data && typeof data.stars === "number" && data.stars > 1) {
           setStars(data.stars);
           try {
             sessionStorage.setItem("stickitupp_gh_stars", String(data.stars));
             sessionStorage.setItem("stickitupp_gh_stars_time", String(Date.now()));
           } catch {}
+        } else {
+          throw new Error("Invalid star count");
         }
       })
       .catch(() => {
@@ -191,15 +195,19 @@ export function GitHubStarButton() {
         fetch("https://api.github.com/repos/Sam721166/stick-it-up")
           .then((res) => (res.ok ? res.json() : null))
           .then((data) => {
-            if (!unmounted && data && typeof data.stargazers_count === "number") {
+            if (!unmounted && data && typeof data.stargazers_count === "number" && data.stargazers_count > 0) {
               setStars(data.stargazers_count);
               try {
                 sessionStorage.setItem("stickitupp_gh_stars", String(data.stargazers_count));
                 sessionStorage.setItem("stickitupp_gh_stars_time", String(Date.now()));
               } catch {}
+            } else if (!unmounted) {
+              setStars(81);
             }
           })
-          .catch(() => {});
+          .catch(() => {
+            if (!unmounted) setStars(81);
+          });
       });
 
     return () => {
