@@ -9,19 +9,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ? `https://${process.env.VERCEL_URL}`
       : "https://stickitupp.vercel.app");
 
+  const now = new Date();
+
   return [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "weekly",
       priority: 1.0,
+      images: [
+        `${baseUrl}/og-image.png`,
+        `${baseUrl}/stickers/logo.svg`,
+        `${baseUrl}/stickers/Flame.svg`,
+        `${baseUrl}/stickers/face.svg`,
+        `${baseUrl}/stickers/Cosmiceye.svg`,
+      ],
     },
     {
       url: `${baseUrl}/stickers`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "daily",
       priority: 0.9,
+      images: [
+        `${baseUrl}/og-image.png`,
+        `${baseUrl}/stickers/japan.svg`,
+        `${baseUrl}/stickers/nori-coffee.svg`,
+        `${baseUrl}/stickers/nori-heart.svg`,
+        `${baseUrl}/stickers/pink-cat.svg`,
+        `${baseUrl}/stickers/blueberry.svg`,
+        `${baseUrl}/stickers/SparkleTrio.svg`,
+      ],
     },
   ];
 }
-

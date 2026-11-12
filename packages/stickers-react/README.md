@@ -2,7 +2,7 @@
 
 > Premium vector, metallic chrome, and pixel art aesthetic sticker components for React & Next.js.
 
-A collection of 65+ vector graphic stickers featuring specular metallic chrome reflections, retro halftone stars, pixel art mascots (Nori, Pip, Kuro, Mochi), cute character doodles, and tactile badges — designed and created by Samiran De. Built with scoped SVG filters, responsive sizing, and realistic 3D vinyl peel hover physics.
+A collection of vector graphic stickers featuring specular metallic chrome reflections, retro halftone stars, pixel art mascots (Nori, Pip, Kuro, Mochi), cute character doodles, and tactile badges — designed and created by Samiran De. Built with scoped SVG filters, responsive sizing, and realistic 3D vinyl peel hover physics.
 
 ---
 
@@ -87,7 +87,7 @@ export function StickerGallery() {
 
 ---
 
-## 🎨 Available Stickers (65 Total)
+## 🎨 Available Stickers
 
 ### 👾 Pixel Mascots (24 stickers)
 - **Nori**: `<NoriCoffeeSticker />`, `<NoriCoolSticker />`, `<NoriHeadphonesSticker />`, `<NoriHeartSticker />`, `<NoriLaptopSticker />`, `<NoriRocketSticker />`

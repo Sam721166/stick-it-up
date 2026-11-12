@@ -2,7 +2,7 @@
   <img src="public/stickers/logo.svg" alt="Stick It Up Logo" width="88" height="88" />
   <h1>Stick It Up</h1>
   <p><strong>Give your website the kind of personality it deserves.</strong></p>
-  <p>A collection of 65+ handcrafted vector, metallic chrome, and pixel art sticker components for React & Next.js with realistic 3D vinyl peel physics — designed and built by Samiran De.</p>
+  <p>A collection of handcrafted vector, metallic chrome, and pixel art sticker components for React & Next.js with realistic 3D vinyl peel physics — designed and built by Samiran De.</p>
 
   <p>
     <a href="https://www.npmjs.com/package/stick-it-up">
@@ -39,7 +39,7 @@
 
 ## 🌟 Highlights
 
-- 🎨 **65+ Handcrafted Stickers**: Specular chrome finishes, retro halftone stars, pixel art mascots (Nori, Pip, Kuro, Mochi), playful character doodles, and tactile badges.
+- 🎨 **Handcrafted Stickers**: Specular chrome finishes, retro halftone stars, pixel art mascots (Nori, Pip, Kuro, Mochi), playful character doodles, and tactile badges.
 - 🪄 **3D Vinyl Peel Physics**: Realistic hover tilt, subtle drop shadows, and elevation with a single `peel` prop.
 - 🔒 **Zero ID Collisions**: Scoped SVG filter and gradient IDs powered by React's `useId()` so duplicate stickers never break each other.
 - 🌲 **Tree-Shakeable & Lightweight**: Pure ESM and CommonJS dual bundle with full TypeScript definitions and zero runtime CSS dependencies.
@@ -148,7 +148,7 @@ All sticker components accept standard SVG element props alongside custom sticke
 
 ---
 
-## 🎨 Available Stickers (65 Total)
+## 🎨 Available Stickers
 
 ### 👾 Pixel Mascots (24 stickers)
 Handcrafted retro pixel art characters in different activities:
@@ -227,7 +227,7 @@ components/
 ├── packages/
 │   └── stickers-react/       # The "stick-it-up" npm package source
 │       ├── src/
-│       │   ├── stickers/     # All 65 sticker React components
+│       │   ├── stickers/     # All sticker React components
 │       │   ├── components/   # Generic <Sticker /> wrapper
 │       │   └── utils/        # usePeel hover hook
 │       └── tsup.config.ts    # Package build config (CJS, ESM, DTS)

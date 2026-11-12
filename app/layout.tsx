@@ -24,28 +24,47 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Stick It Up — Stickers for your UI",
+    default: "Stick It Up — Free Interactive React Stickers & Vinyl Decals",
     template: "%s | Stick It Up",
   },
   description:
-    "Give your website the kind of personality that makes people stick around. A sticker library for React with 3D vinyl hover peel, chrome emblems, and playful vector decals.",
+    "Open-source library of animated, interactive sticker components for React and Next.js with realistic 3D vinyl hover peel physics, metallic chrome emblems, and retro pixel mascots. Free for personal & commercial use.",
   applicationName: "Stick It Up",
   keywords: [
-    "stickers",
-    "react stickers",
     "stick-it-up",
-    "vinyl peel sticker",
-    "holographic sticker",
-    "chrome stickers",
-    "interactive stickers",
-    "react component stickers",
-    "svg decals",
+    "stick it up",
+    "react stickers",
+    "stickers for react",
+    "react sticker component",
+    "vinyl peel sticker react",
+    "vinyl peel effect",
+    "peelable sticker react",
+    "interactive stickers web",
+    "animated stickers react",
+    "svg stickers react",
     "ui stickers",
-    "web animations",
+    "ui stickers library",
+    "nextjs stickers",
+    "next.js component library",
+    "tailwind stickers",
+    "react 19 stickers",
+    "react 18 stickers",
+    "typescript stickers",
+    "holographic stickers web",
+    "chrome badges react",
+    "metallic emblems css",
+    "pixel art stickers",
+    "vector decals web",
+    "retro stickers",
+    "mascot stickers",
+    "free open source react components",
+    "interactive web animations",
+    "developer portfolio stickers",
   ],
   authors: [{ name: "Samiran De", url: "https://github.com/Sam721166" }],
   creator: "Samiran De",
   publisher: "Stick It Up",
+  category: "technology",
   formatDetection: {
     email: false,
     address: false,
@@ -55,9 +74,9 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Stick It Up — Stickers for your UI",
+    title: "Stick It Up — Free Interactive React Stickers & Vinyl Decals",
     description:
-      "Give your website the kind of personality that makes people stick around. A sticker library for React with 3D vinyl peel effects.",
+      "Open-source library of animated, interactive sticker components for React & Next.js with realistic 3D vinyl hover peel physics. Free for commercial & personal use.",
     url: siteUrl,
     siteName: "Stick It Up",
     locale: "en_US",
@@ -67,18 +86,19 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Stick It Up — Give your website the kind of personality that makes people stick around.",
+        alt: "Stick It Up — Free Interactive React Stickers & Vinyl Decals for Web",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Stick It Up — Stickers for your UI",
+    title: "Stick It Up — Free Interactive React Stickers & Vinyl Decals",
     description:
-      "Give your website the kind of personality that makes people stick around. A sticker library for React.",
+      "Open-source library of animated, interactive sticker components for React & Next.js with realistic 3D vinyl hover peel physics.",
     images: ["/og-image.png"],
-    creator: "@samirande",
+    creator: "@samirande_",
+    site: "@samirande_",
   },
   robots: {
     index: true,
@@ -98,6 +118,9 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+  },
 };
 
 const jsonLd = {
@@ -108,11 +131,25 @@ const jsonLd = {
       "@id": `${siteUrl}/#website`,
       url: siteUrl,
       name: "Stick It Up",
-      description: "Delightful React vinyl and holographic stickers for your UI.",
+      description:
+        "Open-source library of interactive vector, chrome, and pixel art sticker components for React and Next.js.",
       publisher: {
         "@type": "Person",
         name: "Samiran De",
         url: "https://github.com/Sam721166",
+        sameAs: [
+          "https://x.com/samirande_",
+          "https://github.com/Sam721166",
+          "https://samworks.vercel.app/",
+        ],
+      },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${siteUrl}/stickers?q={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
       },
     },
     {
@@ -121,15 +158,73 @@ const jsonLd = {
       name: "stick-it-up",
       applicationCategory: "DeveloperApplication",
       operatingSystem: "Any",
+      softwareVersion: "0.3.0",
+      license: "https://opensource.org/licenses/MIT",
       offers: {
         "@type": "Offer",
         price: "0",
         priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
       },
       description:
-        "Premium vector, holographic & chrome aesthetic sticker components for React with 3D vinyl peel.",
+        "Handcrafted vector, holographic, and retro pixel art sticker components for React and Next.js with 3D vinyl hover peel physics.",
       url: siteUrl,
       downloadUrl: "https://www.npmjs.com/package/stick-it-up",
+      sameAs: [
+        "https://github.com/Sam721166/stick-it-up",
+        "https://www.npmjs.com/package/stick-it-up",
+      ],
+      author: {
+        "@type": "Person",
+        name: "Samiran De",
+        url: "https://github.com/Sam721166",
+      },
+      featureList: [
+        "Handcrafted Vector, Chrome, and Pixel Art Sticker Components",
+        "Realistic 3D Vinyl Hover Peel Physics with Spring Motion",
+        "React 18 and React 19 Full Compatibility",
+        "Zero-configuration Tailwind CSS Support",
+        "Dual ESM and CommonJS Output with Strict TypeScript Types",
+        "Pure SVG Support with Standalone HTML <img> Compatibility",
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${siteUrl}/#faq`,
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "What is Stick It Up?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Stick It Up is a free, open-source sticker component library for React and Next.js featuring handcrafted vector, holographic, and retro pixel art stickers with realistic 3D vinyl hover peel physics.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How do I install Stick It Up in React or Next.js?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "You can install it via npm by running 'npm i stick-it-up'. Then import any sticker component, such as 'import { FlameSticker } from \"stick-it-up\"', and render it in your JSX with '<FlameSticker size={96} peel />'.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Are the stickers free for personal and commercial use?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes, Stick It Up is licensed under the MIT License and is 100% free for both personal and commercial web projects.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Can I use the stickers as raw SVGs without React?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes, every sticker in the catalog can be downloaded as an optimized standalone SVG or copied for use in standard HTML <img> tags.",
+          },
+        },
+      ],
     },
   ],
 };
