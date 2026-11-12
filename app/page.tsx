@@ -668,6 +668,7 @@ export default function Home() {
           {/* Explore button */}
           <Link
             href="/stickers"
+            prefetch={false}
             className="group inline-flex cursor-pointer items-center gap-2 rounded-xl
               border border-zinc-800 bg-gradient-to-b from-zinc-800 to-zinc-900
               px-5 py-3 text-sm font-medium text-white
