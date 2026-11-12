@@ -1793,32 +1793,57 @@ export default function Hero() {
       }
     }
 
-    function downloadSvg() {
-      if (activeItem?.svgSrc) {
-        const a = document.createElement("a");
-        a.href = activeItem.svgSrc;
-        a.download = `${activeItem.name}.svg`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        return;
-      }
-      const stage = document.getElementById("inspector-sticker-stage");
-      const svgEl = stage?.querySelector("svg");
-      if (svgEl) {
-        const svgClone = svgEl.cloneNode(true) as SVGSVGElement;
-        svgClone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        const svgData = new XMLSerializer().serializeToString(svgClone);
-        const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+    async function downloadSvg() {
+      if (!activeItem) return;
+      const filename = `${activeItem.name || "sticker"}.svg`;
+
+      const triggerBlobDownload = (blob: Blob) => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `${activeItem?.name || "sticker"}.svg`;
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      };
+
+      const downloadFromDOM = () => {
+        const stage = document.getElementById("inspector-sticker-stage");
+        const svgEl = stage?.querySelector("svg");
+        if (svgEl) {
+          const svgClone = svgEl.cloneNode(true) as SVGSVGElement;
+          svgClone.removeAttribute("class");
+          svgClone.style.transform = "";
+          svgClone.style.transition = "";
+          svgClone.style.filter = "";
+          svgClone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+          svgClone.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+          const serialized = new XMLSerializer().serializeToString(svgClone);
+          const fullSvg = serialized.startsWith("<?xml")
+            ? serialized
+            : `<?xml version="1.0" encoding="utf-8"?>\n${serialized}`;
+          const blob = new Blob([fullSvg], { type: "image/svg+xml;charset=utf-8" });
+          triggerBlobDownload(blob);
+          return true;
+        }
+        return false;
+      };
+
+      if (activeItem.svgSrc) {
+        try {
+          const res = await fetch(activeItem.svgSrc);
+          if (res.ok) {
+            const blob = await res.blob();
+            triggerBlobDownload(blob);
+            return;
+          }
+        } catch {
+          // static asset fetch failed or offline; gracefully fallback to DOM
+        }
       }
+
+      downloadFromDOM();
     }
 
     const backgrounds = [
