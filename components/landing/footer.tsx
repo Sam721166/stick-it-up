@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
+import { Sticker } from "stick-it-up";
 
 /* ------------------------------------------------------------------
    tokens (same language as the rest of the landing page)
@@ -150,21 +151,25 @@ function InlineSticker({ src }: { src: string }) {
   const [hover, setHover] = useState(false);
 
   return (
-    <img
+    <span
       data-sticker
-      src={src}
-      alt=""
-      draggable={false}
-      onClick={() => setTurns((t) => t + 1)}
+      onClick={(e) => {
+        e.stopPropagation();
+        setTurns((t) => t + 1);
+      }}
       onPointerEnter={() => setHover(true)}
       onPointerLeave={() => setHover(false)}
-      className="mx-1 inline-block h-[0.95em] w-[0.95em] cursor-pointer select-none align-[-0.1em]"
+      className="mx-1 inline-flex items-center justify-center h-[0.95em] w-[0.95em] cursor-pointer select-none align-[-0.1em]"
       style={{
+        transformOrigin: "50% 50%",
         rotate: `${turns * 360 + (hover ? 14 : 0)}deg`,
         scale: hover ? 1.12 : 1,
         transition: `rotate 650ms ${SPRING}, scale 300ms ${SPRING}`,
+        willChange: "transform",
       }}
-    />
+    >
+      <Sticker name={src} size="100%" className="h-full w-full pointer-events-none" />
+    </span>
   );
 }
 
@@ -238,7 +243,7 @@ function DraggableSticker({
             : `scale 450ms ${SPRING}, rotate 450ms ${SPRING}`,
         }}
       >
-        <img src={src} alt="" loading="lazy" decoding="async" draggable={false} className="block h-auto w-full" />
+        <Sticker name={src} size="100%" className="block h-auto w-full" />
       </div>
     </div>
   );
@@ -316,14 +321,14 @@ export default function Footer() {
                               transitionTimingFunction: SPRING,
                             }}
                           >
-                            <img
-                              src={link.sticker}
-                              alt=""
-                              className="h-[24px] w-[24px] max-w-none select-none object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]"
+                            <div
+                              className="h-[24px] w-[24px] max-w-none select-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]"
                               style={{
                                 transform: `rotate(${link.rot ?? 0}deg)`,
                               }}
-                            />
+                            >
+                              <Sticker name={link.sticker} size={24} className="h-full w-full" />
+                            </div>
                           </span>
                         </button>
                       ) : link.href?.startsWith("http") ? (
@@ -341,14 +346,14 @@ export default function Footer() {
                               transitionTimingFunction: SPRING,
                             }}
                           >
-                            <img
-                              src={link.sticker}
-                              alt=""
-                              className="h-[24px] w-[24px] max-w-none select-none object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]"
+                            <div
+                              className="h-[24px] w-[24px] max-w-none select-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]"
                               style={{
                                 transform: `rotate(${link.rot ?? 0}deg)`,
                               }}
-                            />
+                            >
+                              <Sticker name={link.sticker} size={24} className="h-full w-full" />
+                            </div>
                           </span>
                         </a>
                       ) : (
@@ -374,14 +379,14 @@ export default function Footer() {
                               transitionTimingFunction: SPRING,
                             }}
                           >
-                            <img
-                              src={link.sticker}
-                              alt=""
-                              className="h-[24px] w-[24px] max-w-none select-none object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]"
+                            <div
+                              className="h-[24px] w-[24px] max-w-none select-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]"
                               style={{
                                 transform: `rotate(${link.rot ?? 0}deg)`,
                               }}
-                            />
+                            >
+                              <Sticker name={link.sticker} size={24} className="h-full w-full" />
+                            </div>
                           </span>
                         </Link>
                       )}

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { Sticker } from "stick-it-up";
 import Folder from "../components/landing/folder"
 import Bento from "../components/landing/bento"
 import Sponsor from "../components/landing/sponsor"
@@ -127,7 +128,7 @@ function DraggableSticker({
             transition: `scale 450ms ${SPRING}, rotate 450ms ${SPRING}`,
           }}
         >
-          <img src={src} alt="" draggable={false} className="block h-auto w-full" />
+          <Sticker name={src} size="100%" className="block h-auto w-full" />
         </div>
       </div>
     </div>
@@ -142,24 +143,28 @@ function HeroSticker({ src, delay }: { src: string; delay: number }) {
 
   return (
     <span
-      className="inline-block"
+      className="inline-block align-middle"
       style={{ animation: `rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) ${delay}ms both` }}
     >
-      <img
+      <span
         data-sticker
-        src={src}
-        alt={src.split("/").pop()?.replace(".svg", "").replace(/%20/g, " ") || "Interactive sticker"}
-        draggable={false}
-        onClick={() => setTurns((t) => t + 1)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setTurns((t) => t + 1);
+        }}
         onPointerEnter={() => setHover(true)}
         onPointerLeave={() => setHover(false)}
-        className="mx-1 inline-block h-[0.92em] w-[0.92em] cursor-pointer select-none align-middle sm:mx-2 hover:rotate-15"
+        className="mx-1 inline-flex items-center justify-center h-[0.92em] w-[0.92em] cursor-pointer select-none align-middle sm:mx-2"
         style={{
+          transformOrigin: "50% 50%",
           rotate: `${turns * 360 + (hover ? 14 : 0)}deg`,
-          scale: hover ? 1.1 : 1,
+          scale: hover ? 1.12 : 1,
           transition: `rotate 650ms ${SPRING}, scale 300ms ${SPRING}`,
+          willChange: "transform",
         }}
-      />
+      >
+        <Sticker name={src} size="100%" className="block h-full w-full pointer-events-none" />
+      </span>
     </span>
   );
 }
@@ -221,14 +226,13 @@ function TotalDownloadsCounter() {
         className="group flex flex-col items-center transition-opacity hover:opacity-90"
         title="View stick-it-up on npm"
       >
-        <img
+        <div
           data-sticker
-          src="/stickers/Component-66.svg"
-          alt="stick-it-up"
-          draggable={false}
           className="h-20 w-20 cursor-pointer select-none transition-transform duration-300 hover:scale-110 hover:-rotate-3 active:scale-95"
           style={{ transitionTimingFunction: SPRING }}
-        />
+        >
+          <Sticker name="component-66" size={80} className="h-full w-full" />
+        </div>
         <p className="-mt-4 flex items-center gap-1 font-sans text-sm sm:text-base text-neutral-500">
           <span className="text-xs text-neutral-400">Used by</span>
           <span className=" text-sm font-sans font-medium text-neutral-800 tabular-nums">
@@ -474,7 +478,7 @@ export default function Home() {
         {/* stickers layer (draggable, parallax, floating) */}
         <div ref={stickersLayerRef} className="pointer-events-none absolute inset-0 z-20 h-200">
           <DraggableSticker
-            src="/stickers/blueberry.svg"
+            src="berries"
             size={120}
             rotate={-25}
             depth={16}
@@ -525,11 +529,8 @@ export default function Home() {
 
         {/* click-to-stick pops across full screen width */}
         {pops.map((p) => (
-          <img
+          <div
             key={p.id}
-            src={p.src}
-            alt=""
-            draggable={false}
             className="pointer-events-none absolute z-10 w-14 select-none"
             style={{
               left: p.x - 28,
@@ -537,7 +538,9 @@ export default function Home() {
               rotate: `${p.rot}deg`,
               animation: `pop 500ms ${SPRING} both, fadeOut 400ms ease-in 2100ms forwards`,
             }}
-          />
+          >
+            <Sticker name={p.src} size={56} className="h-full w-full" />
+          </div>
         ))}
 
         {/* hero */}

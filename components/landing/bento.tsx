@@ -9,6 +9,7 @@ import React, {
   type CSSProperties,
   type ReactNode,
 } from "react";
+import { Sticker as ReactSticker } from "stick-it-up";
 
 export const ShownCtx = createContext<boolean>(true);
 
@@ -241,7 +242,7 @@ function Sticker({
             : `scale 450ms ${SPRING}, rotate 450ms ${SPRING}`,
         }}
       >
-        <img src={src} alt="" draggable={false} className="block h-auto w-full" />
+        <ReactSticker name={src} size="100%" className="block h-auto w-full" />
       </div>
     </div>
   );
@@ -310,10 +311,7 @@ function Key({ label, src, rot }: { label: string; src: string; rot: number }) {
           transition: `translate 160ms ${SPRING}, box-shadow 160ms ease-out`,
         }}
       >
-        <img
-          src={src}
-          alt=""
-          draggable={false}
+        <div
           className="pointer-events-none absolute left-1/2 top-1/2 h-[64px] w-[64px] select-none"
           style={{
             translate: "-50% -50%",
@@ -321,7 +319,9 @@ function Key({ label, src, rot }: { label: string; src: string; rot: number }) {
             scale: down ? 0.94 : hover ? 1.08 : 1,
             transition: `rotate 400ms ${SPRING}, scale 300ms ${SPRING}`,
           }}
-        />
+        >
+          <ReactSticker name={src} size="100%" className="h-full w-full" />
+        </div>
       </button>
       <span className="text-xs font-medium text-green-900/60" style={{ textShadow: "0 1px 0 rgba(255,255,255,0.7)" }}>
         {label}
@@ -386,7 +386,9 @@ function Phone() {
                   border: "2px solid #fff",
                 }}
               >
-                <img src="/stickers/face.svg" alt="" draggable={false} className="h-6 w-6" />
+                <div className="h-6 w-6 select-none">
+                  <ReactSticker name="face" size={24} className="h-full w-full" />
+                </div>
               </span>
             </div>
 
@@ -439,12 +441,9 @@ function Phone() {
                     
                   }}
                 >
-                  <img
-                    src={t.src}
-                    alt=""
-                    draggable={false}
-                    className="absolute left-1/2 top-1/2 h-[62%] w-[62%] -translate-x-1/2 -translate-y-1/2"
-                  />
+                  <div className="absolute left-1/2 top-1/2 h-[62%] w-[62%] -translate-x-1/2 -translate-y-1/2 select-none">
+                    <ReactSticker name={t.src} size="100%" className="h-full w-full" />
+                  </div>
                 </div>
               ))}
             </div>
@@ -491,12 +490,9 @@ function Tile({ src, bg }: { src: string; bg: string }) {
         boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -2px 4px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1)",
       }}
     >
-      <img
-        src={src}
-        alt=""
-        draggable={false}
-        className="absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2"
-      />
+      <div className="absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 select-none">
+        <ReactSticker name={src} size="100%" className="h-full w-full" />
+      </div>
     </span>
   );
 }
@@ -608,12 +604,9 @@ function UiStack() {
           willChange: "transform",
         }}
       >
-        <img
-          src="/stickers/star.svg"
-          alt=""
-          draggable={false}
-          className="h-[54px] w-[54px]"
-        />
+        <div className="h-[54px] w-[54px]">
+          <ReactSticker name="star" size={54} className="h-full w-full" />
+        </div>
       </div>
     </div>
   );

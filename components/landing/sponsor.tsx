@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
+import { Sticker } from "stick-it-up";
 
 /* ------------------------------------------------------------------
    tokens & constants
@@ -198,7 +199,7 @@ function DraggableSticker({
             : `scale 400ms ${SPRING}, rotate 400ms ${SPRING}, filter 250ms ease`,
         }}
       >
-        <img src={src} alt="" loading="lazy" decoding="async" draggable={false} className="block h-auto w-full select-none" />
+        <Sticker name={src} size="100%" className="block h-auto w-full select-none" />
       </div>
     </div>
   );
@@ -640,17 +641,16 @@ export default function Sponsor() {
         <MotionBlur inView={inView} delay={0}>
           <h2 className="flex items-center gap-3 font-sans text-4xl sm:text-4xl md:text-6xl font-normal tracking-tight text-zinc-900">
             Sponsors.
-            <img
-              src="/stickers/bad-cat.svg"
-              alt=""
-              draggable={false}
+            <span
               onClick={() => setStarTurns((t) => t + 1)}
-              className="h-10 w-10 sm:h-15 sm:w-15 cursor-pointer select-none transition-transform duration-500 hover:rotate-[24deg] hover:scale-120"
+              className="h-10 w-10 sm:h-15 sm:w-15 cursor-pointer select-none transition-transform duration-500 hover:rotate-[24deg] hover:scale-120 inline-block align-middle"
               style={{
                 transitionTimingFunction: SPRING,
                 rotate: `${starTurns * 360 - 8}deg`,
               }}
-            />
+            >
+              <Sticker name="bad-cat" size="100%" className="h-full w-full" />
+            </span>
           </h2>
         </MotionBlur>
 

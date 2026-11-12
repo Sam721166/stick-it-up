@@ -148,7 +148,51 @@ export const STICKER_MAP: Record<StickerName, React.FC<StickerProps>> = {
   "mochi-heart": MochiHeartSticker,
   "mochi-laptop": MochiLaptopSticker,
   "mochi-rocket": MochiRocketSticker,
+
+  // Common aliases & filename helpers
+  star: StarBurstSticker,
+  dogsticker: DogSticker,
+  "component-66": AppBadgeSticker,
+  vlc2: ConeSticker,
+  japan: JapanBadgeSticker,
+  "curious-blue-globe": CuriousGlobeSticker,
+  "curious blue globe": CuriousGlobeSticker,
+  cosmiceye: CosmicEyeSticker,
+  sparkletrio: SparkleTrioSticker,
+  catsticker: CatSticker,
+  red_cat: RedCatSticker,
+  "peace hand": PeaceHandSticker,
+  peacehand: PeaceHandSticker,
 };
+
+function normalizeStickerName(rawName: string): StickerName {
+  if (!rawName) return "flame" as StickerName;
+  let n = rawName.trim().toLowerCase();
+
+  // If filename is blueberry.svg, it actually contains both berries (BerriesSticker)
+  if (n.includes("blueberry.svg") || n === "blueberry.svg") {
+    return "berries" as StickerName;
+  }
+
+  // Strip path or extension if someone passed a filename like "/stickers/Flame.svg" or "Flame.svg"
+  n = n.replace(/^(\/)?stickers\//, "").replace(/\.svg$/, "");
+  n = decodeURIComponent(n);
+  n = n.replace(/[_\s]+/g, "-");
+
+  if (n === "star") return "star-burst";
+  if (n === "dogsticker") return "dog";
+  if (n === "component-66") return "app-badge";
+  if (n === "vlc2") return "cone";
+  if (n === "japan") return "japan-badge";
+  if (n === "curious-blue-globe") return "curious-globe";
+  if (n === "cosmiceye") return "cosmic-eye";
+  if (n === "sparkletrio") return "sparkle-trio";
+  if (n === "catsticker") return "cat";
+  if (n === "peacehand") return "peace-hand";
+  if (n === "red-cat" || n === "red_cat") return "red-cat";
+
+  return n as StickerName;
+}
 
 export interface DynamicStickerProps extends StickerProps {
   name: StickerName;
@@ -166,7 +210,8 @@ export interface DynamicStickerProps extends StickerProps {
  * ```
  */
 export const Sticker: React.FC<DynamicStickerProps> = ({ name, ...props }) => {
-  const Component = STICKER_MAP[name];
+  const normalized = normalizeStickerName(name as string);
+  const Component = STICKER_MAP[name] || STICKER_MAP[normalized];
   if (!Component) {
     console.warn(`[stickers-react] Unknown sticker name: "${name}". Available: ${Object.keys(STICKER_MAP).join(", ")}`);
     return null;

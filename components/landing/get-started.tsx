@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Sticker } from "stick-it-up";
 
 const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 const EASE_OUT = "cubic-bezier(0.2, 0.8, 0.2, 1)";
@@ -128,7 +129,7 @@ function DraggableSticker({
             : `scale 450ms ${SPRING}, rotate 450ms ${SPRING}`,
         }}
       >
-        <img src={src} alt="" loading="lazy" decoding="async" draggable={false} className="block h-auto w-full" />
+        <Sticker name={src} size="100%" className="block h-auto w-full" />
       </div>
     </div>
   );

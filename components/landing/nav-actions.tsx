@@ -9,57 +9,58 @@ export function VisitorCounter({ site = "stick-it-up" }: { site?: string }) {
   useEffect(() => {
     let unmounted = false;
 
-    async function recordAndFetch() {
-      // 1. Skip network request if already recorded in this tab session
-      try {
-        const sessionCount = sessionStorage.getItem(`siu_session_visited_${site}`);
-        if (sessionCount !== null) {
-          const val = parseInt(sessionCount, 10);
-          if (!isNaN(val) && val > 0) {
-            setCount(val);
-            return;
-          }
+    // Immediately display previously cached count from localStorage so UI isn't blank
+    try {
+      const cached = localStorage.getItem(`siu_visitors_${site}`);
+      if (cached) {
+        const val = parseInt(cached, 10);
+        if (!isNaN(val) && val > 0) {
+          setCount(val);
         }
-      } catch {}
+      }
+    } catch {}
 
+    async function recordAndFetch() {
       try {
-        // Record visit and get authoritative server count
+        // Record visit and get authoritative server count on every page reload
         const res = await fetch("/api/visitors", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ site }),
+          cache: "no-store",
         });
 
         if (!res.ok) throw new Error("Visitor API response not ok");
         const data = await res.json();
         const target = Number(data.unique_visitors ?? data.total_visits ?? 0);
 
-        if (unmounted) return;
+        if (unmounted || target <= 0) return;
         try {
           localStorage.setItem(`siu_visitors_${site}`, String(target));
-          sessionStorage.setItem(`siu_session_visited_${site}`, String(target));
         } catch {}
 
-        // Smooth roll-up animation starting dynamically from 0
-        const startCount = 0;
-        const startTime = performance.now();
-        const duration = Math.min(1000, Math.max(450, target * 120));
+        // Smooth roll-up animation to the latest target count
+        setCount((current) => {
+          const startCount = current > 0 ? current : 0;
+          if (startCount === target) return target;
 
-        const tick = (now: number) => {
-          if (unmounted) return;
-          const progress = Math.min((now - startTime) / duration, 1);
-          const ease = 1 - Math.pow(1 - progress, 3);
-          const val = Math.round(startCount + (target - startCount) * ease);
-          setCount(val);
-          if (progress < 1) requestAnimationFrame(tick);
-        };
+          const startTime = performance.now();
+          const duration = Math.min(1000, Math.max(350, Math.abs(target - startCount) * 80));
 
-        requestAnimationFrame(tick);
+          const tick = (now: number) => {
+            if (unmounted) return;
+            const progress = Math.min((now - startTime) / duration, 1);
+            const ease = 1 - Math.pow(1 - progress, 3);
+            const val = Math.round(startCount + (target - startCount) * ease);
+            setCount(val);
+            if (progress < 1) requestAnimationFrame(tick);
+          };
+
+          requestAnimationFrame(tick);
+          return current;
+        });
       } catch (err) {
         console.warn("Could not connect to live visitor DB, using local fallback", err);
-        if (!unmounted) {
-          setCount((prev) => prev ?? 0);
-        }
       }
     }
 

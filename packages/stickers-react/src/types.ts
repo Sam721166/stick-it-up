@@ -90,4 +90,15 @@ export type StickerName =
   | "mochi-headphones"
   | "mochi-heart"
   | "mochi-laptop"
-  | "mochi-rocket";
+  | "mochi-rocket"
+  | "star"
+  | "dogsticker"
+  | "component-66"
+  | "vlc2"
+  | "japan"
+  | "curious-blue-globe"
+  | "cosmiceye"
+  | "sparkletrio"
+  | "catsticker"
+  | "red_cat"
+  | (string & {});

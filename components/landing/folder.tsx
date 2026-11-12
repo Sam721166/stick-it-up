@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { Sticker } from "stick-it-up";
 
 const EASE_OUT = "cubic-bezier(0.2, 0.8, 0.2, 1)";
 
@@ -125,15 +126,12 @@ const APP_AVATARS = [
 
 function Img({ src, style }: { src: string; style?: CSSProperties }) {
   return (
-    <img
-      src={src}
-      alt=""
-      loading="lazy"
-      decoding="async"
-      draggable={false}
+    <div
       className="pointer-events-none absolute select-none"
       style={style}
-    />
+    >
+      <Sticker name={src} size="100%" className="h-full w-full" />
+    </div>
   );
 }
 
@@ -192,7 +190,9 @@ function WebMock({ bg, url, brand, headline, cta, logo, stickers }: WebProps) {
 
       <div className="relative" style={{ background: bg, height: "100%", padding: "1.2em" }}>
         <div className="flex items-center" style={{ gap: "0.6em" }}>
-          <img src={logo} alt="" draggable={false} style={{ width: "2em", height: "2em" }} />
+          <div style={{ width: "2em", height: "2em" }} className="select-none">
+            <Sticker name={logo} size="100%" className="h-full w-full" />
+          </div>
           <span className="font-semibold text-zinc-900" style={{ fontSize: "1.1em" }}>
             {brand}
           </span>
@@ -490,7 +490,9 @@ function Folder({ title, stamp, stampRot, cards, avatars }: FolderProps) {
                       "inset 0 -0.15em 0.3em rgba(0,0,0,0.08), 0 0.1em 0.2em rgba(0,0,0,0.14), 0 0.4em 0.8em rgba(0,0,0,0.08)",
                   }}
                 >
-                  <img src={a.src} alt="" draggable={false} className="h-full w-full p-[12%]" />
+                  <div className="h-full w-full p-[12%] select-none">
+                    <Sticker name={a.src} size="100%" className="h-full w-full" />
+                  </div>
                 </span>
               ))}
             </div>
@@ -627,12 +629,9 @@ export default function FolderShowcase() {
               stampRot={0}
               cards={webCards}
               stamp={
-                <img
-                  src="/stickers/pink-cat.svg"
-                  alt=""
-                  draggable={false}
-                  className="h-[80%] w-[80%] mt-11 -ml-2 object-contain"
-                />
+                <div className="h-[80%] w-[80%] mt-11 -ml-2 select-none">
+                  <Sticker name="pink-cat" size="100%" className="h-full w-full" />
+                </div>
               }
             />
           </MotionBlur>
@@ -644,12 +643,9 @@ export default function FolderShowcase() {
               stampRot={-6}
               cards={phoneCards}
               stamp={
-                <img
-                  src="/stickers/japan.svg"
-                  alt=""
-                  draggable={false}
-                  className="h-full w-full mt-8 -ml-2 object-contain"
-                />
+                <div className="h-full w-full mt-8 -ml-2 select-none">
+                  <Sticker name="japan" size="100%" className="h-full w-full" />
+                </div>
               }
             />
           </MotionBlur>
