@@ -659,11 +659,7 @@ export default function Bento() {
                 Everything you need to stick around.
               </h2>
             </MotionBlur>
-            <MotionBlur inView={inView} delay={100}>
-              <p className="mt-4 text-base text-neutral-400">
-                Grab, drag and drop. Every sticker below is live, so go ahead and play.
-              </p>
-            </MotionBlur>
+           
           </div>
 
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-6">

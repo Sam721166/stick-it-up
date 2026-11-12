@@ -181,11 +181,7 @@ export default function GetStarted() {
           </h2>
         </MotionBlur>
 
-        <MotionBlur inView={inView} delay={160}>
-          <p className="mx-auto mt-4 max-w-xl text-base text-neutral-400">
-            Install once, drop stickers anywhere, and make every empty state, card, and hero unforgettable.
-          </p>
-        </MotionBlur>
+        
 
         {/* Action buttons */}
         <MotionBlur inView={inView} delay={240}>

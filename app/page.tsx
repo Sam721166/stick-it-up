@@ -563,12 +563,7 @@ export default function Home() {
           })}
         </h1>
 
-        <p
-          className="mt-6 max-w-2xl text-base sm:text-lg md:text-xl text-zinc-600 font-normal leading-relaxed"
-          style={{ animation: "rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 900ms both" }}
-        >
-          An open-source library of interactive vector, metallic chrome, and pixel art sticker components for React with realistic 3D vinyl hover peel physics.
-        </p>
+      
 
         {/* buttons */}
         <div

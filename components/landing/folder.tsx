@@ -616,12 +616,7 @@ export default function FolderShowcase() {
               See your brand, stickered.
             </h2>
           </MotionBlur>
-          <MotionBlur inView={inView} delay={100}>
-            <p className="mt-4 text-base text-neutral-400">
-              Peek inside a folder to see how a website or an app feels once it has a little
-              personality. Hover or tap to open.
-            </p>
-          </MotionBlur>
+          
         </div>
 
         <div className="grid w-full grid-cols-1 items-start gap-14 md:grid-cols-2 md:gap-8 lg:gap-20">
