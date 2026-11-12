@@ -548,7 +548,6 @@ export default function Home() {
           className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 pb-24 pt-16 mt-15 text-center md:pt-24"
         >
         <h1 className="font-sans text-4xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">
-          <span className="sr-only">Stick It Up — Free Interactive React Stickers &amp; UI Sticker Component Library (stickitupx.com). </span>
           {HERO.map((token, i) => {
             const delay = 80 + i * 55;
             return typeof token === "string" ? (
