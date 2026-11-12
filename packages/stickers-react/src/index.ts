@@ -2,6 +2,7 @@
 
 export * from "./types";
 export * from "./components/Sticker";
+export { CrownSticker } from "./stickers/CrownSticker";
 
 // Aesthetic Chrome & Shapes
 export { FlameSticker } from "./stickers/FlameSticker";
