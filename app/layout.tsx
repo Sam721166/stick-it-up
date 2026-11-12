@@ -13,38 +13,39 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "https://stickitupp.vercel.app");
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stickitupx.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Stick It Up — Free Interactive React Stickers & Vinyl Decals",
+    default: "Stick It Up (stickitupx.com) — Free Interactive React Stickers & UI Sticker Library",
     template: "%s | Stick It Up",
   },
   description:
-    "Open-source library of animated, interactive sticker components for React and Next.js with realistic 3D vinyl hover peel physics, metallic chrome emblems, and retro pixel mascots. Free for personal & commercial use.",
+    "Stick It Up (stickitupx.com) is the open-source UI sticker component library for React and Next.js. 65+ interactive stickers with 3D vinyl hover peel physics, metallic chrome emblems, and pixel art decals. Free for personal & commercial use.",
   applicationName: "Stick It Up",
   keywords: [
-    "stick-it-up",
     "stick it up",
+    "stick-it-up",
+    "stickitup",
+    "stickitupx",
+    "stickitupx.com",
+    "ui sticker",
+    "ui stickers",
+    "ui stickers library",
+    "ui sticker components",
     "react stickers",
     "stickers for react",
     "react sticker component",
+    "react sticker library",
     "vinyl peel sticker react",
     "vinyl peel effect",
     "peelable sticker react",
     "interactive stickers web",
     "animated stickers react",
     "svg stickers react",
-    "ui stickers",
-    "ui stickers library",
     "nextjs stickers",
+    "next.js stickers",
     "next.js component library",
     "tailwind stickers",
     "react 19 stickers",
@@ -71,32 +72,35 @@ export const metadata: Metadata = {
     telephone: false,
   },
   alternates: {
-    canonical: "/",
+    canonical: siteUrl,
+    languages: {
+      "en-US": siteUrl,
+    },
   },
   openGraph: {
-    title: "Stick It Up — Free Interactive React Stickers & Vinyl Decals",
+    title: "Stick It Up (stickitupx.com) — Free Interactive React Stickers & UI Sticker Library",
     description:
-      "Open-source library of animated, interactive sticker components for React & Next.js with realistic 3D vinyl hover peel physics. Free for commercial & personal use.",
+      "Open-source library of animated, interactive UI stickers for React & Next.js with realistic 3D vinyl hover peel physics. Free for commercial & personal use.",
     url: siteUrl,
     siteName: "Stick It Up",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "/og-image.png",
+        url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "Stick It Up — Free Interactive React Stickers & Vinyl Decals for Web",
+        alt: "Stick It Up (stickitupx.com) — Free Interactive React Stickers & Vinyl Decals for Web",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Stick It Up — Free Interactive React Stickers & Vinyl Decals",
+    title: "Stick It Up (stickitupx.com) — Free Interactive React Stickers & UI Sticker Library",
     description:
-      "Open-source library of animated, interactive sticker components for React & Next.js with realistic 3D vinyl hover peel physics.",
-    images: ["/og-image.png"],
+      "Open-source library of animated, interactive UI stickers for React & Next.js with realistic 3D vinyl hover peel physics.",
+    images: [`${siteUrl}/og-image.png`],
     creator: "@samirande_",
     site: "@samirande_",
   },
@@ -131,6 +135,14 @@ const jsonLd = {
       "@id": `${siteUrl}/#website`,
       url: siteUrl,
       name: "Stick It Up",
+      alternateName: [
+        "stickitup",
+        "stickitupx",
+        "stickitupx.com",
+        "stick-it-up",
+        "Stick It Up UI",
+        "UI Stickers",
+      ],
       description:
         "Open-source library of interactive vector, chrome, and pixel art sticker components for React and Next.js.",
       publisher: {
@@ -156,6 +168,7 @@ const jsonLd = {
       "@type": "SoftwareApplication",
       "@id": `${siteUrl}/#software`,
       name: "stick-it-up",
+      alternateName: ["Stick It Up", "stickitupx"],
       applicationCategory: "DeveloperApplication",
       operatingSystem: "Any",
       softwareVersion: "0.3.0",
@@ -180,12 +193,13 @@ const jsonLd = {
         url: "https://github.com/Sam721166",
       },
       featureList: [
-        "Handcrafted Vector, Chrome, and Pixel Art Sticker Components",
-        "Realistic 3D Vinyl Hover Peel Physics with Spring Motion",
+        "65+ Handcrafted Vector, Chrome, and Pixel Art Sticker Components",
+        "Realistic 3D Vinyl Hover Peel Physics with Physical Spring Motion",
         "React 18 and React 19 Full Compatibility",
         "Zero-configuration Tailwind CSS Support",
         "Dual ESM and CommonJS Output with Strict TypeScript Types",
         "Pure SVG Support with Standalone HTML <img> Compatibility",
+        "Zero CDN network requests with inline vector rendering",
       ],
     },
     {
@@ -194,10 +208,10 @@ const jsonLd = {
       mainEntity: [
         {
           "@type": "Question",
-          name: "What is Stick It Up?",
+          name: "What is Stick It Up (stickitupx.com)?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Stick It Up is a free, open-source sticker component library for React and Next.js featuring handcrafted vector, holographic, and retro pixel art stickers with realistic 3D vinyl hover peel physics.",
+            text: "Stick It Up (stickitupx.com) is a free, open-source UI sticker component library for React and Next.js featuring handcrafted vector, holographic, and retro pixel art stickers with realistic 3D vinyl hover peel physics.",
           },
         },
         {
@@ -205,15 +219,15 @@ const jsonLd = {
           name: "How do I install Stick It Up in React or Next.js?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "You can install it via npm by running 'npm i stick-it-up'. Then import any sticker component, such as 'import { FlameSticker } from \"stick-it-up\"', and render it in your JSX with '<FlameSticker size={96} peel />'.",
+            text: "Install it via npm by running 'npm i stick-it-up'. Then import any sticker component, such as 'import { FlameSticker } from \"stick-it-up\"', and render it in your JSX with '<FlameSticker size={96} peel />'.",
           },
         },
         {
           "@type": "Question",
-          name: "Are the stickers free for personal and commercial use?",
+          name: "Are the UI stickers free for personal and commercial use?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes, Stick It Up is licensed under the MIT License and is 100% free for both personal and commercial web projects.",
+            text: "Yes, Stick It Up is licensed under the MIT License and is 100% free for both personal and commercial web projects with no attribution required.",
           },
         },
         {

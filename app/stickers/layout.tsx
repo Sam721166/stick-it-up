@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "https://stickitupp.vercel.app");
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stickitupx.com";
 
 export const metadata: Metadata = {
-  title: "Browse Free React Stickers & SVG Badges",
+  title: "Browse Free React Stickers & UI Sticker Library",
   description:
-    "Explore interactive React sticker components and SVG decals with 3D vinyl hover peel physics. Filter by characters, mascots, components, and symbols. Free for personal & commercial use.",
+    "Explore 65+ interactive React sticker components and SVG decals with 3D vinyl hover peel physics. Handcrafted characters, mascots, chrome badges, and UI stickers. Free for personal & commercial use.",
   keywords: [
+    "stick it up",
+    "stickitup",
+    "stickitupx",
+    "ui stickers",
+    "ui sticker library",
     "react stickers catalog",
     "free svg stickers",
     "vinyl peel stickers",
@@ -22,30 +21,30 @@ export const metadata: Metadata = {
     "ui stickers download",
   ],
   openGraph: {
-    title: "Browse Free React Stickers & SVG Badges | Stick It Up",
+    title: "Browse Free React Stickers & UI Sticker Library | Stick It Up",
     description:
-      "Explore interactive React sticker components and SVG decals with 3D vinyl hover peel physics. Filter by categories, customize size, copy code, or download SVGs.",
-    url: "/stickers",
+      "Explore 65+ interactive React sticker components and SVG decals with 3D vinyl hover peel physics. Filter by categories, customize size, copy code, or download SVGs.",
+    url: `${siteUrl}/stickers`,
     siteName: "Stick It Up",
     images: [
       {
-        url: "/og-image.png",
+        url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "Stick It Up — Complete Stickers & Badges Catalog",
+        alt: "Stick It Up (stickitupx.com) — Complete Stickers & Badges Catalog",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Browse Free React Stickers & SVG Badges | Stick It Up",
+    title: "Browse Free React Stickers & UI Sticker Library | Stick It Up",
     description:
-      "Explore interactive React sticker components and SVG decals with 3D vinyl hover peel physics.",
-    images: ["/og-image.png"],
+      "Explore 65+ interactive React sticker components and SVG decals with 3D vinyl hover peel physics.",
+    images: [`${siteUrl}/og-image.png`],
   },
   alternates: {
-    canonical: "/stickers",
+    canonical: `${siteUrl}/stickers`,
   },
 };
 
