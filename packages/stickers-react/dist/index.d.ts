@@ -19,7 +19,7 @@ interface StickerProps extends SVGProps<SVGSVGElement> {
      */
     style?: CSSProperties;
 }
-type StickerName = "flame" | "metal" | "blob-burst" | "star-burst" | "devil-cone" | "flame-star" | "folded-paper" | "red-berry" | "blueberry" | "berries" | "badge-smiley" | "cosmic-pill" | "red-cat" | "pink-cat" | "pink-cat-stamp" | "yellow-cat" | "black-cat" | "cat" | "cat-serious" | "dog" | "face" | "black-face" | "flower" | "peace-hand" | "sparkles" | "sparkle-trio" | "cosmic-eye" | "curious-globe" | "spiral" | "eye-splat" | "japan-badge" | "cone" | "icy-fleur" | "app-badge" | "bunny" | "cat-sit" | "fish" | "luffy-hat" | "coffee" | "japan-flag" | "cat-cute" | "cherry" | "goo" | "heart" | "nazar" | "bad-cat" | "nori-coffee" | "nori-cool" | "nori-headphones" | "nori-heart" | "nori-laptop" | "nori-rocket" | "pip-coffee" | "pip-detective" | "pip-headphones" | "pip-rocket" | "pip-thinking" | "pip-wizard" | "kuro-coffee" | "kuro-cool" | "kuro-headphones" | "kuro-heart" | "kuro-laptop" | "kuro-rocket" | "mochi-coffee" | "mochi-cool" | "mochi-headphones" | "mochi-heart" | "mochi-laptop" | "mochi-rocket" | "star" | "dogsticker" | "component-66" | "vlc2" | "japan" | "curious-blue-globe" | "cosmiceye" | "sparkletrio" | "catsticker" | "red_cat" | (string & {});
+type StickerName = "flame" | "metal" | "blob-burst" | "star-burst" | "devil-cone" | "flame-star" | "folded-paper" | "red-berry" | "blueberry" | "berries" | "badge-smiley" | "cosmic-pill" | "red-cat" | "pink-cat" | "pink-cat-stamp" | "yellow-cat" | "black-cat" | "cat" | "cat-serious" | "dog" | "face" | "black-face" | "flower" | "peace-hand" | "sparkles" | "sparkle-trio" | "cosmic-eye" | "curious-globe" | "spiral" | "eye-splat" | "japan-badge" | "cone" | "icy-fleur" | "app-badge" | "bunny" | "cat-sit" | "fish" | "luffy-hat" | "coffee" | "japan-flag" | "cat-cute" | "cherry" | "goo" | "heart" | "nazar" | "bad-cat" | "nori-coffee" | "nori-cool" | "nori-headphones" | "nori-heart" | "nori-laptop" | "nori-rocket" | "pip-coffee" | "pip-detective" | "pip-headphones" | "pip-rocket" | "pip-thinking" | "pip-wizard" | "kuro-coffee" | "kuro-cool" | "kuro-headphones" | "kuro-heart" | "kuro-laptop" | "kuro-rocket" | "mochi-coffee" | "mochi-cool" | "mochi-headphones" | "mochi-heart" | "mochi-laptop" | "mochi-rocket" | "star" | "dogsticker" | "component-66" | "vlc2" | "japan" | "curious-blue-globe" | "cosmiceye" | "sparkletrio" | "catsticker" | "red_cat" | "elon" | "elon-1" | "elon-musk" | "elon-visionary" | "elon-2" | "steve-jobs" | "steve-jobs-1" | "steve-jobs-classic" | "steve-jobs-2" | "jensen-huang" | "jensen" | "mark-zuckerberg" | "zuck" | "mark-socialnetwork" | "mark-social" | "erlich-bachman" | "erlich" | "socialnetwork-badge" | "social-network" | (string & {});
 
 declare const STICKER_MAP: Record<StickerName, React.FC<StickerProps>>;
 interface DynamicStickerProps extends StickerProps {
@@ -172,5 +172,23 @@ declare const MochiLaptopSticker: React.FC<StickerProps>;
 
 declare const MochiRocketSticker: React.FC<StickerProps>;
 
-export { AppBadgeSticker, BadCatSticker, RedBerrySticker as BadgeSmileySticker, BerriesSticker, BlackCatSticker, BlackFaceSticker, BlobBurstSticker, BlueberrySticker, BunnySticker, CatCuteSticker, CatSeriousSticker, CatSitSticker, CatSticker, CherrySticker, CoffeeSticker, ConeSticker, CosmicEyeSticker, BlueberrySticker as CosmicPillSticker, CuriousGlobeSticker, DevilConeSticker, DogSticker, EyeSplatSticker, FaceSticker, FishSticker, FlameStarSticker, FlameSticker, FlowerSticker, FoldedPaperSticker, GooSticker, HeartSticker, IcyFleurSticker, JapanBadgeSticker, JapanFlagSticker, KuroCoffeeSticker, KuroCoolSticker, KuroHeadphonesSticker, KuroHeartSticker, KuroLaptopSticker, KuroRocketSticker, LuffyHatSticker, MetalSticker, MochiCoffeeSticker, MochiCoolSticker, MochiHeadphonesSticker, MochiHeartSticker, MochiLaptopSticker, MochiRocketSticker, NazarSticker, NoriCoffeeSticker, NoriCoolSticker, NoriHeadphonesSticker, NoriHeartSticker, NoriLaptopSticker, NoriRocketSticker, PeaceHandSticker, PinkCatSticker as PinkCatStampSticker, PinkCatSticker, PipCoffeeSticker, PipDetectiveSticker, PipHeadphonesSticker, PipRocketSticker, PipThinkingSticker, PipWizardSticker, RedBerrySticker, RedCatSticker, STICKER_MAP, SparkleTrioSticker, SparklesSticker, SpiralSticker, StarBurstSticker, Sticker, YellowCatSticker, Sticker as default };
+declare const ElonSticker: React.FC<StickerProps>;
+
+declare const ElonVisionarySticker: React.FC<StickerProps>;
+
+declare const SteveJobsSticker: React.FC<StickerProps>;
+
+declare const SteveJobsClassicSticker: React.FC<StickerProps>;
+
+declare const JensenHuangSticker: React.FC<StickerProps>;
+
+declare const MarkZuckerbergSticker: React.FC<StickerProps>;
+
+declare const MarkSocialNetworkSticker: React.FC<StickerProps>;
+
+declare const ErlichBachmanSticker: React.FC<StickerProps>;
+
+declare const SocialNetworkBadgeSticker: React.FC<StickerProps>;
+
+export { AppBadgeSticker, BadCatSticker, RedBerrySticker as BadgeSmileySticker, BerriesSticker, BlackCatSticker, BlackFaceSticker, BlobBurstSticker, BlueberrySticker, BunnySticker, CatCuteSticker, CatSeriousSticker, CatSitSticker, CatSticker, CherrySticker, CoffeeSticker, ConeSticker, CosmicEyeSticker, BlueberrySticker as CosmicPillSticker, CuriousGlobeSticker, DevilConeSticker, DogSticker, ElonSticker, ElonVisionarySticker, ErlichBachmanSticker, EyeSplatSticker, FaceSticker, FishSticker, FlameStarSticker, FlameSticker, FlowerSticker, FoldedPaperSticker, GooSticker, HeartSticker, IcyFleurSticker, JapanBadgeSticker, JapanFlagSticker, JensenHuangSticker, KuroCoffeeSticker, KuroCoolSticker, KuroHeadphonesSticker, KuroHeartSticker, KuroLaptopSticker, KuroRocketSticker, LuffyHatSticker, MarkSocialNetworkSticker, MarkZuckerbergSticker, MetalSticker, MochiCoffeeSticker, MochiCoolSticker, MochiHeadphonesSticker, MochiHeartSticker, MochiLaptopSticker, MochiRocketSticker, NazarSticker, NoriCoffeeSticker, NoriCoolSticker, NoriHeadphonesSticker, NoriHeartSticker, NoriLaptopSticker, NoriRocketSticker, PeaceHandSticker, PinkCatSticker as PinkCatStampSticker, PinkCatSticker, PipCoffeeSticker, PipDetectiveSticker, PipHeadphonesSticker, PipRocketSticker, PipThinkingSticker, PipWizardSticker, RedBerrySticker, RedCatSticker, STICKER_MAP, SocialNetworkBadgeSticker, SparkleTrioSticker, SparklesSticker, SpiralSticker, StarBurstSticker, SteveJobsClassicSticker, SteveJobsSticker, Sticker, YellowCatSticker, Sticker as default };
 export type { DynamicStickerProps, StickerName, StickerProps };

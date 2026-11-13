@@ -25,6 +25,7 @@ interface CatalogItem {
   description: string;
   tags: string[];
   componentName?: StickerName;
+  exportName?: string;
   svgSrc?: string;
   defaultRotation?: number;
   previewSize?: number;
@@ -796,15 +797,146 @@ const CATALOG: CatalogItem[] = [
     tags: ["mochi", "cat", "pixel", "cream", "rocket", "space", "fly", "character"],
     defaultRotation: 6,
   },
+  /* Tech Icons & Founder Decals (First-class React components) */
+  {
+    id: "comp-elon-1",
+    name: "elon",
+    title: "Elon Musk (Cyber)",
+    category: "characters",
+    format: "component",
+    componentName: "elon",
+    exportName: "ElonSticker",
+    svgSrc: "/stickers/elon1.svg",
+    description: "Stylized cyberpunk Elon Musk founder sticker decal.",
+    tags: ["elon", "musk", "tesla", "spacex", "founder", "tech", "character", "cyberpunk"],
+    defaultRotation: -4,
+    previewSize: 116,
+  },
+  {
+    id: "comp-elon-2",
+    name: "elon-visionary",
+    title: "Elon Musk (Visionary)",
+    category: "characters",
+    format: "component",
+    componentName: "elon-visionary",
+    exportName: "ElonVisionarySticker",
+    svgSrc: "/stickers/elon2.svg",
+    description: "Bold portrait of tech entrepreneur Elon Musk.",
+    tags: ["elon", "musk", "tech", "founder", "character", "visionary"],
+    defaultRotation: 4,
+    previewSize: 92,
+  },
+  {
+    id: "comp-steve-jobs-1",
+    name: "steve-jobs",
+    title: "Steve Jobs (Think Different)",
+    category: "characters",
+    format: "component",
+    componentName: "steve-jobs",
+    exportName: "SteveJobsSticker",
+    svgSrc: "/stickers/stevejobs1.svg",
+    description: "Iconic Steve Jobs portrait in black turtleneck with round glasses.",
+    tags: ["steve", "jobs", "apple", "founder", "think-different", "character"],
+    defaultRotation: -6,
+    previewSize: 108,
+  },
+  {
+    id: "comp-steve-jobs-2",
+    name: "steve-jobs-classic",
+    title: "Steve Jobs (Classic)",
+    category: "characters",
+    format: "component",
+    componentName: "steve-jobs-classic",
+    exportName: "SteveJobsClassicSticker",
+    svgSrc: "/stickers/stevejobs2.svg",
+    description: "Classic minimalist Steve Jobs silhouette decal.",
+    tags: ["steve", "jobs", "apple", "founder", "character"],
+    defaultRotation: 5,
+    previewSize: 98,
+  },
+  {
+    id: "comp-jensen-huang",
+    name: "jensen-huang",
+    title: "Jensen Huang",
+    category: "characters",
+    format: "component",
+    componentName: "jensen-huang",
+    exportName: "JensenHuangSticker",
+    svgSrc: "/stickers/jensen-huang.svg",
+    description: "NVIDIA CEO Jensen Huang in his trademark black leather jacket.",
+    tags: ["jensen", "huang", "nvidia", "ai", "leather-jacket", "founder", "character"],
+    defaultRotation: -5,
+    previewSize: 96,
+  },
+  {
+    id: "comp-mark-zuckerberg",
+    name: "mark-zuckerberg",
+    title: "Mark Zuckerberg",
+    category: "characters",
+    format: "component",
+    componentName: "mark-zuckerberg",
+    exportName: "MarkZuckerbergSticker",
+    svgSrc: "/stickers/mark-zuckerberg.svg",
+    description: "Meta founder Mark Zuckerberg stylized sticker.",
+    tags: ["mark", "zuckerberg", "meta", "facebook", "founder", "character"],
+    defaultRotation: -3,
+    previewSize: 122,
+  },
+  {
+    id: "comp-mark-socialnetwork",
+    name: "mark-socialnetwork",
+    title: "The Social Network",
+    category: "characters",
+    format: "component",
+    componentName: "mark-socialnetwork",
+    exportName: "MarkSocialNetworkSticker",
+    svgSrc: "/stickers/mark-socialnetwork.svg",
+    description: "Social Network film inspired founder decal.",
+    tags: ["social", "network", "mark", "zuckerberg", "character"],
+    defaultRotation: 4,
+    previewSize: 116,
+  },
+  {
+    id: "comp-erlich-bachman",
+    name: "erlich-bachman",
+    title: "Erlich Bachman",
+    category: "characters",
+    format: "component",
+    componentName: "erlich-bachman",
+    exportName: "ErlichBachmanSticker",
+    svgSrc: "/stickers/Erlich-siliconvalley.svg",
+    description: "Aviato incubator founder Erlich Bachman from Silicon Valley.",
+    tags: ["erlich", "bachman", "silicon-valley", "aviato", "comedy", "character"],
+    defaultRotation: 6,
+    previewSize: 98,
+  },
+  {
+    id: "comp-socialnetwork-badge",
+    name: "socialnetwork-badge",
+    title: "Connect Badge",
+    category: "symbols",
+    format: "component",
+    componentName: "socialnetwork-badge",
+    exportName: "SocialNetworkBadgeSticker",
+    svgSrc: "/stickers/socialnetwork2.svg",
+    description: "Retro social network connecting badge decal.",
+    tags: ["social", "network", "badge", "symbol", "connect"],
+    defaultRotation: -2,
+    previewSize: 118,
+  },
 ];
 
 /* ------------------------------------------------------------------
    Sticker Visual Renderer & Helpers
 ------------------------------------------------------------------- */
 
-function getComponentExportName(name: string): string {
+function getComponentExportName(target: string | CatalogItem): string {
+  if (typeof target !== "string") {
+    if (target.exportName) return target.exportName;
+    target = target.componentName || target.name;
+  }
   return (
-    name
+    target
       .split("-")
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join("") + "Sticker"
@@ -822,6 +954,21 @@ function StickerVisual({
   peel?: boolean;
   className?: string;
 }) {
+  if (item.format === "svg" || (!item.componentName && item.svgSrc)) {
+    return (
+      <img
+        src={item.svgSrc || `/stickers/${item.name}.svg`}
+        alt={item.title || item.name}
+        width={size}
+        height={size}
+        loading="lazy"
+        decoding="async"
+        className={`object-contain select-none pointer-events-none drop-shadow-sm transition-transform duration-200 ${className}`}
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+
   const stickerName = (item.componentName || item.name) as StickerName;
   return (
     <Sticker
@@ -1076,9 +1223,13 @@ export default function StickersCatalogPage() {
 
   async function copyCode(item: CatalogItem, e?: React.MouseEvent) {
     if (e) e.stopPropagation();
-    const stickerName = item.componentName || item.name;
-    const compName = getComponentExportName(stickerName);
-    const code = `import { ${compName} } from "stick-it-up";\n\n<${compName} size={96} peel />`;
+    let code: string;
+    if (item.format === "svg" || (!item.componentName && item.svgSrc)) {
+      code = `<img src="${item.svgSrc || `/stickers/${item.name}.svg`}" width={96} height={96} alt="${item.title}" />`;
+    } else {
+      const compName = getComponentExportName(item);
+      code = `import { ${compName} } from "stick-it-up";\n\n<${compName} size={96} peel />`;
+    }
 
     try {
       await navigator.clipboard.writeText(code);
@@ -1386,9 +1537,9 @@ export default function StickersCatalogPage() {
                     onClick={() => setActiveItem(item)}
                     style={{
                       contentVisibility: "auto",
-                      containIntrinsicSize: "168px",
+                      containIntrinsicSize: "184px",
                     }}
-                    className="group relative flex min-h-[168px] flex-col items-center justify-between rounded-2xl border border-zinc-200/80 bg-white p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-[0_6px_20px_rgba(0,0,0,0.04)] cursor-pointer"
+                    className="group relative flex min-h-[184px] flex-col items-center justify-between rounded-2xl border border-zinc-200/80 bg-white p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-[0_6px_20px_rgba(0,0,0,0.04)] cursor-pointer"
                   >
                     {/* Subtle top-right copy button on hover */}
                     <button
@@ -1416,7 +1567,7 @@ export default function StickersCatalogPage() {
                           transform: `rotate(${item.defaultRotation || 0}deg)`,
                         }}
                       >
-                        <StickerVisual item={item} size={item.previewSize || 74} peel={false} />
+                        <StickerVisual item={item} size={item.previewSize || 88} peel={false} />
                       </div>
                     </div>
 
@@ -1769,16 +1920,21 @@ export default function Hero() {
 ------------------------------------------------------------------- */}
 {activeItem &&
   (() => {
+    const isSvg = activeItem.format === "svg" || (!activeItem.componentName && activeItem.svgSrc);
     const stickerName = activeItem.componentName || activeItem.name;
-    const componentPascalName = getComponentExportName(stickerName);
+    const componentPascalName = getComponentExportName(activeItem);
 
-    const namedCode = `import { ${componentPascalName} } from "stick-it-up";\n\n<${componentPascalName}\n  size={${inspectorSize}}${
-      inspectorPeel ? "\n  peel" : ""
-    }\n/>`;
+    const namedCode = isSvg
+      ? `<img\n  src="${activeItem.svgSrc || `/stickers/${activeItem.name}.svg`}"\n  width={${inspectorSize}}\n  height={${inspectorSize}}\n  alt="${activeItem.title}"\n/>`
+      : `import { ${componentPascalName} } from "stick-it-up";\n\n<${componentPascalName}\n  size={${inspectorSize}}${
+          inspectorPeel ? "\n  peel" : ""
+        }\n/>`;
 
-    const dynamicCode = `import { Sticker } from "stick-it-up";\n\n<Sticker\n  name="${stickerName}"\n  size={${inspectorSize}}${
-      inspectorPeel ? "\n  peel" : ""
-    }\n/>`;
+    const dynamicCode = isSvg
+      ? `<img\n  src="${activeItem.svgSrc || `/stickers/${activeItem.name}.svg`}"\n  width={${inspectorSize}}\n  height={${inspectorSize}}\n  alt="${activeItem.title}"\n/>`
+      : `import { Sticker } from "stick-it-up";\n\n<Sticker\n  name="${stickerName}"\n  size={${inspectorSize}}${
+          inspectorPeel ? "\n  peel" : ""
+        }\n/>`;
 
     const code = snippetTab === "named" ? namedCode : dynamicCode;
 
@@ -1897,7 +2053,7 @@ export default function Hero() {
                   item={activeItem}
                   size={
                     activeItem.previewSize
-                      ? Math.round(inspectorSize * (activeItem.previewSize / 74))
+                      ? Math.round(inspectorSize * (activeItem.previewSize / 88))
                       : inspectorSize
                   }
                   peel={inspectorPeel}

@@ -75,6 +75,17 @@ import { MochiHeartSticker } from "../stickers/MochiHeartSticker";
 import { MochiLaptopSticker } from "../stickers/MochiLaptopSticker";
 import { MochiRocketSticker } from "../stickers/MochiRocketSticker";
 
+// Founders & Tech Decals
+import { ElonSticker } from "../stickers/ElonSticker";
+import { ElonVisionarySticker } from "../stickers/ElonVisionarySticker";
+import { SteveJobsSticker } from "../stickers/SteveJobsSticker";
+import { SteveJobsClassicSticker } from "../stickers/SteveJobsClassicSticker";
+import { JensenHuangSticker } from "../stickers/JensenHuangSticker";
+import { MarkZuckerbergSticker } from "../stickers/MarkZuckerbergSticker";
+import { MarkSocialNetworkSticker } from "../stickers/MarkSocialNetworkSticker";
+import { ErlichBachmanSticker } from "../stickers/ErlichBachmanSticker";
+import { SocialNetworkBadgeSticker } from "../stickers/SocialNetworkBadgeSticker";
+
 export const STICKER_MAP: Record<StickerName, React.FC<StickerProps>> = {
   flame: FlameSticker,
   metal: MetalSticker,
@@ -149,6 +160,27 @@ export const STICKER_MAP: Record<StickerName, React.FC<StickerProps>> = {
   "mochi-laptop": MochiLaptopSticker,
   "mochi-rocket": MochiRocketSticker,
 
+  // Founders & Tech Decals
+  elon: ElonSticker,
+  "elon-1": ElonSticker,
+  "elon-musk": ElonSticker,
+  "elon-visionary": ElonVisionarySticker,
+  "elon-2": ElonVisionarySticker,
+  "steve-jobs": SteveJobsSticker,
+  "steve-jobs-1": SteveJobsSticker,
+  "steve-jobs-classic": SteveJobsClassicSticker,
+  "steve-jobs-2": SteveJobsClassicSticker,
+  "jensen-huang": JensenHuangSticker,
+  jensen: JensenHuangSticker,
+  "mark-zuckerberg": MarkZuckerbergSticker,
+  zuck: MarkZuckerbergSticker,
+  "mark-socialnetwork": MarkSocialNetworkSticker,
+  "mark-social": MarkSocialNetworkSticker,
+  "erlich-bachman": ErlichBachmanSticker,
+  erlich: ErlichBachmanSticker,
+  "socialnetwork-badge": SocialNetworkBadgeSticker,
+  "social-network": SocialNetworkBadgeSticker,
+
   // Common aliases & filename helpers
   star: StarBurstSticker,
   dogsticker: DogSticker,
@@ -190,6 +222,13 @@ function normalizeStickerName(rawName: string): StickerName {
   if (n === "catsticker") return "cat";
   if (n === "peacehand") return "peace-hand";
   if (n === "red-cat" || n === "red_cat") return "red-cat";
+  if (n === "elon1" || n === "elon-1" || n === "elon") return "elon";
+  if (n === "elon2" || n === "elon-2") return "elon-visionary";
+  if (n === "stevejobs1" || n === "stevejobs" || n === "steve-jobs-1") return "steve-jobs";
+  if (n === "stevejobs2" || n === "steve-jobs-2") return "steve-jobs-classic";
+  if (n === "erlich-siliconvalley" || n === "erlich") return "erlich-bachman";
+  if (n === "socialnetwork2" || n === "socialnetwork" || n === "social-network") return "socialnetwork-badge";
+  if (n === "zuck" || n === "zuckerberg") return "mark-zuckerberg";
 
   return n as StickerName;
 }

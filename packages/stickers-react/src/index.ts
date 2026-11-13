@@ -77,5 +77,16 @@ export { MochiHeartSticker } from "./stickers/MochiHeartSticker";
 export { MochiLaptopSticker } from "./stickers/MochiLaptopSticker";
 export { MochiRocketSticker } from "./stickers/MochiRocketSticker";
 
+// Founders & Tech Decals
+export { ElonSticker } from "./stickers/ElonSticker";
+export { ElonVisionarySticker } from "./stickers/ElonVisionarySticker";
+export { SteveJobsSticker } from "./stickers/SteveJobsSticker";
+export { SteveJobsClassicSticker } from "./stickers/SteveJobsClassicSticker";
+export { JensenHuangSticker } from "./stickers/JensenHuangSticker";
+export { MarkZuckerbergSticker } from "./stickers/MarkZuckerbergSticker";
+export { MarkSocialNetworkSticker } from "./stickers/MarkSocialNetworkSticker";
+export { ErlichBachmanSticker } from "./stickers/ErlichBachmanSticker";
+export { SocialNetworkBadgeSticker } from "./stickers/SocialNetworkBadgeSticker";
+
 import { Sticker } from "./components/Sticker";
 export default Sticker;
