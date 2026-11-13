@@ -9,37 +9,43 @@ export function VisitorCounter({ site = "stick-it-up" }: { site?: string }) {
   useEffect(() => {
     let unmounted = false;
 
-    // Immediately display previously cached count from localStorage so UI isn't blank
-    let shouldFetch = true;
+    // 1. Immediately display previously cached count from localStorage so UI isn't blank
     try {
       const cached = localStorage.getItem(`siu_visitors_${site}`);
-      const cachedTime = localStorage.getItem(`siu_visitors_time_${site}`);
       if (cached) {
         const val = parseInt(cached, 10);
         if (!isNaN(val) && val > 0) {
           setCount(val);
-          // Don't refetch if fetched within last 30 minutes
-          if (cachedTime && Date.now() - parseInt(cachedTime, 10) < 30 * 60 * 1000) {
-            shouldFetch = false;
-          }
         }
       }
     } catch {}
 
-    if (!shouldFetch) return;
-
+    // 2. Always fetch latest count from server on mount/reload/page change
     async function recordAndFetch() {
       try {
-        // Record visit and get authoritative server count
-        const res = await fetch("/api/visitors", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ site }),
+        const hasRecordedSession = Boolean(sessionStorage.getItem(`siu_recorded_${site}`));
+        // Use GET if already recorded visit in this browser session, otherwise POST to record
+        const method = hasRecordedSession ? "GET" : "POST";
+        const url = method === "GET"
+          ? `/api/visitors?site=${encodeURIComponent(site)}&_t=${Date.now()}`
+          : "/api/visitors";
+
+        const res = await fetch(url, {
+          method,
+          headers: method === "POST" ? { "Content-Type": "application/json" } : undefined,
+          body: method === "POST" ? JSON.stringify({ site }) : undefined,
           cache: "no-store",
         });
 
         if (!res.ok) throw new Error("Visitor API response not ok");
         const data = await res.json();
+        
+        if (method === "POST" && data?.success) {
+          try {
+            sessionStorage.setItem(`siu_recorded_${site}`, "1");
+          } catch {}
+        }
+
         const target = Number(data.unique_visitors ?? data.total_visits ?? 0);
 
         if (unmounted || target <= 0) return;
