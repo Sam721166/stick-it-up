@@ -252,6 +252,20 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
     >
       <head>
+        {/* Google Analytics 4 (GA4) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-S3DJKR57QZ"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-S3DJKR57QZ');
+          `}
+        </Script>
+        {/* Google Tag Manager (GTM) */}
         <Script
           src="https://www.googletagmanager.com/gtm.js?id=GTM-WT7V99F8"
           strategy="afterInteractive"
