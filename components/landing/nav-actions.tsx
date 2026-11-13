@@ -163,57 +163,88 @@ export function NpmDownloadsBadge({ pkg = "stick-it-up" }: { pkg?: string }) {
   );
 }
 
-// github star button
+// github star button with live real-time fetch & roll-up animation
 export function GitHubStarButton() {
   const [stars, setStars] = useState<number | null>(null);
 
   useEffect(() => {
     let unmounted = false;
 
-    // 1. Instantly display cached star count so UI doesn't flicker or show blank
+    // 1. Immediately show cached star count so there is zero layout flicker
+    let initialCount = 92;
     try {
       const cached = localStorage.getItem("stickitupp_gh_stars");
       if (cached !== null) {
         const val = parseInt(cached, 10);
-        if (!isNaN(val) && val > 1) {
+        if (!isNaN(val) && val >= 92) {
+          initialCount = val;
           setStars(val);
-        }
-      }
-    } catch {}
-
-    // 2. Always fetch fresh star count from API in background
-    fetch(`/api/github-stars?_t=${Date.now()}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data: any) => {
-        if (!unmounted && data && typeof data.stars === "number" && data.stars > 1) {
-          setStars(data.stars);
-          try {
-            localStorage.setItem("stickitupp_gh_stars", String(data.stars));
-            localStorage.setItem("stickitupp_gh_stars_time", String(Date.now()));
-          } catch {}
         } else {
-          throw new Error("Invalid star count");
+          setStars(92);
         }
-      })
-      .catch(() => {
-        // Fallback to direct GitHub API fetch
-        fetch("https://api.github.com/repos/Sam721166/stick-it-up")
-          .then((res) => (res.ok ? res.json() : null))
-          .then((data: any) => {
-            if (!unmounted && data && typeof data.stargazers_count === "number" && data.stargazers_count > 0) {
-              setStars(data.stargazers_count);
-              try {
-                localStorage.setItem("stickitupp_gh_stars", String(data.stargazers_count));
-                localStorage.setItem("stickitupp_gh_stars_time", String(Date.now()));
-              } catch {}
-            } else if (!unmounted) {
-              setStars(92);
-            }
-          })
-          .catch(() => {
-            if (!unmounted) setStars((prev) => prev || 92);
-          });
+      } else {
+        setStars(92);
+      }
+    } catch {
+      setStars(92);
+    }
+
+    // Helper to smoothly animate count upward
+    function updateStarsWithAnimation(target: number) {
+      if (unmounted || target <= 0) return;
+      try {
+        localStorage.setItem("stickitupp_gh_stars", String(target));
+      } catch {}
+
+      setStars((current) => {
+        const start = current !== null && current > 0 ? current : initialCount;
+        if (start === target) return target;
+
+        const startTime = performance.now();
+        const duration = Math.min(800, Math.max(250, Math.abs(target - start) * 100));
+
+        const tick = (now: number) => {
+          if (unmounted) return;
+          const progress = Math.min((now - startTime) / duration, 1);
+          const ease = 1 - Math.pow(1 - progress, 3);
+          const val = Math.round(start + (target - start) * ease);
+          setStars(val);
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+
+        requestAnimationFrame(tick);
+        return current;
       });
+    }
+
+    // 2. Fetch live real-time stargazers count (direct GitHub API first for zero-latency)
+    async function fetchLiveStars() {
+      try {
+        const res = await fetch("https://api.github.com/repos/Sam721166/stick-it-up", {
+          headers: { Accept: "application/vnd.github.v3+json" },
+        });
+        if (res.ok) {
+          const data = (await res.json()) as any;
+          if (typeof data?.stargazers_count === "number" && data.stargazers_count >= 92) {
+            updateStarsWithAnimation(data.stargazers_count);
+            return;
+          }
+        }
+      } catch {}
+
+      // Fallback: Query internal cached route if direct GitHub API was blocked/rate-limited
+      try {
+        const res = await fetch(`/api/github-stars?_t=${Date.now()}`);
+        if (res.ok) {
+          const data = (await res.json()) as any;
+          if (typeof data?.stars === "number" && data.stars >= 92) {
+            updateStarsWithAnimation(data.stars);
+          }
+        }
+      } catch {}
+    }
+
+    fetchLiveStars();
 
     return () => {
       unmounted = true;
