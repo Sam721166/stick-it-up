@@ -14,13 +14,13 @@ import { VisitorCounter, GitHubStarButton } from "../../components/landing/nav-a
 ------------------------------------------------------------------- */
 
 type StickerFormat = "component" | "svg";
-type StickerCategory = "all" | "mascots" | "characters" | "components" | "symbols";
+type StickerCategory = "all" | "founders" | "mascots" | "characters" | "components" | "symbols";
 
 interface CatalogItem {
   id: string;
   name: string;
   title: string;
-  category: "components" | "symbols" | "characters" | "mascots";
+  category: "components" | "symbols" | "characters" | "mascots" | "founders";
   format: StickerFormat;
   description: string;
   tags: string[];
@@ -802,7 +802,7 @@ const CATALOG: CatalogItem[] = [
     id: "comp-elon-1",
     name: "elon",
     title: "Elon Musk (Cyber)",
-    category: "characters",
+    category: "founders",
     format: "component",
     componentName: "elon",
     exportName: "ElonSticker",
@@ -816,7 +816,7 @@ const CATALOG: CatalogItem[] = [
     id: "comp-elon-2",
     name: "elon-visionary",
     title: "Elon Musk (Visionary)",
-    category: "characters",
+    category: "founders",
     format: "component",
     componentName: "elon-visionary",
     exportName: "ElonVisionarySticker",
@@ -830,7 +830,7 @@ const CATALOG: CatalogItem[] = [
     id: "comp-steve-jobs-1",
     name: "steve-jobs",
     title: "Steve Jobs (Think Different)",
-    category: "characters",
+    category: "founders",
     format: "component",
     componentName: "steve-jobs",
     exportName: "SteveJobsSticker",
@@ -844,7 +844,7 @@ const CATALOG: CatalogItem[] = [
     id: "comp-steve-jobs-2",
     name: "steve-jobs-classic",
     title: "Steve Jobs (Classic)",
-    category: "characters",
+    category: "founders",
     format: "component",
     componentName: "steve-jobs-classic",
     exportName: "SteveJobsClassicSticker",
@@ -858,7 +858,7 @@ const CATALOG: CatalogItem[] = [
     id: "comp-jensen-huang",
     name: "jensen-huang",
     title: "Jensen Huang",
-    category: "characters",
+    category: "founders",
     format: "component",
     componentName: "jensen-huang",
     exportName: "JensenHuangSticker",
@@ -872,7 +872,7 @@ const CATALOG: CatalogItem[] = [
     id: "comp-mark-zuckerberg",
     name: "mark-zuckerberg",
     title: "Mark Zuckerberg",
-    category: "characters",
+    category: "founders",
     format: "component",
     componentName: "mark-zuckerberg",
     exportName: "MarkZuckerbergSticker",
@@ -886,7 +886,7 @@ const CATALOG: CatalogItem[] = [
     id: "comp-mark-socialnetwork",
     name: "mark-socialnetwork",
     title: "The Social Network",
-    category: "characters",
+    category: "founders",
     format: "component",
     componentName: "mark-socialnetwork",
     exportName: "MarkSocialNetworkSticker",
@@ -900,7 +900,7 @@ const CATALOG: CatalogItem[] = [
     id: "comp-erlich-bachman",
     name: "erlich-bachman",
     title: "Erlich Bachman",
-    category: "characters",
+    category: "founders",
     format: "component",
     componentName: "erlich-bachman",
     exportName: "ErlichBachmanSticker",
@@ -914,7 +914,7 @@ const CATALOG: CatalogItem[] = [
     id: "comp-socialnetwork-badge",
     name: "socialnetwork-badge",
     title: "Connect Badge",
-    category: "symbols",
+    category: "founders",
     format: "component",
     componentName: "socialnetwork-badge",
     exportName: "SocialNetworkBadgeSticker",
@@ -1242,6 +1242,7 @@ export default function StickersCatalogPage() {
   const categoryCounts = useMemo(() => {
     return {
       all: CATALOG.length,
+      founders: CATALOG.filter((c) => c.category === "founders").length,
       mascots: CATALOG.filter((c) => c.category === "mascots").length,
       characters: CATALOG.filter((c) => c.category === "characters").length,
       components: CATALOG.filter((c) => c.category === "components").length,
@@ -1445,6 +1446,7 @@ export default function StickersCatalogPage() {
             {(
               [
                 { id: "all", label: "All Stickers", count: categoryCounts.all },
+                { id: "founders", label: "Tech Founders", count: categoryCounts.founders },
                 { id: "mascots", label: "Mascots", count: categoryCounts.mascots },
                 { id: "characters", label: "Characters", count: categoryCounts.characters },
                 { id: "components", label: "Chrome & Badges", count: categoryCounts.components },
