@@ -104,8 +104,35 @@ async function getVisitors(url: URL, env: Env): Promise<Response> {
   }
 }
 
+// A real body is about 25 bytes. Parsing a 10 MB one costs ~20 ms of CPU, over
+// the free plan's 10 ms, so reading stops at 1 KB, with or without a
+// Content-Length header. A larger or non-JSON body counts as no body, and the
+// site comes from ?site= or the default instead.
+const MAX_BODY_BYTES = 1024;
+
+async function readSmallJson(request: Request): Promise<unknown> {
+  if (!request.body || Number(request.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) return null;
+  const reader = request.body.getReader();
+  const decoder = new TextDecoder();
+  let size = 0;
+  let text = "";
+  for (let part = await reader.read(); !part.done; part = await reader.read()) {
+    size += part.value.byteLength;
+    if (size > MAX_BODY_BYTES) {
+      await reader.cancel();
+      return null;
+    }
+    text += decoder.decode(part.value, { stream: true });
+  }
+  try {
+    return JSON.parse(text + decoder.decode());
+  } catch {
+    return null;
+  }
+}
+
 async function recordVisit(request: Request, url: URL, env: Env): Promise<Response> {
-  const body = (await request.json().catch(() => null)) as { site?: unknown } | null;
+  const body = (await readSmallJson(request)) as { site?: unknown } | null;
   const site = sanitizeSite(typeof body?.site === "string" ? body.site : url.searchParams.get("site"));
   const hash = await visitorHash(request, site);
 
