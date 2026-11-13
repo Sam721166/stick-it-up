@@ -10,19 +10,27 @@ export function VisitorCounter({ site = "stick-it-up" }: { site?: string }) {
     let unmounted = false;
 
     // Immediately display previously cached count from localStorage so UI isn't blank
+    let shouldFetch = true;
     try {
       const cached = localStorage.getItem(`siu_visitors_${site}`);
+      const cachedTime = localStorage.getItem(`siu_visitors_time_${site}`);
       if (cached) {
         const val = parseInt(cached, 10);
         if (!isNaN(val) && val > 0) {
           setCount(val);
+          // Don't refetch if fetched within last 30 minutes
+          if (cachedTime && Date.now() - parseInt(cachedTime, 10) < 30 * 60 * 1000) {
+            shouldFetch = false;
+          }
         }
       }
     } catch {}
 
+    if (!shouldFetch) return;
+
     async function recordAndFetch() {
       try {
-        // Record visit and get authoritative server count on every page reload
+        // Record visit and get authoritative server count
         const res = await fetch("/api/visitors", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -37,6 +45,7 @@ export function VisitorCounter({ site = "stick-it-up" }: { site?: string }) {
         if (unmounted || target <= 0) return;
         try {
           localStorage.setItem(`siu_visitors_${site}`, String(target));
+          localStorage.setItem(`siu_visitors_time_${site}`, String(Date.now()));
         } catch {}
 
         // Smooth roll-up animation to the latest target count
@@ -94,15 +103,15 @@ export function NpmDownloadsBadge({ pkg = "stick-it-up" }: { pkg?: string }) {
   useEffect(() => {
     let unmounted = false;
 
-    // Check sessionStorage cache (1 hour TTL)
+    // Check localStorage cache (24 hour TTL)
     try {
-      const cached = sessionStorage.getItem(`siu_npm_dl_${pkg}`);
-      const cachedAt = sessionStorage.getItem(`siu_npm_dl_time_${pkg}`);
+      const cached = localStorage.getItem(`siu_npm_dl_${pkg}`);
+      const cachedAt = localStorage.getItem(`siu_npm_dl_time_${pkg}`);
       if (cached !== null) {
         const val = parseInt(cached, 10);
         if (!isNaN(val)) {
           setDownloads(val);
-          if (cachedAt && Date.now() - parseInt(cachedAt, 10) < 60 * 60 * 1000) {
+          if (cachedAt && Date.now() - parseInt(cachedAt, 10) < 24 * 60 * 60 * 1000) {
             return;
           }
         }
@@ -115,8 +124,8 @@ export function NpmDownloadsBadge({ pkg = "stick-it-up" }: { pkg?: string }) {
         if (!unmounted && typeof data?.downloads === "number") {
           setDownloads(data.downloads);
           try {
-            sessionStorage.setItem(`siu_npm_dl_${pkg}`, String(data.downloads));
-            sessionStorage.setItem(`siu_npm_dl_time_${pkg}`, String(Date.now()));
+            localStorage.setItem(`siu_npm_dl_${pkg}`, String(data.downloads));
+            localStorage.setItem(`siu_npm_dl_time_${pkg}`, String(Date.now()));
           } catch {}
         }
       })
@@ -155,21 +164,21 @@ export function GitHubStarButton() {
   useEffect(() => {
     let unmounted = false;
 
-    // Read cached star count immediately after mount on client to avoid SSR hydration mismatch
+    // Read cached star count immediately from localStorage (12 hour TTL)
     let hasFreshCache = false;
     try {
-      const cached = sessionStorage.getItem("stickitupp_gh_stars");
-      const cachedAt = sessionStorage.getItem("stickitupp_gh_stars_time");
+      const cached = localStorage.getItem("stickitupp_gh_stars");
+      const cachedAt = localStorage.getItem("stickitupp_gh_stars_time");
       if (cached !== null) {
         const val = parseInt(cached, 10);
         if (!isNaN(val) && val > 1) {
           setStars(val);
-          if (cachedAt && Date.now() - parseInt(cachedAt, 10) < 30 * 60 * 1000) {
+          if (cachedAt && Date.now() - parseInt(cachedAt, 10) < 12 * 60 * 60 * 1000) {
             hasFreshCache = true;
           }
         } else {
-          sessionStorage.removeItem("stickitupp_gh_stars");
-          sessionStorage.removeItem("stickitupp_gh_stars_time");
+          localStorage.removeItem("stickitupp_gh_stars");
+          localStorage.removeItem("stickitupp_gh_stars_time");
         }
       }
     } catch {}
@@ -183,8 +192,8 @@ export function GitHubStarButton() {
         if (!unmounted && data && typeof data.stars === "number" && data.stars > 1) {
           setStars(data.stars);
           try {
-            sessionStorage.setItem("stickitupp_gh_stars", String(data.stars));
-            sessionStorage.setItem("stickitupp_gh_stars_time", String(Date.now()));
+            localStorage.setItem("stickitupp_gh_stars", String(data.stars));
+            localStorage.setItem("stickitupp_gh_stars_time", String(Date.now()));
           } catch {}
         } else {
           throw new Error("Invalid star count");
@@ -198,8 +207,8 @@ export function GitHubStarButton() {
             if (!unmounted && data && typeof data.stargazers_count === "number" && data.stargazers_count > 0) {
               setStars(data.stargazers_count);
               try {
-                sessionStorage.setItem("stickitupp_gh_stars", String(data.stargazers_count));
-                sessionStorage.setItem("stickitupp_gh_stars_time", String(Date.now()));
+                localStorage.setItem("stickitupp_gh_stars", String(data.stargazers_count));
+                localStorage.setItem("stickitupp_gh_stars_time", String(Date.now()));
               } catch {}
             } else if (!unmounted) {
               setStars(81);
