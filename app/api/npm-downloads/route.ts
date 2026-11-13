@@ -58,7 +58,7 @@ async function fetchTotalDownloads(pkg: string): Promise<{ downloads: number; st
       headers: { Accept: "application/json" },
     });
     if (regRes.ok) {
-      const regData = await regRes.json();
+      const regData = (await regRes.json()) as any;
       if (regData.time?.created) {
         createdStr = regData.time.created.split("T")[0];
       }
@@ -85,7 +85,7 @@ async function fetchTotalDownloads(pkg: string): Promise<{ downloads: number; st
           return 0;
         }
 
-        const data = await res.json();
+        const data = (await res.json()) as any;
         return typeof data.downloads === "number" ? data.downloads : 0;
       } catch (err) {
         console.warn(`npm download fetch failed for chunk ${chunk.start}:${chunk.end}:`, err);
@@ -94,7 +94,7 @@ async function fetchTotalDownloads(pkg: string): Promise<{ downloads: number; st
     })
   );
 
-  let total = results.reduce((acc, curr) => acc + curr, 0);
+  let total = results.reduce((acc: number, curr: number) => acc + curr, 0);
 
   // Fallback check if point query returned 0 downloads unexpectedly
   if (total === 0) {
@@ -104,7 +104,7 @@ async function fetchTotalDownloads(pkg: string): Promise<{ downloads: number; st
         { next: { revalidate: 3600 } }
       );
       if (monthRes.ok) {
-        const monthData = await monthRes.json();
+        const monthData = (await monthRes.json()) as any;
         if (typeof monthData.downloads === "number" && monthData.downloads > 0) {
           total = monthData.downloads;
         }

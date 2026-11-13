@@ -38,7 +38,7 @@ export function VisitorCounter({ site = "stick-it-up" }: { site?: string }) {
         });
 
         if (!res.ok) throw new Error("Visitor API response not ok");
-        const data = await res.json();
+        const data = (await res.json()) as any;
         
         if (method === "POST" && data?.success) {
           try {
@@ -126,7 +126,7 @@ export function NpmDownloadsBadge({ pkg = "stick-it-up" }: { pkg?: string }) {
 
     fetch(`/api/npm-downloads?package=${encodeURIComponent(pkg)}`)
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
+      .then((data: any) => {
         if (!unmounted && typeof data?.downloads === "number") {
           setDownloads(data.downloads);
           try {
@@ -194,7 +194,7 @@ export function GitHubStarButton() {
     // Fetch from internal cached API route to avoid browser CORS/rate-limits
     fetch("/api/github-stars")
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
+      .then((data: any) => {
         if (!unmounted && data && typeof data.stars === "number" && data.stars > 1) {
           setStars(data.stars);
           try {
@@ -209,7 +209,7 @@ export function GitHubStarButton() {
         // Fallback to direct fetch
         fetch("https://api.github.com/repos/Sam721166/stick-it-up")
           .then((res) => (res.ok ? res.json() : null))
-          .then((data) => {
+          .then((data: any) => {
             if (!unmounted && data && typeof data.stargazers_count === "number" && data.stargazers_count > 0) {
               setStars(data.stargazers_count);
               try {

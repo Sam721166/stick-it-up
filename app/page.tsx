@@ -180,7 +180,7 @@ function TotalDownloadsCounter() {
 
     fetch("/api/npm-downloads?package=stick-it-up")
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
+      .then((data: any) => {
         if (unmounted) return;
         const target = typeof data?.downloads === "number" ? data.downloads : 453;
         setLoading(false);

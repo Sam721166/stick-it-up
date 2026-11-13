@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
   let siteInput: string | null = null;
 
   try {
-    const body = await req.json().catch(() => null);
+    const body = (await req.json().catch(() => null)) as any;
     if (body && typeof body.site === "string") {
       siteInput = body.site;
     }

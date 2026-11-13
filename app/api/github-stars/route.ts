@@ -35,7 +35,7 @@ export async function GET() {
     });
 
     if (res.ok) {
-      const data = await res.json();
+      const data = (await res.json()) as any;
       if (typeof data.stargazers_count === "number" && data.stargazers_count > 0) {
         cachedStars = data.stargazers_count;
         lastFetchTime = now;
