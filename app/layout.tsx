@@ -252,26 +252,6 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
     >
       <head>
-        {/* Remove Netlify injected HUD badge / "Powered by Netlify" */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var o = new MutationObserver(function() {
-                  var s = document.querySelector('script[data-nf-variant]');
-                  if (s) { s.removeAttribute('data-nf-variant'); s.remove(); }
-                  var f = document.getElementById('nl-badge-frame') || document.getElementById('nl-hud-frame');
-                  if (f) { f.remove(); o.disconnect(); }
-                });
-                o.observe(document.documentElement, { childList: true, subtree: true });
-                window.addEventListener('DOMContentLoaded', function() {
-                  var f = document.getElementById('nl-badge-frame') || document.getElementById('nl-hud-frame');
-                  if (f) f.remove();
-                });
-              })();
-            `,
-          }}
-        />
         {/* Google Analytics 4 (GA4) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-S3DJKR57QZ"
