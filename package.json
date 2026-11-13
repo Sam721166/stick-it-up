@@ -27,7 +27,7 @@
     "react-dom": "19.3.0",
     "react-icons": "^5.7.0",
     "shaders": "^4.0.6",
-    "stick-it-up": "^0.1.0",
+    "stick-it-up": "^0.4.0",
     "wrangler": "^4.160.1"
   },
   "devDependencies": {

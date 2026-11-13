@@ -114,6 +114,17 @@ export function StickerGallery() {
 - `red-cat` (`<RedCatSticker />`)
 - `yellow-cat` (`<YellowCatSticker />`)
 
+### 🚀 Tech Icons & Founders (9 stickers)
+- `elon` / `elon-1` (`<ElonSticker />`)
+- `elon-visionary` / `elon-2` (`<ElonVisionarySticker />`)
+- `steve-jobs` / `steve-jobs-1` (`<SteveJobsSticker />`)
+- `steve-jobs-classic` / `steve-jobs-2` (`<SteveJobsClassicSticker />`)
+- `jensen-huang` (`<JensenHuangSticker />`)
+- `mark-zuckerberg` (`<MarkZuckerbergSticker />`)
+- `mark-socialnetwork` (`<MarkSocialNetworkSticker />`)
+- `erlich-bachman` (`<ErlichBachmanSticker />`)
+- `socialnetwork-badge` (`<SocialNetworkBadgeSticker />`)
+
 ### ⚡ Chrome & Aesthetic Shapes (9 stickers)
 - `flame` (`<FlameSticker />`)
 - `metal` (`<MetalSticker />`)
