@@ -180,7 +180,7 @@ const jsonLd = {
         availability: "https://schema.org/InStock",
       },
       description:
-        "Handcrafted vector, holographic, and retro pixel art sticker components for React and Next.js with 3D vinyl hover peel physics.",
+        "Handcrafted vector stickers, holographic, and retro pixel art sticker components for React and Next.js with 3D vinyl hover peel physics.",
       url: siteUrl,
       downloadUrl: "https://www.npmjs.com/package/stick-it-up",
       sameAs: [
