@@ -170,29 +170,19 @@ export function GitHubStarButton() {
   useEffect(() => {
     let unmounted = false;
 
-    // Read cached star count immediately from localStorage (12 hour TTL)
-    let hasFreshCache = false;
+    // 1. Instantly display cached star count so UI doesn't flicker or show blank
     try {
       const cached = localStorage.getItem("stickitupp_gh_stars");
-      const cachedAt = localStorage.getItem("stickitupp_gh_stars_time");
       if (cached !== null) {
         const val = parseInt(cached, 10);
         if (!isNaN(val) && val > 1) {
           setStars(val);
-          if (cachedAt && Date.now() - parseInt(cachedAt, 10) < 12 * 60 * 60 * 1000) {
-            hasFreshCache = true;
-          }
-        } else {
-          localStorage.removeItem("stickitupp_gh_stars");
-          localStorage.removeItem("stickitupp_gh_stars_time");
         }
       }
     } catch {}
 
-    if (hasFreshCache) return;
-
-    // Fetch from internal cached API route to avoid browser CORS/rate-limits
-    fetch("/api/github-stars")
+    // 2. Always fetch fresh star count from API in background
+    fetch(`/api/github-stars?_t=${Date.now()}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data: any) => {
         if (!unmounted && data && typeof data.stars === "number" && data.stars > 1) {
@@ -206,7 +196,7 @@ export function GitHubStarButton() {
         }
       })
       .catch(() => {
-        // Fallback to direct fetch
+        // Fallback to direct GitHub API fetch
         fetch("https://api.github.com/repos/Sam721166/stick-it-up")
           .then((res) => (res.ok ? res.json() : null))
           .then((data: any) => {
@@ -217,11 +207,11 @@ export function GitHubStarButton() {
                 localStorage.setItem("stickitupp_gh_stars_time", String(Date.now()));
               } catch {}
             } else if (!unmounted) {
-              setStars(81);
+              setStars(92);
             }
           })
           .catch(() => {
-            if (!unmounted) setStars(81);
+            if (!unmounted) setStars((prev) => prev || 92);
           });
       });
 

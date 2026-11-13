@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
-let cachedStars = 81;
+let cachedStars = 92;
 let lastFetchTime = 0;
-const CACHE_TTL_MS = 15 * 60 * 1000;
+const CACHE_TTL_MS = 2 * 60 * 1000;
 
 export async function GET() {
   const now = Date.now();
@@ -12,7 +12,7 @@ export async function GET() {
       { stars: cachedStars },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=1800, stale-while-revalidate=86400",
+          "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600",
         },
       }
     );
@@ -31,7 +31,7 @@ export async function GET() {
 
     const res = await fetch("https://api.github.com/repos/Sam721166/stick-it-up", {
       headers,
-      next: { revalidate: 1800 },
+      next: { revalidate: 120 },
     });
 
     if (res.ok) {
@@ -43,7 +43,7 @@ export async function GET() {
           { stars: cachedStars },
           {
             headers: {
-              "Cache-Control": "public, s-maxage=1800, stale-while-revalidate=86400",
+              "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600",
             },
           }
         );
@@ -54,10 +54,10 @@ export async function GET() {
   }
 
   return NextResponse.json(
-    { stars: Math.max(cachedStars, 81) },
+    { stars: Math.max(cachedStars, 92) },
     {
       headers: {
-        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=1800",
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
       },
     }
   );
