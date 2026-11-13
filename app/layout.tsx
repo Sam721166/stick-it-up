@@ -122,7 +122,7 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+    google: "5jVvqETr6i6dRLzcat_zbKVRFIlvpYRjngLkLVX2n1c",
   },
 };
 
