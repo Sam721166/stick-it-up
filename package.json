@@ -19,7 +19,6 @@
   "dependencies": {
     "@cloudflare/workers-types": "^5.20261110.1",
     "@neondatabase/serverless": "^1.2.0",
-    "@opennextjs/cloudflare": "^1.20.16",
     "@vercel/analytics": "^2.0.1",
     "lucide-react": "^1.66.0",
     "next": "^16.4.6",
