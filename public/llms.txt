@@ -156,3 +156,4 @@ export default function Page() {
 
 Every sticker is also available as a standalone, standalone-optimized SVG file for use in Figma, Penpot, or standard HTML:
 Download directly from https://stickitupx.com/stickers.
+
