@@ -36,7 +36,7 @@ const SPONSORS: Sponsor[] = [
     name: "Clonvo",
     url: "https://clonvo.com/",
     logo: "/sponsors/clonvo-favicon.svg",
-    sublabel: "OpenAI-compatible unified API",
+    sublabel: "The AI gateway for Agents",
     bg: "#12110f",
     border: "#27272a",
   },
