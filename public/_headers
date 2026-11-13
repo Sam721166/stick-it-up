@@ -1,0 +1,28 @@
+# Headers for static files. Cloudflare applies these rules in order and joins
+# repeated headers with a comma, so a narrower rule detaches (!) before it
+# sets a header again. Worker responses (/api/*) set their own headers in
+# worker/index.ts; these rules do not reach them.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Images, as next.config.ts had them. One rule per type: a pattern may hold
+# only one "*".
+/*.svg
+  Cache-Control: public, max-age=31536000, immutable
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+/*.ico
+  Cache-Control: public, max-age=31536000, immutable
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+# Build output. File names carry a content hash, so they never change.
+/_next/static/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
