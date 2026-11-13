@@ -156,7 +156,8 @@ export function GitHubStarButton() {
       });
     }
 
-    // 2. Fetch live real-time stargazers count (direct GitHub API first for zero-latency)
+    // 2. Fetch the live stargazers count from GitHub. If GitHub refuses (it allows
+    // 60 unauthenticated requests per hour per IP), the cached count stays.
     async function fetchLiveStars() {
       try {
         const res = await fetch("https://api.github.com/repos/Sam721166/stick-it-up", {
@@ -166,18 +167,6 @@ export function GitHubStarButton() {
           const data = (await res.json()) as any;
           if (typeof data?.stargazers_count === "number" && data.stargazers_count >= 92) {
             updateStarsWithAnimation(data.stargazers_count);
-            return;
-          }
-        }
-      } catch {}
-
-      // Fallback: Query internal cached route if direct GitHub API was blocked/rate-limited
-      try {
-        const res = await fetch(`/api/github-stars?_t=${Date.now()}`);
-        if (res.ok) {
-          const data = (await res.json()) as any;
-          if (typeof data?.stars === "number" && data.stars >= 92) {
-            updateStarsWithAnimation(data.stars);
           }
         }
       } catch {}
