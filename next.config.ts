@@ -64,7 +64,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/stickers/:path*",
+        source: "/stickers/:path+",
         headers: [
           {
             key: "Cache-Control",
