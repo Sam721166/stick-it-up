@@ -36,3 +36,4 @@ jobs:
         run: |
           npx @netlify/cli build
           npx @netlify/cli deploy --prebuilt --prod
+
