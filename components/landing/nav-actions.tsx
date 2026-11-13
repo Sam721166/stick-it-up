@@ -3,18 +3,22 @@
 import { useEffect, useState } from "react";
 
 // visitor counter connected to Neon PostgreSQL
+const BASELINE_VISITORS = 6576;
+
 export function VisitorCounter({ site = "stick-it-up" }: { site?: string }) {
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<number>(BASELINE_VISITORS);
 
   useEffect(() => {
     let unmounted = false;
 
     // 1. Immediately display previously cached count from localStorage so UI isn't blank
+    let initialCount = BASELINE_VISITORS;
     try {
       const cached = localStorage.getItem(`siu_visitors_${site}`);
       if (cached) {
         const val = parseInt(cached, 10);
-        if (!isNaN(val) && val > 0) {
+        if (!isNaN(val) && val >= BASELINE_VISITORS) {
+          initialCount = val;
           setCount(val);
         }
       }
@@ -46,7 +50,8 @@ export function VisitorCounter({ site = "stick-it-up" }: { site?: string }) {
           } catch {}
         }
 
-        const target = Number(data.unique_visitors ?? data.total_visits ?? 0);
+        const rawTarget = Number(data.unique_visitors ?? data.total_visits ?? 0);
+        const target = Math.max(rawTarget, BASELINE_VISITORS);
 
         if (unmounted || target <= 0) return;
         try {
@@ -56,7 +61,7 @@ export function VisitorCounter({ site = "stick-it-up" }: { site?: string }) {
 
         // Smooth roll-up animation to the latest target count
         setCount((current) => {
-          const startCount = current > 0 ? current : 0;
+          const startCount = current > 0 ? current : initialCount;
           if (startCount === target) return target;
 
           const startTime = performance.now();
