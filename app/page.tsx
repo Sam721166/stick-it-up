@@ -171,6 +171,34 @@ function HeroSticker({ src, delay }: { src: string; delay: number }) {
 
 /* ---------- total npm downloads counter with isolated rAF ---------- */
 
+const NPM_PACKAGE = "stick-it-up";
+const NPM_FIRST_DAY = "2026-11-01";
+
+// Sums downloads since NPM_FIRST_DAY straight from npm's public API (it allows
+// browser requests). npm caps one request at 18 months, so we ask in 365-day
+// windows. Throws on any failed window rather than showing a partial total.
+async function fetchTotalNpmDownloads(): Promise<number> {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const today = Date.now();
+  const isoDay = (ms: number) => new Date(ms).toISOString().slice(0, 10);
+
+  const ranges: string[] = [];
+  for (let start = Date.parse(NPM_FIRST_DAY); start <= today; start += 365 * DAY_MS) {
+    ranges.push(`${isoDay(start)}:${isoDay(Math.min(start + 364 * DAY_MS, today))}`);
+  }
+
+  const counts = await Promise.all(
+    ranges.map(async (range) => {
+      const res = await fetch(`https://api.npmjs.org/downloads/point/${range}/${NPM_PACKAGE}`);
+      if (!res.ok) throw new Error(`npm downloads ${range}: HTTP ${res.status}`);
+      const data = (await res.json()) as { downloads?: unknown };
+      if (typeof data.downloads !== "number") throw new Error(`npm downloads ${range}: no count`);
+      return data.downloads;
+    })
+  );
+  return counts.reduce((sum, n) => sum + n, 0);
+}
+
 function TotalDownloadsCounter() {
   const [count, setCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
@@ -178,11 +206,9 @@ function TotalDownloadsCounter() {
   useEffect(() => {
     let unmounted = false;
 
-    fetch("/api/npm-downloads?package=stick-it-up")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data: any) => {
+    fetchTotalNpmDownloads()
+      .then((target) => {
         if (unmounted) return;
-        const target = typeof data?.downloads === "number" ? data.downloads : 453;
         setLoading(false);
 
         // Smooth roll-up animation starting dynamically from 0
