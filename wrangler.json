@@ -1,27 +1,19 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "stickitup",
-  "main": ".open-next/worker.js",
-  "compatibility_date": "2025-02-14",
-  "compatibility_flags": [
-    "nodejs_compat",
-    "global_fetch_strictly_public"
-  ],
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-01",
   "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS"
+    "directory": "./out",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
   },
   "workers_dev": true,
   "preview_urls": true,
   "routes": [
     { "pattern": "stickitupx.com", "custom_domain": true },
     { "pattern": "www.stickitupx.com", "custom_domain": true }
-  ],
-  "services": [
-    {
-      "binding": "WORKER_SELF_REFERENCE",
-      "service": "stickitup"
-    }
   ],
   "observability": {
     "logs": {

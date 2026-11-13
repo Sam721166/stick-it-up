@@ -1,8 +1,9 @@
 // Cloudflare Worker for stickitupx.com.
 //
 // The pages are static files in ./out, served by Cloudflare without running
-// this code. wrangler.json sends only /api/* here (run_worker_first), plus
-// requests that match no file. This file does one job: the visitor counter.
+// this code. wrangler.json sends /api/* here (run_worker_first); a missing
+// file gets out/404.html. Any other request that does reach this worker is
+// handed back to the static files. This file does one job: the visitor counter.
 //
 //   GET  /api/visitors?site=<name>   -> { site, unique_visitors, total_visits }
 //   POST /api/visitors {"site":...}  -> records a visit, returns the new counts
