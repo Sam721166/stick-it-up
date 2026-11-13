@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stickitupx.com";
 
 export const metadata: Metadata = {
-  title: "Browse Free React Stickers & UI Sticker Library",
+  title: "Browse Stickers",
   description:
     "Explore 65+ interactive React sticker components and SVG decals with 3D vinyl hover peel physics. Handcrafted characters, mascots, chrome badges, and UI stickers. Free for personal & commercial use.",
   keywords: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     "ui stickers download",
   ],
   openGraph: {
-    title: "Browse Free React Stickers & UI Sticker Library | Stick It Up",
+    title: "Browse Stickers | Stick It Up",
     description:
       "Explore 65+ interactive React sticker components and SVG decals with 3D vinyl hover peel physics. Filter by categories, customize size, copy code, or download SVGs.",
     url: `${siteUrl}/stickers`,
@@ -31,14 +31,14 @@ export const metadata: Metadata = {
         url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "Stick It Up (stickitupx.com) — Complete Stickers & Badges Catalog",
+        alt: "Stick It Up — Complete Stickers & Badges Catalog",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Browse Free React Stickers & UI Sticker Library | Stick It Up",
+    title: "Browse Stickers | Stick It Up",
     description:
       "Explore 65+ interactive React sticker components and SVG decals with 3D vinyl hover peel physics.",
     images: [`${siteUrl}/og-image.png`],

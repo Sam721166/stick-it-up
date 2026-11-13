@@ -17,11 +17,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stickitupx.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Stick It Up (stickitupx.com) — Free Interactive React Stickers & UI Sticker Library",
+    default: "Stick It Up — Stickers Library for UI",
     template: "%s | Stick It Up",
   },
   description:
-    "Stick It Up (stickitupx.com) is the open-source UI sticker component library for React and Next.js. 65+ interactive stickers with 3D vinyl hover peel physics, metallic chrome emblems, and pixel art decals. Free for personal & commercial use.",
+    "Stick It Up is an open-source UI sticker library for React and Next.js. 65+ interactive stickers with 3D vinyl hover peel physics, metallic chrome emblems, and pixel art decals. Free for personal & commercial use.",
   applicationName: "Stick It Up",
   keywords: [
     "stick it up",
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Stick It Up (stickitupx.com) — Free Interactive React Stickers & UI Sticker Library",
+    title: "Stick It Up — Stickers Library for UI",
     description:
       "Open-source library of animated, interactive UI stickers for React & Next.js with realistic 3D vinyl hover peel physics. Free for commercial & personal use.",
     url: siteUrl,
@@ -89,14 +89,14 @@ export const metadata: Metadata = {
         url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "Stick It Up (stickitupx.com) — Free Interactive React Stickers & Vinyl Decals for Web",
+        alt: "Stick It Up — Free Interactive React Stickers & Vinyl Decals for Web",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Stick It Up (stickitupx.com) — Free Interactive React Stickers & UI Sticker Library",
+    title: "Stick It Up — Stickers Library for UI",
     description:
       "Open-source library of animated, interactive UI stickers for React & Next.js with realistic 3D vinyl hover peel physics.",
     images: [`${siteUrl}/og-image.png`],
