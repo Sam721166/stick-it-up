@@ -102,67 +102,6 @@ export function VisitorCounter({ site = "stick-it-up" }: { site?: string }) {
   );
 }
 
-// total npm downloads badge
-export function NpmDownloadsBadge({ pkg = "stick-it-up" }: { pkg?: string }) {
-  const [downloads, setDownloads] = useState<number | null>(null);
-
-  useEffect(() => {
-    let unmounted = false;
-
-    // Check localStorage cache (24 hour TTL)
-    try {
-      const cached = localStorage.getItem(`siu_npm_dl_${pkg}`);
-      const cachedAt = localStorage.getItem(`siu_npm_dl_time_${pkg}`);
-      if (cached !== null) {
-        const val = parseInt(cached, 10);
-        if (!isNaN(val)) {
-          setDownloads(val);
-          if (cachedAt && Date.now() - parseInt(cachedAt, 10) < 24 * 60 * 60 * 1000) {
-            return;
-          }
-        }
-      }
-    } catch {}
-
-    fetch(`/api/npm-downloads?package=${encodeURIComponent(pkg)}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data: any) => {
-        if (!unmounted && typeof data?.downloads === "number") {
-          setDownloads(data.downloads);
-          try {
-            localStorage.setItem(`siu_npm_dl_${pkg}`, String(data.downloads));
-            localStorage.setItem(`siu_npm_dl_time_${pkg}`, String(Date.now()));
-          } catch {}
-        }
-      })
-      .catch(() => {
-        if (!unmounted) setDownloads(453);
-      });
-
-    return () => {
-      unmounted = true;
-    };
-  }, [pkg]);
-
-  return (
-    <a
-      href={`https://www.npmjs.com/package/${pkg}`}
-      target="_blank"
-      rel="noreferrer"
-      title="Total npm downloads"
-      className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-zinc-200/90 bg-white/85 px-2 sm:px-2.5 py-1.5 sm:py-2 text-xs font-medium text-zinc-700 shadow-xs backdrop-blur-xs transition-all hover:border-zinc-300 select-none"
-    >
-      <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-red-600">
-        <path d="M0 7.334v9.332h24V7.334H0zm4 8h-2.666V8.667H4v6.667zm5.334 0H6.668V8.667H9.334v6.667zm8 0h-4v-4h-1.334v4H10.668V8.667h6.666v6.667zm5.332 0h-4v-4h-1.332v4H16V8.667h6.666v6.667z" />
-      </svg>
-      <span className="font-mono  text-zinc-800">
-        {downloads !== null ? downloads.toLocaleString() : "..."}
-      </span>
-      <span className="hidden text-[11px] text-zinc-500 sm:inline">total npm downloads</span>
-    </a>
-  );
-}
-
 // github star button with live real-time fetch & roll-up animation
 export function GitHubStarButton() {
   const [stars, setStars] = useState<number | null>(null);
