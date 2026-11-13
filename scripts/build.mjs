@@ -11,8 +11,8 @@ const isCloudflare =
 const isInsideOpenNext = Boolean(process.env.NEXT_PRIVATE_STANDALONE);
 
 if (isCloudflare && !isInsideOpenNext) {
-  console.log("☁️ Cloudflare build environment detected: building with opennextjs-cloudflare...");
-  execSync("npx opennextjs-cloudflare build", { stdio: "inherit", env: process.env });
+  console.log("☁️ Cloudflare build environment detected: building with opennextjs-cloudflare and static assets copy...");
+  execSync("node scripts/build-cf.mjs", { stdio: "inherit", env: process.env });
 } else {
   execSync("npm run build:package && npx next build", { stdio: "inherit", env: process.env });
 }
