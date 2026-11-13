@@ -31,3 +31,17 @@ body {
   color: #78350f; /* amber-900 */
 }
 
+/* Hide Netlify injected HUD badge / "Powered by Netlify" frame */
+#nl-badge-frame,
+#nl-hud-frame,
+iframe[title="Powered by Netlify"],
+iframe[title="Netlify"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+
