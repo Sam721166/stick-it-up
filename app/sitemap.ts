@@ -34,5 +34,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
         `${baseUrl}/stickers/SparkleTrio.svg`,
       ],
     },
+    {
+      url: `${baseUrl}/llms.txt`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
   ];
 }

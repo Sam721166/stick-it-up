@@ -1,0 +1,158 @@
+# Stick It Up (stickitupx.com)
+
+> Free, open-source UI sticker component library for React and Next.js featuring 65+ interactive vector, metallic chrome, and retro pixel art stickers with realistic 3D vinyl hover peel physics.
+
+- Website: https://stickitupx.com
+- Stickers Catalog: https://stickitupx.com/stickers
+- GitHub: https://github.com/Sam721166/stick-it-up
+- npm: https://www.npmjs.com/package/stick-it-up
+- License: MIT (100% free for personal and commercial use)
+
+---
+
+## Installation
+
+Install via npm, pnpm, or bun:
+
+```bash
+npm install stick-it-up@latest
+# or
+pnpm add stick-it-up@latest
+# or
+bun add stick-it-up@latest
+```
+
+Requirements: React 18 or React 19. Fully compatible with Next.js App Router and Pages Router.
+
+---
+
+## Quick Start
+
+### 1. Dynamic `<Sticker />` Component
+
+Import the universal `Sticker` component and specify the sticker by name:
+
+```tsx
+import { Sticker } from "stick-it-up";
+
+export default function Hero() {
+  return (
+    <div className="flex gap-4">
+      {/* Vinyl hover peel physics enabled */}
+      <Sticker name="star" size={80} peel />
+
+      {/* Static vector emblem */}
+      <Sticker name="flame" size={64} />
+
+      {/* Pixel art mascot */}
+      <Sticker name="nori-coffee" size={96} peel />
+    </div>
+  );
+}
+```
+
+### 2. Direct Named Component Imports (Tree-shakeable)
+
+Each sticker is also available as an individually exported, tree-shakeable component:
+
+```tsx
+import { 
+  FlameSticker, 
+  MetalSticker, 
+  NoriCoffeeSticker, 
+  StarBurstSticker 
+} from "stick-it-up";
+
+export default function Badge() {
+  return (
+    <FlameSticker size={72} peel className="hover:scale-110 transition-transform" />
+  );
+}
+```
+
+---
+
+## Component API & Props
+
+The `<Sticker />` component accepts all standard SVG HTML attributes (`SVGProps<SVGSVGElement>`) plus:
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `name` | `StickerName` | *(required)* | Unique name of the sticker (e.g. `"flame"`, `"nori-coffee"`). |
+| `size` | `number \| string` | `100` | Width and height shortcut in pixels (`80`) or CSS units (`"5rem"`, `"100%"`). |
+| `peel` | `boolean` | `false` | Enables physical 3D vinyl hover peel tilt with depth lighting. |
+| `className` | `string` | `undefined` | Additional Tailwind or CSS classes applied to the sticker. |
+| `style` | `CSSProperties` | `undefined` | Custom inline CSS styles. |
+
+---
+
+## Available Stickers (65+)
+
+### Aesthetic Shapes & Chrome Emblems
+- `flame` — Metallic chrome flame emblem
+- `metal` — Y2K metallic liquid chrome badge
+- `star-burst` — 8-point silver holographic star
+- `blob-burst` — Iridescent liquid chrome splash
+- `devil-cone` — Spiked chrome emblem
+- `flame-star` — Chrome star wrapped in fire
+- `folded-paper` — Paper decal with folded corner
+- `cosmic-pill` — Chrome capsule with holographic gradient
+- `badge-smiley` — Acid smiley badge
+- `icy-fleur` — Liquid chrome fleur-de-lis
+- `spiral` — Hypnotic chrome vortex
+
+### Pixel Art & Mascots
+- `nori-coffee` — Nori the mascot sipping coffee
+- `nori-cool` — Nori wearing sunglasses
+- `nori-headphones` — Nori listening to beats
+- `nori-heart` — Nori holding a pixel heart
+- `nori-laptop` — Nori hacking on a laptop
+- `nori-rocket` — Nori flying a retro spaceship
+- `cat` / `black-cat` / `pink-cat` / `yellow-cat` / `red-cat` — Retro pixel cat variants
+- `cat-serious` — Serious pixel kitty
+- `dog` — Retro pixel puppy
+- `bunny` — Floating pixel bunny
+
+### Nature & Fruit
+- `red-berry` / `blueberry` / `berries` — Glossy fruit stickers
+- `cherry` — Double glossy cherries
+- `flower` — Retro graphic flower decal
+
+### Badges, Gestures & Emblems
+- `peace-hand` — Retro graphic peace sign
+- `cosmic-eye` — Third eye mystic badge
+- `curious-globe` — Friendly illustrated planet
+- `japan-badge` / `japan-flag` — Tokyo graphic emblems
+- `luffy-hat` — Straw hat emblem
+- `sparkles` / `sparkle-trio` — Holographic sparkle stars
+- `nazar` — Evil eye talisman badge
+- `app-badge` — Modern rounded squircle app tile
+
+---
+
+## Next.js App Router Integration
+
+Stick It Up components run client-side interactivity (`"use client"`). In Next.js Server Components, render them directly inside your pages:
+
+```tsx
+// app/page.tsx
+import { Sticker } from "stick-it-up";
+
+export default function Page() {
+  return (
+    <main className="p-8">
+      <h1 className="text-3xl font-bold flex items-center gap-2">
+        Welcome to my site
+        <Sticker name="sparkles" size={32} peel />
+      </h1>
+    </main>
+  );
+}
+```
+
+---
+
+## Plain SVG Downloads
+
+Every sticker is also available as a standalone, standalone-optimized SVG file for use in Figma, Penpot, or standard HTML:
+Download directly from https://stickitupx.com/stickers.
