@@ -2,6 +2,7 @@
 
 import React from "react";
 import type { StickerProps, StickerName } from "../types";
+import { CrownSticker } from "../stickers/CrownSticker";
 import { FlameSticker } from "../stickers/FlameSticker";
 import { MetalSticker } from "../stickers/MetalSticker";
 import { BlobBurstSticker } from "../stickers/BlobBurstSticker";
@@ -87,6 +88,7 @@ import { ErlichBachmanSticker } from "../stickers/ErlichBachmanSticker";
 import { SocialNetworkBadgeSticker } from "../stickers/SocialNetworkBadgeSticker";
 
 export const STICKER_MAP: Record<StickerName, React.FC<StickerProps>> = {
+  crown: CrownSticker,
   flame: FlameSticker,
   metal: MetalSticker,
   "blob-burst": BlobBurstSticker,

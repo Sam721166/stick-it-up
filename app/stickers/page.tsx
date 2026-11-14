@@ -37,6 +37,18 @@ interface CatalogItem {
 const CATALOG: CatalogItem[] = [
   /* Built-in React Components (stick-it-up) */
   {
+    id: "svg-crown",
+    name: "crown",
+    title: "Golden Crown",
+    category: "symbols",
+    format: "component",
+    componentName: "crown",
+    svgSrc: "/stickers/crown.svg",
+    description: "Golden five-point crown with rounded finials and a white vinyl border.",
+    tags: ["crown", "gold", "royal", "king", "queen", "symbol"],
+    defaultRotation: -6,
+  },
+  {
     id: "svg-face",
     name: "face",
     title: "Smiley Face",
