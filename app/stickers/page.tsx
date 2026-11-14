@@ -14,7 +14,7 @@ import { VisitorCounter, GitHubStarButton } from "../../components/landing/nav-a
 ------------------------------------------------------------------- */
 
 type StickerFormat = "component" | "svg";
-type StickerCategory = "all" | "founders" | "mascots" | "characters" | "components" | "symbols";
+type StickerCategory = "all" | "new" | "founders" | "mascots" | "characters" | "symbols";
 
 interface CatalogItem {
   id: string;
@@ -29,6 +29,7 @@ interface CatalogItem {
   svgSrc?: string;
   defaultRotation?: number;
   previewSize?: number;
+  isNew?: boolean;
 }
 
 const CATALOG: CatalogItem[] = [
@@ -811,6 +812,7 @@ const CATALOG: CatalogItem[] = [
     tags: ["elon", "musk", "tesla", "spacex", "founder", "tech", "character", "cyberpunk"],
     defaultRotation: -4,
     previewSize: 116,
+    isNew: true,
   },
   {
     id: "comp-elon-2",
@@ -825,6 +827,7 @@ const CATALOG: CatalogItem[] = [
     tags: ["elon", "musk", "tech", "founder", "character", "visionary"],
     defaultRotation: 4,
     previewSize: 92,
+    isNew: true,
   },
   {
     id: "comp-steve-jobs-1",
@@ -839,6 +842,7 @@ const CATALOG: CatalogItem[] = [
     tags: ["steve", "jobs", "apple", "founder", "think-different", "character"],
     defaultRotation: -6,
     previewSize: 108,
+    isNew: true,
   },
   {
     id: "comp-steve-jobs-2",
@@ -853,6 +857,7 @@ const CATALOG: CatalogItem[] = [
     tags: ["steve", "jobs", "apple", "founder", "character"],
     defaultRotation: 5,
     previewSize: 98,
+    isNew: true,
   },
   {
     id: "comp-jensen-huang",
@@ -867,6 +872,7 @@ const CATALOG: CatalogItem[] = [
     tags: ["jensen", "huang", "nvidia", "ai", "leather-jacket", "founder", "character"],
     defaultRotation: -5,
     previewSize: 96,
+    isNew: true,
   },
   {
     id: "comp-mark-zuckerberg",
@@ -881,6 +887,7 @@ const CATALOG: CatalogItem[] = [
     tags: ["mark", "zuckerberg", "meta", "facebook", "founder", "character"],
     defaultRotation: -3,
     previewSize: 122,
+    isNew: true,
   },
   {
     id: "comp-mark-socialnetwork",
@@ -895,6 +902,7 @@ const CATALOG: CatalogItem[] = [
     tags: ["social", "network", "mark", "zuckerberg", "character"],
     defaultRotation: 4,
     previewSize: 116,
+    isNew: true,
   },
   {
     id: "comp-erlich-bachman",
@@ -909,6 +917,7 @@ const CATALOG: CatalogItem[] = [
     tags: ["erlich", "bachman", "silicon-valley", "aviato", "comedy", "character"],
     defaultRotation: 6,
     previewSize: 98,
+    isNew: true,
   },
   {
     id: "comp-socialnetwork-badge",
@@ -923,6 +932,7 @@ const CATALOG: CatalogItem[] = [
     tags: ["social", "network", "badge", "symbol", "connect"],
     defaultRotation: -2,
     previewSize: 118,
+    isNew: true,
   },
 ];
 
@@ -1167,7 +1177,13 @@ export default function StickersCatalogPage() {
     const q = deferredSearch.toLowerCase().trim();
     return CATALOG.filter((item) => {
       const matchesCategory =
-        selectedCategory === "all" || item.category === selectedCategory;
+        selectedCategory === "all"
+          ? true
+          : selectedCategory === "new"
+          ? Boolean(item.isNew)
+          : selectedCategory === "symbols"
+          ? item.category === "symbols" || item.category === "components"
+          : item.category === selectedCategory;
 
       if (!matchesCategory) return false;
       if (!q) return true;
@@ -1242,11 +1258,11 @@ export default function StickersCatalogPage() {
   const categoryCounts = useMemo(() => {
     return {
       all: CATALOG.length,
+      new: CATALOG.filter((c) => c.isNew).length,
       founders: CATALOG.filter((c) => c.category === "founders").length,
       mascots: CATALOG.filter((c) => c.category === "mascots").length,
       characters: CATALOG.filter((c) => c.category === "characters").length,
-      components: CATALOG.filter((c) => c.category === "components").length,
-      symbols: CATALOG.filter((c) => c.category === "symbols").length,
+      symbols: CATALOG.filter((c) => c.category === "symbols" || c.category === "components").length,
     };
   }, []);
 
@@ -1446,24 +1462,28 @@ export default function StickersCatalogPage() {
             {(
               [
                 { id: "all", label: "All Stickers", count: categoryCounts.all },
+                { id: "new", label: "New", count: categoryCounts.new, hasDot: true },
                 { id: "founders", label: "Tech Founders", count: categoryCounts.founders },
                 { id: "mascots", label: "Mascots", count: categoryCounts.mascots },
                 { id: "characters", label: "Characters", count: categoryCounts.characters },
-                { id: "components", label: "Chrome & Badges", count: categoryCounts.components },
-                { id: "symbols", label: "Symbols & Badges", count: categoryCounts.symbols },
+                { id: "symbols", label: "Symbols", count: categoryCounts.symbols },
               ] as const
             ).map((tab) => {
               const active = selectedCategory === tab.id;
+              const hasDot = "hasDot" in tab && tab.hasDot;
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setSelectedCategory(tab.id)}
-                  className={`cursor-pointer rounded-xl px-3.5 py-2 text-xs font-medium transition-all duration-150 ${
+                  onClick={() => setSelectedCategory(tab.id as StickerCategory)}
+                  className={`inline-flex items-center cursor-pointer rounded-xl px-3.5 py-2 text-xs font-medium transition-all duration-150 ${
                     active
                       ? "bg-zinc-900 text-white shadow-sm"
                       : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
                   }`}
                 >
+                  {hasDot && (
+                    <span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-emerald-500" />
+                  )}
                   <span>{tab.label}</span>
                   <span
                     className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] ${
