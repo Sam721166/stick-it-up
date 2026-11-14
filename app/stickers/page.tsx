@@ -6,6 +6,8 @@ import { LuCopyCheck, LuCopy } from "react-icons/lu";
 import { Sticker, type StickerName } from "stick-it-up";
 import Footer from "../../components/landing/footer";
 import { VisitorCounter, GitHubStarButton } from "../../components/landing/nav-actions";
+import { NavbarSponsorDock } from "../../components/landing/navbar-sponsor";
+import { SponsorSuccessModal } from "../../components/landing/sponsor-success-modal";
 
 
 
@@ -1360,7 +1362,8 @@ export default function StickersCatalogPage() {
           </ul>
 
           {/* visitor counter & github star */}
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <NavbarSponsorDock />
             <VisitorCounter />
             <GitHubStarButton />
           </div>
@@ -2239,6 +2242,7 @@ export default function Hero() {
           FOOTER (shared from landing page)
       ------------------------------------------------------------------- */}
       <Footer />
+      <SponsorSuccessModal />
     </div>
   );
 }

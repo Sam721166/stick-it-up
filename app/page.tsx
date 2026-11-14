@@ -8,6 +8,8 @@ import Sponsor from "../components/landing/sponsor"
 import GetStarted from "../components/landing/get-started"
 import Footer from "../components/landing/footer"
 import { VisitorCounter, GitHubStarButton } from "../components/landing/nav-actions"
+import { NavbarSponsorDock } from "../components/landing/navbar-sponsor"
+import { SponsorSuccessModal } from "../components/landing/sponsor-success-modal"
 
 /* ---------- data ---------- */
 
@@ -461,7 +463,8 @@ export default function Home() {
           </ul>
 
           {/* visitor counter & github star */}
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <NavbarSponsorDock />
             <VisitorCounter />
             <GitHubStarButton />
           </div>
@@ -707,6 +710,8 @@ export default function Home() {
       <GetStarted />
 
       <Footer />
+
+      <SponsorSuccessModal />
 
     </main>
   );

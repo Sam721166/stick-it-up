@@ -121,16 +121,17 @@ const COLUMNS: FooterColumn[] = [
       { label: "Contribution Guide", href: "https://github.com/Sam721166/stick-it-up/blob/main/CONTRIBUTING.md", sticker: "/stickers/dogsticker.svg", rot: 8 },
       { label: "Request a Sticker", href: "https://github.com/Sam721166/stick-it-up/issues/new?labels=sticker-request&title=[Sticker+Request]:+", sticker: "/stickers/Curious%20blue%20globe.svg", rot: 6 },
       { label: "Sticker Files", href: "https://github.com/Sam721166/stick-it-up/tree/main/public/stickers", sticker: "/stickers/Spiral.svg", rot: -8 },
+      { label: "Issues & Feedback", href: "https://github.com/Sam721166/stick-it-up/issues", sticker: "/stickers/face.svg", rot: -6 },
     ],
   },
   {
-    title: "Community",
+    title: "Connect",
     links: [
       { label: "GitHub", href: "https://github.com/Sam721166/stick-it-up", sticker: "/stickers/cat.svg", rot: 8 },
       { label: "Sponsor (GitHub)", href: "https://github.com/sponsors/Sam721166", sticker: "/stickers/nori-heart.svg", rot: -8 },
       { label: "Buy Me a Coffee", href: "https://buymeacoffee.com/samirande_", sticker: "/stickers/pip-coffee.svg", rot: 10 },
       { label: "X / Twitter", href: "https://x.com/samirande_", sticker: "/stickers/Cosmiceye.svg", rot: 10 },
-      { label: "Issues & Feedback", href: "https://github.com/Sam721166/stick-it-up/issues", sticker: "/stickers/face.svg", rot: -6 },
+      { label: "Email", href: "mailto:sam.de.721166@gmail.com", sticker: "/stickers/heart.svg", rot: -8 },
     ],
   },
   {
@@ -289,13 +290,31 @@ export default function Footer() {
 
         {/* top: tagline + links */}
         <div className="relative z-10 mx-auto grid max-w-5xl gap-12 lg:grid-cols-[1fr_1.85fr] lg:gap-14">
-          <MotionBlur inView={inView} delay={0} className="text-center lg:text-left">
-            <p className="font-sans text-3xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-4xl">
-              Stick it on.
-              <br />
-              Ship it fun
-              <InlineSticker src="/stickers/Peace-hand.svg" />
-            </p>
+          <MotionBlur inView={inView} delay={0} className="text-center lg:text-left flex flex-col justify-between mb-8">
+            <div>
+              <p className="font-sans text-3xl font-normal leading-[1.1] tracking-tight text-zinc-900 sm:text-4xl">
+                Stick it on.
+                <br />
+                Ship it fun
+                <InlineSticker src="/stickers/Peace-hand.svg" />
+              </p>
+            </div>
+
+            {/* Super minimal copyright & made by */}
+            <div className="mt-5 text-[11px] leading-relaxed text-zinc-500">
+              <p>&copy; {new Date().getFullYear()} Stick It Up. All rights reserved.</p>
+              <p className="mt-0.5">
+                Made with care by{" "}
+                <a
+                  href="https://samworks.vercel.app/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-semibold text-zinc-500 transition-colors hover:text-zinc-600 "
+                >
+                  Samiran De
+                </a>
+              </p>
+            </div>
           </MotionBlur>
 
           <div className="grid grid-cols-2 gap-x-6 gap-y-10 text-center sm:grid-cols-4 sm:text-left">
@@ -331,11 +350,12 @@ export default function Footer() {
                             </div>
                           </span>
                         </button>
-                      ) : link.href?.startsWith("http") ? (
+                      ) : link.href?.startsWith("http") || link.href?.startsWith("mailto:") ? (
                         <a
                           href={link.href}
-                          target="_blank"
-                          rel="noreferrer"
+                          target={link.href.startsWith("http") ? "_blank" : undefined}
+                          rel={link.href.startsWith("http") ? "noreferrer" : undefined}
+                          title={link.href.startsWith("mailto:") ? link.href.replace("mailto:", "") : undefined}
                           className="group relative inline-flex items-center py-0.5 text-sm font-medium text-zinc-500 transition-colors duration-200 hover:text-zinc-900"
                         >
                           <span>{link.label}</span>

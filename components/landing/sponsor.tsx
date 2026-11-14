@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import Link from "next/link";
 import { Sticker } from "stick-it-up";
+import { SponsorModal } from "./sponsor-modal";
 
 /* ------------------------------------------------------------------
    tokens & constants
@@ -10,11 +10,7 @@ import { Sticker } from "stick-it-up";
 const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 const EASE_OUT = "cubic-bezier(0.2, 0.8, 0.2, 1)";
 
-const GITHUB_URL = "https://github.com/sponsors/Sam721166";
-const COFFEE_URL = "https://buymeacoffee.com/samirande_";
-const TWITTER_URL = "https://x.com/samirande_";
-
-interface Sponsor {
+interface SponsorItem {
   name: string;
   url: string;
   logo: string;
@@ -23,12 +19,12 @@ interface Sponsor {
   border?: string;
 }
 
-const SPONSORS: Sponsor[] = [
+const SPONSORS: SponsorItem[] = [
   {
     name: "PureCanvas",
     url: "https://www.purecanvas.app/",
     logo: "https://www.purecanvas.app/favicon.svg",
-    sublabel: "Local-first vector design",
+    sublabel: "Local-first vector design app",
     bg: "#ffffff",
     border: "#e4e4e7",
   },
@@ -117,7 +113,7 @@ function MotionBlur({
       className={className}
       style={{
         opacity: inView ? 1 : 0,
-        transform: inView ? "translate3d(0, 0, 0)" : "translate3d(0, 24px, 0)",
+        transform: inView ? "translate3d(0, 0, 0)" : "translate3d(0, 20px, 0)",
         filter: settled ? "none" : inView ? "blur(0px)" : `blur(${blur}px)`,
         transition: settled
           ? "none"
@@ -131,92 +127,15 @@ function MotionBlur({
 }
 
 /* ------------------------------------------------------------------
-   draggable sticker on the section sides
+   Tooltips
 ------------------------------------------------------------------- */
-function DraggableSticker({
-  src,
-  size,
-  left,
-  right,
-  top,
-  bottom,
-  rot = 0,
-  inView,
-  delay = 0,
+function Tip({
+  label,
+  sublabel,
 }: {
-  src: string;
-  size: number;
-  left?: string;
-  right?: string;
-  top?: string;
-  bottom?: string;
-  rot?: number;
-  inView: boolean;
-  delay?: number;
+  label: string;
+  sublabel?: string;
 }) {
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  const [hover, setHover] = useState(false);
-  const [drag, setDrag] = useState(false);
-  const start = useRef({ px: 0, py: 0, x: 0, y: 0 });
-
-  return (
-    <div
-      className="pointer-events-auto absolute hidden xl:block select-none"
-      style={{
-        left,
-        right,
-        top,
-        bottom,
-        width: size,
-        zIndex: drag ? 40 : 20,
-        opacity: inView ? 1 : 0,
-        transform: inView ? "scale(1)" : "scale(0)",
-        transition: `transform 650ms ${SPRING} ${delay}ms, opacity 400ms ease-out ${delay}ms`,
-      }}
-    >
-      <div
-        data-sticker
-        onPointerDown={(e) => {
-          e.currentTarget.setPointerCapture(e.pointerId);
-          start.current = { px: e.clientX, py: e.clientY, x: pos.x, y: pos.y };
-          setDrag(true);
-        }}
-        onPointerMove={(e) => {
-          if (!drag) return;
-          setPos({
-            x: start.current.x + e.clientX - start.current.px,
-            y: start.current.y + e.clientY - start.current.py,
-          });
-        }}
-        onPointerUp={() => setDrag(false)}
-        onPointerCancel={() => setDrag(false)}
-        onPointerEnter={() => setHover(true)}
-        onPointerLeave={() => setHover(false)}
-        className="touch-none select-none cursor-grab active:cursor-grabbing"
-        style={{
-          translate: `${pos.x}px ${pos.y}px`,
-          rotate: `${rot + (drag ? -5 : hover ? 10 : 0)}deg`,
-          scale: drag ? 1.16 : hover ? 1.08 : 1,
-          filter: drag
-            ? "drop-shadow(0 16px 14px rgba(0,0,0,0.22))"
-            : hover
-            ? "drop-shadow(0 10px 10px rgba(0,0,0,0.12))"
-            : "drop-shadow(0 4px 6px rgba(0,0,0,0.06))",
-          transition: drag
-            ? "scale 150ms ease-out"
-            : `scale 400ms ${SPRING}, rotate 400ms ${SPRING}, filter 250ms ease`,
-        }}
-      >
-        <Sticker name={src} size="100%" className="block h-auto w-full select-none" />
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------
-   tooltip pill that pops above a tile on hover / keyboard focus
-------------------------------------------------------------------- */
-function Tip({ label, sublabel }: { label: string; sublabel?: string }) {
   return (
     <span
       role="tooltip"
@@ -241,60 +160,7 @@ function Tip({ label, sublabel }: { label: string; sublabel?: string }) {
   );
 }
 
-/* ------------------------------------------------------------------
-   first box: website logo with matching light lime background
-------------------------------------------------------------------- */
-function FaviconTile({
-  inView,
-  index,
-}: {
-  inView: boolean;
-  index: number;
-}) {
-  const [hover, setHover] = useState(false);
 
-  return (
-    <li
-      className="relative list-none"
-      style={{
-        opacity: 0,
-        animation: inView ? `sponsorPop 600ms ${SPRING} ${420 + index * 60}ms both` : "none",
-      }}
-    >
-      <Link
-        href="/"
-        aria-label="Stick it up website"
-        onPointerEnter={() => setHover(true)}
-        onPointerLeave={() => setHover(false)}
-        className="group relative block h-[76px] w-[76px] cursor-pointer outline-none sm:h-24 sm:w-24 "
-      >
-        {/* Inner visual box: ONLY this translates on group-hover to prevent edge flickering */}
-        <div
-          className="relative flex h-full w-full items-center justify-center rounded-[24px] group-hover:-translate-y-1.5 active:scale-95"
-          style={{
-            background: "#ecfccb", // light lime matching logo (#B5EE0A / #CEFF65)
-            
-            boxShadow: "inset 0 1px 0 #fff, 0 2px 8px rgba(181,238,10,0.22), 0 1px 2px rgba(0,0,0,0.04)",
-            transition: `transform 350ms ${SPRING}, box-shadow 250ms ease, border-color 150ms`,
-          }}
-        >
-          <img
-            src="/stickers/logo.svg"
-            alt="Stick it up logo"
-            draggable={false}
-            className="h-full w-full select-none rounded-[24px] transition-[rotate,scale] duration-300 group-hover:scale-105 border border-[#d9f99d]"
-            style={{
-              rotate: hover ? "-8deg" : "0deg",
-              transitionTimingFunction: SPRING,
-            }}
-          />
-        </div>
-
-        <Tip label="Stick it up" sublabel="Official website" />
-      </Link>
-    </li>
-  );
-}
 
 /* ------------------------------------------------------------------
    sponsor box: active sponsor showcase
@@ -304,7 +170,7 @@ function SponsorTile({
   index,
   inView,
 }: {
-  sponsor: Sponsor;
+  sponsor: SponsorItem;
   index: number;
   inView: boolean;
 }) {
@@ -312,7 +178,7 @@ function SponsorTile({
 
   return (
     <li
-      className="relative list-none"
+      className="relative list-none flex flex-col items-center"
       style={{
         opacity: 0,
         animation: inView ? `sponsorPop 600ms ${SPRING} ${420 + index * 60}ms both` : "none",
@@ -325,30 +191,32 @@ function SponsorTile({
         aria-label={`${sponsor.name} — Sponsor`}
         onPointerEnter={() => setHover(true)}
         onPointerLeave={() => setHover(false)}
-        className="group relative block h-[76px] w-[76px] cursor-pointer outline-none sm:h-24 sm:w-24 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 rounded-[24px]"
+        className="group relative flex flex-col items-center cursor-pointer outline-none"
       >
-        {/* Inner visual box: ONLY this translates on group-hover to prevent edge flickering */}
         <div
-          className="relative flex h-full w-full items-center justify-center rounded-[24px] group-hover:-translate-y-1.5 active:scale-95"
+          className="relative flex h-[76px] w-[76px] sm:h-24 sm:w-24 items-center justify-center rounded-[24px] active:scale-95"
           style={{
             background: sponsor.bg ?? "#ffffff",
-            
             boxShadow:
               "inset 0 1px 0 #fff, 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.04)",
-            transition: `transform 350ms ${SPRING}, box-shadow 250ms ease, border-color 150ms`,
+            transition: `transform 350ms ${SPRING}, box-shadow 250ms ease`,
           }}
         >
           <img
             src={sponsor.logo}
             alt={sponsor.name}
             draggable={false}
-            className="h-full w-full object-contain select-none transition-[rotate,scale] duration-300 group-hover:scale-110"
+            className="h-full w-full select-none rounded-[24px] transition-[rotate,scale] duration-300 group-hover:scale-105"
             style={{
-              rotate: hover ? "-6deg" : "0deg",
+              rotate: hover ? "-8deg" : "0deg",
               transitionTimingFunction: SPRING,
             }}
           />
         </div>
+
+        <span className="mt-2 text-center text-xs sm:text-[13px] font-medium text-zinc-600 group-hover:text-zinc-900 transition-colors truncate max-w-[76px] sm:max-w-[96px]">
+          {sponsor.name}
+        </span>
 
         <Tip label={sponsor.name} sublabel={sponsor.sublabel ?? "Sponsor"} />
       </a>
@@ -357,380 +225,199 @@ function SponsorTile({
 }
 
 /* ------------------------------------------------------------------
-   empty grey boxes with plus: available sponsor slots
+   empty grey box with plus: available sponsor slot (opens modal)
 ------------------------------------------------------------------- */
 function EmptySlotTile({
   index,
   inView,
-  href = GITHUB_URL,
+  onOpenModal,
 }: {
   index: number;
   inView: boolean;
-  href?: string;
+  onOpenModal?: () => void;
 }) {
+  const [hover, setHover] = useState(false);
+
   return (
     <li
-      className="relative list-none"
+      className="relative list-none flex flex-col items-center"
       style={{
         opacity: 0,
         animation: inView ? `sponsorPop 600ms ${SPRING} ${420 + index * 60}ms both` : "none",
       }}
     >
-      <a
-        href={href}
-        target="_blank"
-        rel="noreferrer"
+      <button
+        type="button"
+        onClick={onOpenModal}
         aria-label="Empty sponsor slot — Click to sponsor"
-        className="group relative block h-[76px] w-[76px] cursor-pointer outline-none sm:h-24 sm:w-24 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 rounded-[24px]"
+        onPointerEnter={() => setHover(true)}
+        onPointerLeave={() => setHover(false)}
+        className="group relative flex flex-col items-center cursor-pointer outline-none"
       >
-        {/* Inner visual box: ONLY this translates on group-hover to prevent edge flickering */}
         <div
-          className="relative flex h-full w-full items-center justify-center rounded-[24px] group-hover:-translate-y-1.5 active:scale-95"
+          className="relative flex h-[76px] w-[76px] sm:h-24 sm:w-24 items-center justify-center rounded-[24px] border-2 border-dashed border-zinc-300 bg-zinc-50/70 group-hover:border-zinc-500 group-hover:bg-zinc-100/80 active:scale-95"
           style={{
-            background: "#f4f4f5", // empty grey div box
-            border: "1px solid #e4e4e7",
-            boxShadow: "inset 0 1px 0 #fff, 0 1px 2px rgba(0,0,0,0.04)",
-            transition: `transform 350ms ${SPRING}, box-shadow 250ms ease, border-color 150ms`,
+            boxShadow: "inset 0 1px 0 #fff, 0 1px 2px rgba(0,0,0,0.03)",
+            transition: `box-shadow 250ms ease, border-color 200ms ease, background-color 200ms ease`,
           }}
         >
           <svg
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2.2"
+            strokeWidth="2.5"
             strokeLinecap="round"
-            className="h-7 w-7 sm:h-8 sm:w-8 text-zinc-400 transition-[transform,color] duration-300 group-hover:rotate-90 group-hover:text-zinc-800"
-            style={{ transitionTimingFunction: SPRING }}
+            className="h-7 w-7 sm:h-8 sm:w-8 text-zinc-400 group-hover:text-zinc-900 origin-center transition-colors"
+            style={{
+              transform: hover ? "rotate(90deg)" : "rotate(0deg)",
+              transformOrigin: "center",
+              transition: `transform 350ms ${SPRING}, color 200ms ease`,
+            }}
           >
             <path d="M12 5v14M5 12h14" />
           </svg>
         </div>
 
-        <Tip label="Your company/name logo here" />
-      </a>
+        <span className="mt-2 text-center text-xs sm:text-[13px] font-medium text-zinc-400 group-hover:text-zinc-800 transition-colors truncate max-w-[76px] sm:max-w-[96px]">
+          Add yours
+        </span>
+
+        <Tip label="Your brand here" sublabel="$49.99" />
+      </button>
     </li>
   );
 }
 
 /* ------------------------------------------------------------------
-   under box 1: github (light grey background + github icon)
-------------------------------------------------------------------- */
-function GitHubTile({
-  index,
-  inView,
-}: {
-  index: number;
-  inView: boolean;
-}) {
-  const [hover, setHover] = useState(false);
-
-  return (
-    <li
-      className="relative list-none"
-      style={{
-        opacity: 0,
-        animation: inView ? `sponsorPop 600ms ${SPRING} ${420 + index * 60}ms both` : "none",
-      }}
-    >
-      <a
-        href={GITHUB_URL}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Sponsor on GitHub"
-        onPointerEnter={() => setHover(true)}
-        onPointerLeave={() => setHover(false)}
-        className="group relative block h-[76px] w-[76px] cursor-pointer outline-none sm:h-24 sm:w-24 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 rounded-[24px]"
-      >
-        {/* Inner visual box: ONLY this translates on group-hover to prevent edge flickering */}
-        <div
-          className="relative flex h-full w-full items-center justify-center rounded-[24px] group-hover:-translate-y-1.5 active:scale-95"
-          style={{
-            background: "#f4f4f5", // light grey background from GitHub
-            border: "1px solid #e4e4e7",
-            boxShadow: "inset 0 1px 0 #fff, 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.04)",
-            transition: `transform 350ms ${SPRING}, box-shadow 250ms ease, border-color 150ms`,
-          }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="h-8 w-8 sm:h-9 sm:w-9 text-zinc-900 transition-[transform,color] duration-300 group-hover:scale-110 group-hover:text-black"
-            style={{
-              rotate: hover ? "-6deg" : "0deg",
-              transitionTimingFunction: SPRING,
-            }}
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-            />
-          </svg>
-
-          {/* Mini Plus Badge */}
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xs transition-transform duration-300 group-hover:scale-125">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="h-3 w-3">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-          </span>
-        </div>
-
-        <Tip label="Sponsor on GitHub" />
-      </a>
-    </li>
-  );
-}
-
-/* ------------------------------------------------------------------
-   under box 2: buy me a coffee (light yellow background + coffee mug)
-------------------------------------------------------------------- */
-function CoffeeTile({
-  index,
-  inView,
-}: {
-  index: number;
-  inView: boolean;
-}) {
-  const [hover, setHover] = useState(false);
-
-  return (
-    <li
-      className="relative list-none"
-      style={{
-        opacity: 0,
-        animation: inView ? `sponsorPop 600ms ${SPRING} ${420 + index * 60}ms both` : "none",
-      }}
-    >
-      <a
-        href={COFFEE_URL}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Buy me a coffee"
-        onPointerEnter={() => setHover(true)}
-        onPointerLeave={() => setHover(false)}
-        className="group relative block h-[76px] w-[76px] cursor-pointer outline-none sm:h-24 sm:w-24 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 rounded-[24px]"
-      >
-        {/* Inner visual box: ONLY this translates on group-hover to prevent edge flickering */}
-        <div
-          className="relative flex h-full w-full items-center justify-center rounded-[24px] group-hover:-translate-y-1.5 active:scale-95"
-          style={{
-            background: "#fef9c3", // light yellow background from Buy Me a Coffee
-            border: "1px solid #fde047",
-            boxShadow: "inset 0 1px 0 #fff, 0 1px 3px rgba(202,138,4,0.12), 0 4px 12px -2px rgba(202,138,4,0.06)",
-            transition: `transform 350ms ${SPRING}, box-shadow 250ms ease, border-color 150ms`,
-          }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-8 w-8 sm:h-9 sm:w-9 text-amber-950 transition-[transform,color] duration-300 group-hover:scale-110 group-hover:text-amber-800"
-            style={{
-              rotate: hover ? "8deg" : "0deg",
-              transitionTimingFunction: SPRING,
-            }}
-          >
-            <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
-            <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
-            <line x1="6" y1="2" x2="6" y2="4" />
-            <line x1="10" y1="2" x2="10" y2="4" />
-            <line x1="14" y1="2" x2="14" y2="4" />
-          </svg>
-
-          {/* Mini Plus Badge */}
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-white shadow-xs transition-transform duration-300 group-hover:scale-125">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="h-3 w-3">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-          </span>
-        </div>
-
-        <Tip label="Buy me a coffee" />
-      </a>
-    </li>
-  );
-}
-
-/* ------------------------------------------------------------------
-   under box 3: twitter / X (light sky/blue background + X logo + DM badge)
-------------------------------------------------------------------- */
-function TwitterTile({
-  index,
-  inView,
-}: {
-  index: number;
-  inView: boolean;
-}) {
-  const [hover, setHover] = useState(false);
-
-  return (
-    <li
-      className="relative list-none"
-      style={{
-        opacity: 0,
-        animation: inView ? `sponsorPop 600ms ${SPRING} ${420 + index * 60}ms both` : "none",
-      }}
-    >
-      <a
-        href={TWITTER_URL}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Talk in DM on X"
-        onPointerEnter={() => setHover(true)}
-        onPointerLeave={() => setHover(false)}
-        className="group relative block h-[76px] w-[76px] cursor-pointer outline-none sm:h-24 sm:w-24 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 rounded-[24px]"
-      >
-        {/* Inner visual box: ONLY this translates on group-hover to prevent edge flickering */}
-        <div
-          className="relative flex h-full w-full items-center justify-center rounded-[24px] group-hover:-translate-y-1.5 active:scale-95"
-          style={{
-            background: "#e4e4e7", // light blackish / graphite to match the other 2
-            border: "1px solid #d4d4d8",
-            boxShadow: "inset 0 1px 0 #fff, 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px -2px rgba(0,0,0,0.05)",
-            transition: `transform 350ms ${SPRING}, box-shadow 250ms ease, border-color 150ms`,
-          }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="h-7 w-7 sm:h-8 sm:w-8 text-black transition-[transform,opacity] duration-300 group-hover:scale-110"
-            style={{
-              rotate: hover ? "-6deg" : "0deg",
-              transitionTimingFunction: SPRING,
-            }}
-          >
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-          </svg>
-
-          {/* Mini DM Badge */}
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-black text-white shadow-xs transition-transform duration-300 group-hover:scale-125">
-            <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5">
-              <path d="M4.5 3.75A2.25 2.25 0 002.25 6v9a2.25 2.25 0 002.25 2.25h1.5v3.25a.75.75 0 001.28.53l3.78-3.78h7.44A2.25 2.25 0 0020.75 15V6a2.25 2.25 0 00-2.25-2.25H4.5z" />
-            </svg>
-          </span>
-        </div>
-
-        <Tip label="Talk in DM" sublabel="@samirande_ on X" />
-      </a>
-    </li>
-  );
-}
-
-/* ------------------------------------------------------------------
-   section
+   Landing Page Sponsor Section (Centered Middle Layout)
 ------------------------------------------------------------------- */
 export default function Sponsor() {
   const [sectionRef, inView] = useInView();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [starTurns, setStarTurns] = useState(0);
 
   return (
-    <section
-      ref={sectionRef}
-      id="sponsor"
-      className="relative z-10 mx-auto max-w-6xl px-4 pt-5 pb-20 overflow-visible"
-    >
-      <style>{`
-        @keyframes sponsorPop {
-          0% { opacity: 0; transform: translateY(14px) scale(0.6) rotate(-6deg); }
-          100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          #sponsor * { animation-duration: 0.01ms !important; }
-        }
-      `}</style>
+    <>
+      <section
+        ref={sectionRef}
+        id="sponsor"
+        className="relative z-10 mx-auto max-w-6xl px-4 pt-12 pb-24 overflow-visible"
+      >
+        <style>{`
+          @keyframes sponsorPop {
+            0% { opacity: 0; transform: translateY(14px) scale(0.6) rotate(-6deg); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            #sponsor * { animation-duration: 0.01ms !important; }
+          }
+        `}</style>
 
-     
-      {/* Clean section content without border or shadow */}
-      <div className="relative mx-auto max-w-3xl sm:max-w-4xl px-2 sm:px-4">
-        {/* Heading: Geist font, normal font weight font-sans */}
-        <MotionBlur inView={inView} delay={0}>
-          <h2 className="flex items-center gap-3 font-sans text-4xl sm:text-4xl md:text-6xl font-normal tracking-tight text-zinc-900">
-            Sponsors.
-            <span
-              onClick={() => setStarTurns((t) => t + 1)}
-              className="h-10 w-10 sm:h-15 sm:w-15 cursor-pointer select-none transition-transform duration-500 hover:rotate-[24deg] hover:scale-120 inline-block align-middle"
-              style={{
-                transitionTimingFunction: SPRING,
-                rotate: `${starTurns * 360 - 8}deg`,
-              }}
-            >
-              <Sticker name="bad-cat" size="100%" className="h-full w-full" />
-            </span>
-          </h2>
-        </MotionBlur>
+        {/* Centered Middle Container (max-w-3xl sm:max-w-4xl mx-auto) */}
+        <div className="relative mx-auto max-w-3xl sm:max-w-4xl px-2 sm:px-4">
+          {/* Section Header: Exact text, font, size & color */}
+          <MotionBlur inView={inView} delay={0}>
+            <h2 className="flex items-center gap-3 font-sans text-4xl sm:text-4xl md:text-6xl font-normal tracking-tight text-zinc-900">
+              <span>Sponsors.</span>
+              <span
+                onClick={() => setStarTurns((t) => t + 1)}
+                className="h-10 w-10 sm:h-15 sm:w-15 cursor-pointer select-none transition-transform duration-500 hover:rotate-[24deg] hover:scale-120 inline-block align-middle"
+                style={{
+                  transitionTimingFunction: SPRING,
+                  rotate: `${starTurns * 360 - 8}deg`,
+                }}
+              >
+                <Sticker name="bad-cat" size="100%" className="h-full w-full" />
+              </span>
+            </h2>
+          </MotionBlur>
 
-        {/* Narrative paragraph */}
-        <MotionBlur inView={inView} delay={100}>
-          <p className="mt-5 text-lg sm:text-xl md:text-[22px] leading-relaxed text-zinc-600 max-w-3xl">
-            You just scrolled to the good part of the page. Stick It Up is built by
-            one student, for everyone, and it keeps going because of kind sponsors like you.
-          </p>
-        </MotionBlur>
+          {/* Exact narrative paragraph */}
+          <MotionBlur inView={inView} delay={100}>
+            <p className="mt-5 text-lg sm:text-xl md:text-[22px] leading-relaxed text-zinc-600 max-w-3xl">
+              Get lifetime brand exposure for just
+              <span className="font-medium text-zinc-700"> $49.99</span> <br />
+              Showcase your product on Stick It Up and get a dedicated
+              <span className="font-medium text-zinc-700">
+                <a href="https://x.com/samirande_"> shoutout on X</a>
+              </span>.
+            </p>
+          </MotionBlur>
 
-        {/* "Slots are empty" text note */}
-        <MotionBlur inView={inView} delay={160}>
-          <div className="mt-7 sm:mt-8 flex items-center gap-2 text-sm sm:text-base font-normal text-zinc-500">
-           
-            <span>Slots are empty, click any slot to add your logo</span>
+          {/* Exact "Slots are empty" text note */}
+          <MotionBlur inView={inView} delay={160}>
+            <div className="mt-7 sm:mt-8 flex items-center gap-2 text-sm sm:text-base font-normal text-zinc-500">
+              <span>Slots are empty, click any slot to add your logo</span>
+            </div>
+          </MotionBlur>
+
+          {/* Sponsor squircle boxes with names under each */}
+          <div className="mt-6 sm:mt-7">
+            <ul className="flex flex-wrap items-center gap-4 sm:gap-6 p-0 m-0">
+              {/* Active sponsors */}
+              {SPONSORS.map((sponsor, i) => (
+                <SponsorTile
+                  key={sponsor.name}
+                  sponsor={sponsor}
+                  index={i}
+                  inView={inView}
+                />
+              ))}
+
+              {/* Empty grey box with plus (opens sponsor modal) */}
+              {Array.from({
+                length: Math.max(1, TOTAL_SPONSOR_SLOTS - SPONSORS.length),
+              }).map((_, i) => (
+                <EmptySlotTile
+                  key={i}
+                  index={SPONSORS.length + i}
+                  inView={inView}
+                  onOpenModal={() => setIsModalOpen(true)}
+                />
+              ))}
+            </ul>
           </div>
-        </MotionBlur>
 
-        {/* Sponsor boxes */}
-        <div className="mt-6 sm:mt-7">
-          {/* Row 1: 1st box is website logo, followed by active sponsors and empty grey boxes with plus */}
-          <ul className="flex flex-wrap items-center gap-4 sm:gap-5 p-0 m-0">
-            {/* 1st box: website logo with matching light lime background */}
-            <FaviconTile inView={inView} index={0} />
+          {/* Questions Contact Block (Have questions? + Email & X underneath) */}
+          <MotionBlur inView={inView} delay={240}>
+            <div className="mt-10 sm:mt-12">
+              <p className="text-base sm:text-[22px] font-normal leading-snug text-zinc-700">
+                Have questions?
+              </p>
+              <div className="mt-2 flex items-center gap-1.5 -ml-2.5">
+                <a
+                  href="mailto:sam.de.721166@gmail.com?subject=Sponsorship%20Inquiry%20-%20Stick%20It%20Up"
+                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs sm:text-sm font-medium text-zinc-600  hover:text-zinc-950 transition-colors"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5 text-zinc-400 ">
+                    <rect width="20" height="16" x="2" y="4" rx="2" />
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  </svg>
+                  <span>Email</span>
+                </a>
 
-            {/* Active sponsors */}
-            {SPONSORS.map((sponsor, i) => (
-              <SponsorTile
-                key={sponsor.name}
-                sponsor={sponsor}
-                index={1 + i}
-                inView={inView}
-              />
-            ))}
-
-            {/* Empty grey boxes with plus */}
-            {Array.from({
-              length: Math.max(0, TOTAL_SPONSOR_SLOTS - SPONSORS.length),
-            }).map((_, i) => (
-              <EmptySlotTile
-                key={i}
-                index={1 + SPONSORS.length + i}
-                inView={inView}
-              />
-            ))}
-          </ul>
-
-          {/* Row 2 ("under boxes"): GitHub (light grey), Buy Me a Coffee (light yellow), and X / Twitter (light sky) */}
-          <ul className="mt-4 sm:mt-5 flex items-center gap-4 sm:gap-5 p-0 m-0">
-            <GitHubTile index={TOTAL_SPONSOR_SLOTS + 1} inView={inView} />
-            <CoffeeTile index={TOTAL_SPONSOR_SLOTS + 2} inView={inView} />
-            <TwitterTile index={TOTAL_SPONSOR_SLOTS + 3} inView={inView} />
-          </ul>
+                <a
+                  href="https://x.com/samirande_"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs sm:text-sm font-medium text-zinc-600 hover:text-zinc-950 transition-colors"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3 text-zinc-400">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                  <span>X / Twitter</span>
+                </a>
+              </div>
+            </div>
+          </MotionBlur>
         </div>
+      </section>
 
-        {/* Sign-off linking to portfolio */}
-        <MotionBlur inView={inView} delay={450}>
-          <p className="mt-10 sm:mt-12 text-lg sm:text-xl md:text-[22px] font-normal leading-snug text-zinc-700">
-            Thank you all.
-            <br />
-            <a
-              href="https://samworks.vercel.app/"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-block text-zinc-900 transition-colors hover:text-black hover:underline underline-offset-4"
-            >
-              Sam.
-            </a>
-          </p>
-        </MotionBlur>
-      </div>
-    </section>
+      {/* Sponsor Submission Modal */}
+      <SponsorModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </>
   );
 }
