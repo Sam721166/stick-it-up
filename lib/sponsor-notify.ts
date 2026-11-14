@@ -12,7 +12,10 @@ export interface SponsorNotificationPayload {
 }
 
 export async function sendSponsorNotificationEmail(payload: SponsorNotificationPayload) {
-  const targetEmail = process.env.SPONSOR_NOTIFICATION_EMAIL || "sam.de.721166@gmail.com";
+  const targetEmail =
+    process.env.SPONSOR_NOTIFICATION_EMAIL ||
+    (process.env as any).SPONSOR_NOTIFICATION_EMAI ||
+    "sam.de.721166@gmail.com";
   const amountFormatted = `$${((payload.amountCents ?? 4999) / 100).toFixed(2)} ${payload.currency ?? "USD"}`;
 
   console.log("--------------------------------------------------");

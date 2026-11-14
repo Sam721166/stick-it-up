@@ -13,6 +13,8 @@
   },
   "workers_dev": true,
   "preview_urls": true,
+  "upload_source_maps": false,
+  "keep_vars": true,
   "routes": [
     { "pattern": "stickitupx.com", "custom_domain": true },
     { "pattern": "www.stickitupx.com", "custom_domain": true }
