@@ -1,5 +1,6 @@
 "use client";
 
+import Sticker from "@/packages/stickers-react/src";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
@@ -116,8 +117,11 @@ export function SponsorModal({ isOpen, onClose }: SponsorModalProps) {
         {/* Header */}
         <div className="flex items-start justify-between pb-4">
           <div>
+            
             <h3 className="font-sans text-xl font-semibold tracking-tight text-zinc-900">
-              Become a Sponsor
+              Become a Sponsor 
+              <span className="text-zinc-400 "> ( $49.99 )</span> &nbsp;
+              <Sticker name="bad-cat" size={38} />
             </h3>
             <p className="mt-1 text-xs leading-relaxed text-zinc-500">
               Tell us about your brand and pay on the next page. Get featured in our Sponsor section soon.
