@@ -76,9 +76,26 @@ export async function POST(req: NextRequest) {
       const description = metadata.description || "";
       const contactEmail = metadata.contact_email || data.customer?.email || "";
       const paymentId = data.payment_id || event.event_id || `pay_${Date.now()}`;
-      const amountCents = typeof data.amount === "number" ? data.amount : 4999;
-      const currency = data.currency || "USD";
+      // Dodo Payments provides total_amount (or amount) in smallest currency unit (cents) after all discounts/coupons
+      const amountCents =
+        typeof data.total_amount === "number"
+          ? data.total_amount
+          : typeof data.amount === "number"
+          ? data.amount
+          : 4999;
+      const currency = (data.currency || "USD").toUpperCase();
       const sessionId = data.session_id || metadata.session_id;
+
+      // Extract coupon/discount info if applied
+      let discountSummary: string | undefined;
+      if (Array.isArray(data.discounts) && data.discounts.length > 0) {
+        discountSummary = data.discounts
+          .map((d: any) => d.code || d.name || d.discount_id || "Coupon")
+          .filter(Boolean)
+          .join(", ");
+      } else if (data.discount_id) {
+        discountSummary = String(data.discount_id);
+      }
 
       // 1. Mark as paid in database
       await markSponsorSubmissionPaid({
@@ -105,6 +122,7 @@ export async function POST(req: NextRequest) {
         amountCents,
         currency,
         sessionId,
+        discountSummary,
       });
 
       console.log(`✅ Sponsor payment processed & notified for: ${brandName} (${contactEmail})`);
