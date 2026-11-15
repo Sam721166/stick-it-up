@@ -52,9 +52,17 @@ const SPONSORS: SponsorItem[] = [
     bg: "#09090b",
     border: "#27272a",
   },
+  {
+    name: "ServerOS",
+    url: "https://serveros.com/",
+    logo: "/sponsors/serveros-logo.png",
+    sublabel: "Infrastructure for teams & AI agents",
+    bg: "#000000",
+    border: "#27272a",
+  },
 ];
 
-const TOTAL_SPONSOR_SLOTS = 5;
+const TOTAL_SPONSOR_SLOTS = 6;
 
 function useInView({
   threshold = 0.08,

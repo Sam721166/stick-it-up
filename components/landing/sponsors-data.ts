@@ -64,4 +64,14 @@ export const SPONSOR_APPS: SponsorApp[] = [
     bg: "#09090b",
     border: "#27272a",
   },
+  {
+    id: "serveros",
+    name: "ServerOS",
+    subtitle: "Sponsored",
+    description: "The infrastructure management platform for teams and AI agents.",
+    url: "https://serveros.com/",
+    logo: "/sponsors/serveros-logo.png",
+    bg: "#000000",
+    border: "#27272a",
+  },
 ];
