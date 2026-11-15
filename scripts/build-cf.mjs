@@ -15,6 +15,7 @@ if (fs.existsSync(appOutputDir)) {
   // Ensure target directories exist
   fs.mkdirSync(assetsDir, { recursive: true });
   fs.mkdirSync(path.join(assetsDir, "stickers"), { recursive: true });
+  fs.mkdirSync(path.join(assetsDir, "sponsor"), { recursive: true });
 
   const copyIfSrcExists = (src, dest) => {
     if (fs.existsSync(src)) {
@@ -36,7 +37,10 @@ if (fs.existsSync(appOutputDir)) {
   // 3. 404 error page
   copyIfSrcExists(path.join(appOutputDir, "_not-found.html"), path.join(assetsDir, "404.html"));
 
-  // 4. SEO & metadata files
+  // 4. Sponsor success redirect page
+  copyIfSrcExists(path.join(appOutputDir, "sponsor", "success.html"), path.join(assetsDir, "sponsor", "success.html"));
+
+  // 5. SEO & metadata files
   copyIfSrcExists(path.join(appOutputDir, "robots.txt.body"), path.join(assetsDir, "robots.txt"));
   copyIfSrcExists(path.join(appOutputDir, "sitemap.xml.body"), path.join(assetsDir, "sitemap.xml"));
   copyIfSrcExists(path.join(appOutputDir, "manifest.webmanifest.body"), path.join(assetsDir, "manifest.webmanifest"));
