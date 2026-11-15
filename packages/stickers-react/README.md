@@ -195,8 +195,11 @@ interface StickerProps extends React.SVGProps<SVGSVGElement> {
 ## 🌟 Sponsors
 
 - **[PureCanvas](https://www.purecanvas.app/)** — Free, open-source, local-first vector design web application that runs entirely inside the browser.
-- **[Clonvo](https://clonvo.com/)** — OpenAI-compatible API for 100+ AI models from OpenAI, Anthropic, Google etc plus web, company and people tools for agents. You point the OpenAI SDK to Clonvo API, switch models by changing the model id, and use the same key for those tools.
+- **[Clonvo](https://clonvo.com/)** — OpenAI-compatible API for 100+ AI models from OpenAI, Anthropic, Google etc plus web, company and people tools for agents.
 - **[React Bits](https://reactbits.dev/)** — An open-source collection of animated, interactive & fully customizable React components for building standout web products and experiences.
+- **[Brickyard](https://brickyard.ch/)** — Build Roblox games with AI: world builder & script assistant.
+- **[ServerOS](https://serveros.com/)** — The infrastructure management platform for teams and AI agents.
+- **[MotionVideo](https://motionvideo.xyz/)** — Motion design, written in code.
 
 ---
 

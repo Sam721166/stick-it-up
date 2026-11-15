@@ -74,4 +74,14 @@ export const SPONSOR_APPS: SponsorApp[] = [
     bg: "#000000",
     border: "#27272a",
   },
+  {
+    id: "motionvideo",
+    name: "MotionVideo",
+    subtitle: "Sponsored",
+    description: "Motion design, written in code.",
+    url: "https://motionvideo.xyz/",
+    logo: "/sponsors/motionvideo-app-icon.svg",
+    bg: "#FFBE25",
+    border: "#f59e0b",
+  },
 ];

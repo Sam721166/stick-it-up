@@ -60,9 +60,17 @@ const SPONSORS: SponsorItem[] = [
     bg: "#000000",
     border: "#27272a",
   },
+  {
+    name: "MotionVideo",
+    url: "https://motionvideo.xyz/",
+    logo: "/sponsors/motionvideo-app-icon.svg",
+    sublabel: "Motion design, written in code",
+    bg: "#FFBE25",
+    border: "#f59e0b",
+  },
 ];
 
-const TOTAL_SPONSOR_SLOTS = 6;
+const TOTAL_SPONSOR_SLOTS = 7;
 
 function useInView({
   threshold = 0.08,
