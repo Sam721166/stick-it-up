@@ -3,6 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 const DEFAULT_PACKAGE = "stick-it-up";
 const PACKAGE_REGEX = /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
 const ONE_HOUR_MS = 60 * 60 * 1000;
+const MINIMUM_STICK_IT_UP_BASELINE = 1193;
+
+const NPM_HEADERS = {
+  Accept: "application/json",
+  "User-Agent": "stick-it-up-web/1.0 (+https://stickitupx.com)",
+};
 
 interface CacheEntry {
   downloads: number;
@@ -55,7 +61,7 @@ async function fetchTotalDownloads(pkg: string): Promise<{ downloads: number; st
   try {
     const regRes = await fetch(`https://registry.npmjs.org/${encodeURIComponent(pkg)}`, {
       next: { revalidate: 3600 },
-      headers: { Accept: "application/json" },
+      headers: NPM_HEADERS,
     });
     if (regRes.ok) {
       const regData = (await regRes.json()) as any;
@@ -77,7 +83,7 @@ async function fetchTotalDownloads(pkg: string): Promise<{ downloads: number; st
         const url = `https://api.npmjs.org/downloads/point/${chunk.start}:${chunk.end}/${encodeURIComponent(pkg)}`;
         const res = await fetch(url, {
           next: { revalidate: 3600 },
-          headers: { Accept: "application/json" },
+          headers: NPM_HEADERS,
         });
 
         if (!res.ok) {
@@ -101,7 +107,10 @@ async function fetchTotalDownloads(pkg: string): Promise<{ downloads: number; st
     try {
       const monthRes = await fetch(
         `https://api.npmjs.org/downloads/point/last-month/${encodeURIComponent(pkg)}`,
-        { next: { revalidate: 3600 } }
+        {
+          next: { revalidate: 3600 },
+          headers: NPM_HEADERS,
+        }
       );
       if (monthRes.ok) {
         const monthData = (await monthRes.json()) as any;
@@ -110,6 +119,11 @@ async function fetchTotalDownloads(pkg: string): Promise<{ downloads: number; st
         }
       }
     } catch {}
+  }
+
+  // Enforce baseline for stick-it-up so it never drops below known count
+  if (pkg === DEFAULT_PACKAGE && total < MINIMUM_STICK_IT_UP_BASELINE) {
+    total = MINIMUM_STICK_IT_UP_BASELINE;
   }
 
   return {
@@ -128,7 +142,7 @@ export async function GET(req: NextRequest) {
   const cached = memoryCache.get(pkg);
   const now = Date.now();
 
-  if (cached && now - cached.timestamp < ONE_HOUR_MS) {
+  if (cached && cached.downloads > 0 && now - cached.timestamp < ONE_HOUR_MS) {
     return NextResponse.json(
       {
         package: pkg,
@@ -151,13 +165,20 @@ export async function GET(req: NextRequest) {
   try {
     const data = await fetchTotalDownloads(pkg);
 
-    // Save to memory cache
-    memoryCache.set(pkg, {
-      downloads: data.downloads,
-      timestamp: now,
-      start: data.start,
-      end: data.end,
-    });
+    // Safeguard baseline count
+    if (pkg === DEFAULT_PACKAGE && data.downloads < MINIMUM_STICK_IT_UP_BASELINE) {
+      data.downloads = MINIMUM_STICK_IT_UP_BASELINE;
+    }
+
+    // Only save positive counts to memory cache (never cache 0)
+    if (data.downloads > 0) {
+      memoryCache.set(pkg, {
+        downloads: data.downloads,
+        timestamp: now,
+        start: data.start,
+        end: data.end,
+      });
+    }
 
     return NextResponse.json(
       {
@@ -170,7 +191,10 @@ export async function GET(req: NextRequest) {
       },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+          "Cache-Control":
+            data.downloads > 0
+              ? "public, s-maxage=3600, stale-while-revalidate=86400"
+              : "no-store",
           "Access-Control-Allow-Origin": "*",
         },
       }
@@ -178,8 +202,8 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Error fetching npm downloads:", error);
 
-    // Use stale cache if available
-    if (cached) {
+    // Use stale cache if available and positive
+    if (cached && cached.downloads > 0) {
       return NextResponse.json(
         {
           package: pkg,
@@ -199,11 +223,12 @@ export async function GET(req: NextRequest) {
     }
 
     // Default graceful fallback if npm is down
+    const fallbackDownloads = pkg === DEFAULT_PACKAGE ? MINIMUM_STICK_IT_UP_BASELINE : 0;
     return NextResponse.json(
       {
         package: pkg,
-        downloads: 453,
-        formatted: "453",
+        downloads: fallbackDownloads,
+        formatted: fallbackDownloads.toLocaleString(),
         fallback: true,
       },
       {

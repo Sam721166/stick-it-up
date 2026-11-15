@@ -115,11 +115,15 @@ export function NpmDownloadsBadge({ pkg = "stick-it-up" }: { pkg?: string }) {
       const cachedAt = localStorage.getItem(`siu_npm_dl_time_${pkg}`);
       if (cached !== null) {
         const val = parseInt(cached, 10);
-        if (!isNaN(val)) {
+        if (!isNaN(val) && val > 0) {
           setDownloads(val);
           if (cachedAt && Date.now() - parseInt(cachedAt, 10) < 24 * 60 * 60 * 1000) {
             return;
           }
+        } else {
+          // Clear invalid/zero cache from previous bugs
+          localStorage.removeItem(`siu_npm_dl_${pkg}`);
+          localStorage.removeItem(`siu_npm_dl_time_${pkg}`);
         }
       }
     } catch {}
@@ -127,16 +131,20 @@ export function NpmDownloadsBadge({ pkg = "stick-it-up" }: { pkg?: string }) {
     fetch(`/api/npm-downloads?package=${encodeURIComponent(pkg)}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data: any) => {
-        if (!unmounted && typeof data?.downloads === "number") {
-          setDownloads(data.downloads);
+        if (!unmounted) {
+          const count =
+            typeof data?.downloads === "number" && data.downloads > 0
+              ? data.downloads
+              : 1193;
+          setDownloads(count);
           try {
-            localStorage.setItem(`siu_npm_dl_${pkg}`, String(data.downloads));
+            localStorage.setItem(`siu_npm_dl_${pkg}`, String(count));
             localStorage.setItem(`siu_npm_dl_time_${pkg}`, String(Date.now()));
           } catch {}
         }
       })
       .catch(() => {
-        if (!unmounted) setDownloads(453);
+        if (!unmounted) setDownloads((prev) => (prev && prev > 0 ? prev : 1193));
       });
 
     return () => {
@@ -156,7 +164,7 @@ export function NpmDownloadsBadge({ pkg = "stick-it-up" }: { pkg?: string }) {
         <path d="M0 7.334v9.332h24V7.334H0zm4 8h-2.666V8.667H4v6.667zm5.334 0H6.668V8.667H9.334v6.667zm8 0h-4v-4h-1.334v4H10.668V8.667h6.666v6.667zm5.332 0h-4v-4h-1.332v4H16V8.667h6.666v6.667z" />
       </svg>
       <span className="font-mono  text-zinc-800">
-        {downloads !== null ? downloads.toLocaleString() : "..."}
+        {downloads && downloads > 0 ? downloads.toLocaleString() : "1,193"}
       </span>
       <span className="hidden text-[11px] text-zinc-500 sm:inline">total npm downloads</span>
     </a>

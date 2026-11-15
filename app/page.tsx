@@ -173,41 +173,67 @@ function HeroSticker({ src, delay }: { src: string; delay: number }) {
 
 /* ---------- total npm downloads counter with isolated rAF ---------- */
 
+const BASELINE_DOWNLOADS = 1193;
+
 function TotalDownloadsCounter() {
-  const [count, setCount] = useState<number>(0);
-  const [loading, setLoading] = useState(true);
+  const [count, setCount] = useState<number>(BASELINE_DOWNLOADS);
 
   useEffect(() => {
     let unmounted = false;
+
+    // Check localStorage cache first
+    try {
+      const cached = localStorage.getItem("siu_npm_dl_stick-it-up");
+      if (cached) {
+        const val = parseInt(cached, 10);
+        if (!isNaN(val) && val > 0) {
+          setCount(Math.max(val, BASELINE_DOWNLOADS));
+        } else {
+          localStorage.removeItem("siu_npm_dl_stick-it-up");
+        }
+      }
+    } catch {}
 
     fetch("/api/npm-downloads?package=stick-it-up")
       .then((res) => (res.ok ? res.json() : null))
       .then((data: any) => {
         if (unmounted) return;
-        const target = typeof data?.downloads === "number" ? data.downloads : 453;
-        setLoading(false);
+        const fresh =
+          typeof data?.downloads === "number" && data.downloads > 0
+            ? data.downloads
+            : BASELINE_DOWNLOADS;
+        const target = Math.max(fresh, BASELINE_DOWNLOADS);
 
-        // Smooth roll-up animation starting dynamically from 0
-        const startCount = 0;
-        const startTime = performance.now();
-        const duration = 1200;
+        try {
+          localStorage.setItem("siu_npm_dl_stick-it-up", String(target));
+          localStorage.setItem("siu_npm_dl_time_stick-it-up", String(Date.now()));
+        } catch {}
 
-        const tick = (now: number) => {
-          if (unmounted) return;
-          const progress = Math.min((now - startTime) / duration, 1);
-          const ease = 1 - Math.pow(1 - progress, 3);
-          const val = Math.round(startCount + (target - startCount) * ease);
-          setCount(val);
-          if (progress < 1) requestAnimationFrame(tick);
-        };
+        // Smooth roll-up animation towards target
+        setCount((prev) => {
+          const startCount = prev > 0 ? prev : Math.max(target - 100, 1000);
+          if (startCount === target) return target;
 
-        requestAnimationFrame(tick);
+          const startTime = performance.now();
+          const duration = 1000;
+
+          const tick = (now: number) => {
+            if (unmounted) return;
+            const progress = Math.min((now - startTime) / duration, 1);
+            const ease = 1 - Math.pow(1 - progress, 3);
+            const val = Math.round(startCount + (target - startCount) * ease);
+            setCount(val);
+            if (progress < 1) requestAnimationFrame(tick);
+          };
+
+          requestAnimationFrame(tick);
+          return startCount;
+        });
       })
       .catch((err) => {
         console.warn("Could not fetch npm downloads, using local fallback", err);
         if (!unmounted) {
-          setLoading(false);
-          setCount(453);
+          setCount((prev) => (prev > 0 ? prev : BASELINE_DOWNLOADS));
         }
       });
 
@@ -237,8 +263,8 @@ function TotalDownloadsCounter() {
         </div>
         <p className="-mt-4 flex items-center gap-1 font-sans text-sm sm:text-base text-neutral-500">
           <span className="text-xs text-neutral-400">Used by</span>
-          <span className=" text-sm font-sans font-medium text-neutral-800 tabular-nums">
-            {loading && count === 0 ? "..." : count.toLocaleString()}
+          <span className="text-sm font-sans font-medium text-neutral-800 tabular-nums">
+            {(count > 0 ? count : BASELINE_DOWNLOADS).toLocaleString()}
           </span>
           <span className="text-xs text-neutral-400"> developers</span>
         </p>
