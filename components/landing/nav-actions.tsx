@@ -172,40 +172,43 @@ export function NpmDownloadsBadge({ pkg = "stick-it-up" }: { pkg?: string }) {
 }
 
 // github star button with live real-time fetch & roll-up animation
+const MINIMUM_STARS_BASELINE = 130;
+
 export function GitHubStarButton() {
   const [stars, setStars] = useState<number | null>(null);
 
   useEffect(() => {
     let unmounted = false;
 
-    // 1. Immediately show cached star count so there is zero layout flicker
-    let initialCount = 92;
+    // 1. Check cached star count from localStorage (wipe if older than baseline 130)
+    let initialCount = MINIMUM_STARS_BASELINE;
     try {
       const cached = localStorage.getItem("stickitupp_gh_stars");
       if (cached !== null) {
         const val = parseInt(cached, 10);
-        if (!isNaN(val) && val >= 92) {
+        if (!isNaN(val) && val >= MINIMUM_STARS_BASELINE) {
           initialCount = val;
           setStars(val);
         } else {
-          setStars(92);
+          localStorage.setItem("stickitupp_gh_stars", String(MINIMUM_STARS_BASELINE));
+          setStars(MINIMUM_STARS_BASELINE);
         }
       } else {
-        setStars(92);
+        setStars(MINIMUM_STARS_BASELINE);
       }
     } catch {
-      setStars(92);
+      setStars(MINIMUM_STARS_BASELINE);
     }
 
     // Helper to smoothly animate count upward
     function updateStarsWithAnimation(target: number) {
-      if (unmounted || target <= 0) return;
+      if (unmounted || target < MINIMUM_STARS_BASELINE) return;
       try {
         localStorage.setItem("stickitupp_gh_stars", String(target));
       } catch {}
 
       setStars((current) => {
-        const start = current !== null && current > 0 ? current : initialCount;
+        const start = current !== null && current >= MINIMUM_STARS_BASELINE ? current : initialCount;
         if (start === target) return target;
 
         const startTime = performance.now();
@@ -225,28 +228,29 @@ export function GitHubStarButton() {
       });
     }
 
-    // 2. Fetch live real-time stargazers count (direct GitHub API first for zero-latency)
+    // 2. Fetch live real-time stargazers count
+    // Query internal route first (cached on edge & has web scrape fallback without 60 req/hr limit)
     async function fetchLiveStars() {
+      try {
+        const res = await fetch(`/api/github-stars?_t=${Date.now()}`);
+        if (res.ok) {
+          const data = (await res.json()) as any;
+          if (typeof data?.stars === "number" && data.stars >= MINIMUM_STARS_BASELINE) {
+            updateStarsWithAnimation(data.stars);
+            return;
+          }
+        }
+      } catch {}
+
+      // Secondary fallback: Direct GitHub API
       try {
         const res = await fetch("https://api.github.com/repos/Sam721166/stick-it-up", {
           headers: { Accept: "application/vnd.github.v3+json" },
         });
         if (res.ok) {
           const data = (await res.json()) as any;
-          if (typeof data?.stargazers_count === "number" && data.stargazers_count >= 92) {
+          if (typeof data?.stargazers_count === "number" && data.stargazers_count >= MINIMUM_STARS_BASELINE) {
             updateStarsWithAnimation(data.stargazers_count);
-            return;
-          }
-        }
-      } catch {}
-
-      // Fallback: Query internal cached route if direct GitHub API was blocked/rate-limited
-      try {
-        const res = await fetch(`/api/github-stars?_t=${Date.now()}`);
-        if (res.ok) {
-          const data = (await res.json()) as any;
-          if (typeof data?.stars === "number" && data.stars >= 92) {
-            updateStarsWithAnimation(data.stars);
           }
         }
       } catch {}
@@ -301,7 +305,9 @@ export function GitHubStarButton() {
         suppressHydrationWarning
         className="ml-0.5 rounded-full bg-white/10 px-1.5 py-0.5 font-mono text-[10px] sm:text-[11px] text-zinc-300"
       >
-        {stars !== null ? stars : "..."}
+        {stars !== null && stars >= MINIMUM_STARS_BASELINE
+          ? stars.toLocaleString()
+          : MINIMUM_STARS_BASELINE.toLocaleString()}
       </span>
     </a>
   );
