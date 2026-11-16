@@ -85,6 +85,7 @@ import { MarkZuckerbergSticker } from "../stickers/MarkZuckerbergSticker";
 import { MarkSocialNetworkSticker } from "../stickers/MarkSocialNetworkSticker";
 import { ErlichBachmanSticker } from "../stickers/ErlichBachmanSticker";
 import { SocialNetworkBadgeSticker } from "../stickers/SocialNetworkBadgeSticker";
+import { AkatsukiCloudSticker } from "../stickers/AkatsukiCloudSticker";
 
 export const STICKER_MAP: Record<StickerName, React.FC<StickerProps>> = {
   flame: FlameSticker,
@@ -180,6 +181,8 @@ export const STICKER_MAP: Record<StickerName, React.FC<StickerProps>> = {
   erlich: ErlichBachmanSticker,
   "socialnetwork-badge": SocialNetworkBadgeSticker,
   "social-network": SocialNetworkBadgeSticker,
+  "akatsuki-cloud": AkatsukiCloudSticker,
+  akatsuki: AkatsukiCloudSticker,
 
   // Common aliases & filename helpers
   star: StarBurstSticker,
@@ -229,6 +232,7 @@ function normalizeStickerName(rawName: string): StickerName {
   if (n === "erlich-siliconvalley" || n === "erlich") return "erlich-bachman";
   if (n === "socialnetwork2" || n === "socialnetwork" || n === "social-network") return "socialnetwork-badge";
   if (n === "zuck" || n === "zuckerberg") return "mark-zuckerberg";
+  if (n === "akatsuki" || n === "akatsuki-cloud") return "akatsuki-cloud";
 
   return n as StickerName;
 }

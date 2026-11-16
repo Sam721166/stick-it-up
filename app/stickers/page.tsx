@@ -37,6 +37,20 @@ interface CatalogItem {
 const CATALOG: CatalogItem[] = [
   /* Built-in React Components (stick-it-up) */
   {
+    id: "svg-akatsuki-cloud",
+    name: "akatsuki-cloud",
+    title: "Akatsuki Cloud",
+    category: "characters",
+    format: "component",
+    componentName: "akatsuki-cloud",
+    exportName: "AkatsukiCloudSticker",
+    svgSrc: "/stickers/akatsuki-cloud.svg",
+    description: "Iconic Akatsuki red cloud decal from Naruto with vinyl peel.",
+    tags: ["anime", "naruto", "akatsuki", "cloud", "itachi", "red"],
+    defaultRotation: -4,
+    isNew: true,
+  },
+  {
     id: "svg-face",
     name: "face",
     title: "Smiley Face",
