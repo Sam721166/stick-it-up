@@ -88,5 +88,8 @@ export { MarkSocialNetworkSticker } from "./stickers/MarkSocialNetworkSticker";
 export { ErlichBachmanSticker } from "./stickers/ErlichBachmanSticker";
 export { SocialNetworkBadgeSticker } from "./stickers/SocialNetworkBadgeSticker";
 
+// Anime & Iconic Symbols
+export { AkatsukiCloudSticker } from "./stickers/AkatsukiCloudSticker";
+
 import { Sticker } from "./components/Sticker";
 export default Sticker;
