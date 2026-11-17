@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const MINIMUM_STARS_BASELINE = 130;
+const MINIMUM_STARS_BASELINE = 138;
 let cachedStars = MINIMUM_STARS_BASELINE;
 let lastFetchTime = 0;
 const CACHE_TTL_MS = 2 * 60 * 1000;
@@ -9,7 +9,7 @@ export async function GET() {
   const now = Date.now();
 
   // Return fresh in-memory cache if valid
-  if (cachedStars > MINIMUM_STARS_BASELINE && now - lastFetchTime < CACHE_TTL_MS) {
+  if (lastFetchTime > 0 && cachedStars >= MINIMUM_STARS_BASELINE && now - lastFetchTime < CACHE_TTL_MS) {
     return NextResponse.json(
       { stars: cachedStars },
       {
@@ -34,7 +34,7 @@ export async function GET() {
 
     const res = await fetch("https://api.github.com/repos/Sam721166/stick-it-up", {
       headers,
-      next: { revalidate: 120 },
+      cache: "no-store",
     });
 
     if (res.ok) {
@@ -43,7 +43,7 @@ export async function GET() {
         cachedStars = Math.max(data.stargazers_count, MINIMUM_STARS_BASELINE);
         lastFetchTime = now;
         return NextResponse.json(
-          { stars: cachedStars },
+          { stars: cachedStars, cached: false },
           {
             headers: {
               "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600",
@@ -64,7 +64,7 @@ export async function GET() {
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       },
-      next: { revalidate: 120 },
+      cache: "no-store",
     });
 
     if (htmlRes.ok) {
@@ -80,7 +80,7 @@ export async function GET() {
           cachedStars = Math.max(count, MINIMUM_STARS_BASELINE);
           lastFetchTime = now;
           return NextResponse.json(
-            { stars: cachedStars },
+            { stars: cachedStars, cached: false },
             {
               headers: {
                 "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600",
@@ -94,12 +94,12 @@ export async function GET() {
     console.warn("GitHub web scrape fallback error:", err);
   }
 
-  // Fallback to latest verified count
+  // Fallback to latest verified count (do NOT cache fallback in edge CDN so it retries fresh)
   return NextResponse.json(
-    { stars: Math.max(cachedStars, MINIMUM_STARS_BASELINE) },
+    { stars: Math.max(cachedStars, MINIMUM_STARS_BASELINE), fallback: true },
     {
       headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
       },
     }
   );

@@ -172,7 +172,7 @@ export function NpmDownloadsBadge({ pkg = "stick-it-up" }: { pkg?: string }) {
 }
 
 // github star button with live real-time fetch & roll-up animation
-const MINIMUM_STARS_BASELINE = 130;
+const MINIMUM_STARS_BASELINE = 138;
 
 export function GitHubStarButton() {
   const [stars, setStars] = useState<number | null>(null);
@@ -180,7 +180,7 @@ export function GitHubStarButton() {
   useEffect(() => {
     let unmounted = false;
 
-    // 1. Check cached star count from localStorage (wipe if older than baseline 130)
+    // 1. Check cached star count from localStorage (wipe if older than baseline)
     let initialCount = MINIMUM_STARS_BASELINE;
     try {
       const cached = localStorage.getItem("stickitupp_gh_stars");
@@ -229,20 +229,8 @@ export function GitHubStarButton() {
     }
 
     // 2. Fetch live real-time stargazers count
-    // Query internal route first (cached on edge & has web scrape fallback without 60 req/hr limit)
+    // PRIMARY: Query official GitHub API directly from client (always fresh, CORS-enabled)
     async function fetchLiveStars() {
-      try {
-        const res = await fetch(`/api/github-stars?_t=${Date.now()}`);
-        if (res.ok) {
-          const data = (await res.json()) as any;
-          if (typeof data?.stars === "number" && data.stars >= MINIMUM_STARS_BASELINE) {
-            updateStarsWithAnimation(data.stars);
-            return;
-          }
-        }
-      } catch {}
-
-      // Secondary fallback: Direct GitHub API
       try {
         const res = await fetch("https://api.github.com/repos/Sam721166/stick-it-up", {
           headers: { Accept: "application/vnd.github.v3+json" },
@@ -251,6 +239,18 @@ export function GitHubStarButton() {
           const data = (await res.json()) as any;
           if (typeof data?.stargazers_count === "number" && data.stargazers_count >= MINIMUM_STARS_BASELINE) {
             updateStarsWithAnimation(data.stargazers_count);
+            return;
+          }
+        }
+      } catch {}
+
+      // SECONDARY: If client is rate-limited by GitHub API, fall back to internal edge route
+      try {
+        const res = await fetch(`/api/github-stars?_t=${Date.now()}`);
+        if (res.ok) {
+          const data = (await res.json()) as any;
+          if (typeof data?.stars === "number" && data.stars >= MINIMUM_STARS_BASELINE) {
+            updateStarsWithAnimation(data.stars);
           }
         }
       } catch {}
