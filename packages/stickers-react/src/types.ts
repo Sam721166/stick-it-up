@@ -120,4 +120,10 @@ export type StickerName =
   | "erlich"
   | "socialnetwork-badge"
   | "social-network"
+  | "mario-face"
+  | "super-mushroom"
+  | "super-star"
+  | "goal-flag"
+  | "fire-flower"
+  | "warp-pipe"
   | (string & {});

@@ -25,6 +25,12 @@ import { CatSticker } from "../stickers/CatSticker";
 import { CatSeriousSticker } from "../stickers/CatSeriousSticker";
 import { DogSticker } from "../stickers/DogSticker";
 import { FaceSticker } from "../stickers/FaceSticker";
+import { MarioFaceSticker } from "../stickers/MarioFaceSticker";
+import { SuperMushroomSticker } from "../stickers/SuperMushroomSticker";
+import { SuperStarSticker } from "../stickers/SuperStarSticker";
+import { GoalFlagSticker } from "../stickers/GoalFlagSticker";
+import { FireFlowerSticker } from "../stickers/FireFlowerSticker";
+import { WarpPipeSticker } from "../stickers/WarpPipeSticker";
 import { BlackFaceSticker } from "../stickers/BlackFaceSticker";
 import { FlowerSticker } from "../stickers/FlowerSticker";
 import { PeaceHandSticker } from "../stickers/PeaceHandSticker";
@@ -110,6 +116,12 @@ export const STICKER_MAP: Record<StickerName, React.FC<StickerProps>> = {
   "cat-serious": CatSeriousSticker,
   dog: DogSticker,
   face: FaceSticker,
+  "mario-face": MarioFaceSticker,
+  "super-mushroom": SuperMushroomSticker,
+  "super-star": SuperStarSticker,
+  "goal-flag": GoalFlagSticker,
+  "fire-flower": FireFlowerSticker,
+  "warp-pipe": WarpPipeSticker,
   "black-face": BlackFaceSticker,
   flower: FlowerSticker,
   "peace-hand": PeaceHandSticker,

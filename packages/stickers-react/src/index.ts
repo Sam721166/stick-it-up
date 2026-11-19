@@ -88,5 +88,13 @@ export { MarkSocialNetworkSticker } from "./stickers/MarkSocialNetworkSticker";
 export { ErlichBachmanSticker } from "./stickers/ErlichBachmanSticker";
 export { SocialNetworkBadgeSticker } from "./stickers/SocialNetworkBadgeSticker";
 
+// Mario world
+export { MarioFaceSticker } from "./stickers/MarioFaceSticker";
+export { SuperMushroomSticker } from "./stickers/SuperMushroomSticker";
+export { SuperStarSticker } from "./stickers/SuperStarSticker";
+export { GoalFlagSticker } from "./stickers/GoalFlagSticker";
+export { FireFlowerSticker } from "./stickers/FireFlowerSticker";
+export { WarpPipeSticker } from "./stickers/WarpPipeSticker";
+
 import { Sticker } from "./components/Sticker";
 export default Sticker;
